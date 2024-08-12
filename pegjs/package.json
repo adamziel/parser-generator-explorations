@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "peggy": "^4.0.3"
+    "peggy": "^4.0.3",
+    "pegjs-backtrace": "^0.2.1"
   }
 }

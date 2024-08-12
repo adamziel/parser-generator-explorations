@@ -7,7 +7,9 @@ def add_peg_parse_whitespace(file_path):
 
         for line in lines:
             file.write(line)
-            if line.strip().startswith('function peg$parse') and not line.strip().startswith('function peg$parseWHITESPACE'):
+            if line.strip().startswith('function peg$parse') \
+                and not line.strip().startswith('function peg$parseWHITESPACE') \
+                and not line.strip().startswith('function peg$parse('):
                 file.write('peg$parseWHITESPACE();\n')
 
         file.truncate()

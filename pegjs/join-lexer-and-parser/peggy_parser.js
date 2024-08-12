@@ -167,7 +167,6 @@ peg$SyntaxError.buildMessage = function(expected, found) {
 };
 
 function peg$parse(input, options) {
-peg$parseWHITESPACE();
   options = options !== undefined ? options : {};
 
   var peg$FAILED = {};
@@ -11037,7 +11036,7 @@ peg$parseWHITESPACE();
 
   function peg$parsequerySpecification() {
 peg$parseWHITESPACE();
-    var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11;
+    var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
 
     s0 = peg$currPos;
     s1 = peg$parseSELECT_SYMBOL();
@@ -11050,51 +11049,47 @@ peg$parseWHITESPACE();
       }
       s3 = peg$parseselectItemList();
       if (s3 !== peg$FAILED) {
-        s4 = peg$parseintoClause();
+        s4 = peg$parsefromClause();
         if (s4 === peg$FAILED) {
           s4 = null;
         }
-        s5 = peg$parsefromClause();
+        s5 = peg$parsewhereClause();
         if (s5 === peg$FAILED) {
           s5 = null;
         }
-        s6 = peg$parsewhereClause();
+        s6 = peg$parsegroupByClause();
         if (s6 === peg$FAILED) {
           s6 = null;
         }
-        s7 = peg$parsegroupByClause();
+        s7 = peg$parsehavingClause();
         if (s7 === peg$FAILED) {
           s7 = null;
         }
-        s8 = peg$parsehavingClause();
+        s8 = peg$currPos;
+        peg$savedPos = peg$currPos;
+        s9 = peg$f49();
+        if (s9) {
+          s9 = undefined;
+        } else {
+          s9 = peg$FAILED;
+        }
+        if (s9 !== peg$FAILED) {
+          s10 = peg$parsewindowClause();
+          if (s10 !== peg$FAILED) {
+            s9 = [s9, s10];
+            s8 = s9;
+          } else {
+            peg$currPos = s8;
+            s8 = peg$FAILED;
+          }
+        } else {
+          peg$currPos = s8;
+          s8 = peg$FAILED;
+        }
         if (s8 === peg$FAILED) {
           s8 = null;
         }
-        s9 = peg$currPos;
-        peg$savedPos = peg$currPos;
-        s10 = peg$f49();
-        if (s10) {
-          s10 = undefined;
-        } else {
-          s10 = peg$FAILED;
-        }
-        if (s10 !== peg$FAILED) {
-          s11 = peg$parsewindowClause();
-          if (s11 !== peg$FAILED) {
-            s10 = [s10, s11];
-            s9 = s10;
-          } else {
-            peg$currPos = s9;
-            s9 = peg$FAILED;
-          }
-        } else {
-          peg$currPos = s9;
-          s9 = peg$FAILED;
-        }
-        if (s9 === peg$FAILED) {
-          s9 = null;
-        }
-        s1 = [s1, s2, s3, s4, s5, s6, s7, s8, s9];
+        s1 = [s1, s2, s3, s4, s5, s6, s7, s8];
         s0 = s1;
       } else {
         peg$currPos = s0;
@@ -42015,6 +42010,7 @@ peg$parseWHITESPACE();
     s0 = peg$currPos;
     s1 = [];
     s2 = peg$parseDIGITS();
+    console.log('s2', s2, input.substr(peg$currPos, 10));
     if (s2 !== peg$FAILED) {
       while (s2 !== peg$FAILED) {
         s1.push(s2);
@@ -57739,20 +57735,29 @@ peg$parseWHITESPACE();
   }
 
   function peg$parseWHITESPACE() {
-    var s0, s1;
+    var s0, s1, s2;
 
     s0 = peg$currPos;
-    s1 = input.charAt(peg$currPos);
-    if (peg$r43.test(s1)) {
+    s1 = [];
+    s2 = input.charAt(peg$currPos);
+    if (peg$r43.test(s2)) {
       peg$currPos++;
     } else {
-      s1 = peg$FAILED;
+      s2 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e853); }
     }
-    if (s1 !== peg$FAILED) {
-      peg$savedPos = s0;
-      s1 = peg$f444();
+    while (s2 !== peg$FAILED) {
+      s1.push(s2);
+      s2 = input.charAt(peg$currPos);
+      if (peg$r43.test(s2)) {
+        peg$currPos++;
+      } else {
+        s2 = peg$FAILED;
+        if (peg$silentFails === 0) { peg$fail(peg$e853); }
+      }
     }
+    peg$savedPos = s0;
+    s1 = peg$f444();
     s0 = s1;
 
     return s0;
@@ -57808,13 +57813,6 @@ peg$parseWHITESPACE();
     }
   };
   const serverVersion = serverInfo.getServerVersion();
-
-  function override(rule) {
-    return function() {
-      WHITESPACE();  // Skip leading whitespace before every match
-      return rule.apply(this, arguments);
-    };
-  }
 
   peg$result = peg$startRuleFunction();
 

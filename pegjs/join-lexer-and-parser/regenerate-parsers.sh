@@ -5,3 +5,4 @@ python postprocess.py peggy_parser.js
 
 bunx pegjs MySQL.pegjs
 mv MySQL.js peg_parser.js
+python postprocess.py peg_parser.js

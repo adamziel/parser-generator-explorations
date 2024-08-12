@@ -9,13 +9,6 @@
     }
   };
   const serverVersion = serverInfo.getServerVersion();
-
-  function override(rule) {
-    return function() {
-      WHITESPACE();  // Skip leading whitespace before every match
-      return rule.apply(this, arguments);
-    };
-  }
 }
 
 Start
@@ -885,7 +878,7 @@ queryPrimary
 
 querySpecification
   = SELECT_SYMBOL
-    selectOption* selectItemList intoClause? fromClause? whereClause?
+    selectOption* selectItemList fromClause? whereClause?
     groupByClause? havingClause?
     (&{serverVersion >= 80000} windowClause)?
 
@@ -7109,7 +7102,7 @@ SQL_TSI_YEAR_SYMBOL
   = 'SQL_TSI_YEAR' { return 'YEAR_SYMBOL'; }    // Synonym
 
 WHITESPACE
-  = [ \t\f\r\n] { return ''; }
+  = [ \t\f\r\n]* { return ''; }
 
 INVALID_INPUT
   = [\u0001-\u0008]   // Control codes.

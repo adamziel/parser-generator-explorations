@@ -2139,6 +2139,7 @@ module.exports = (function() {
     }
 
     function peg$parseStart() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsequery();
@@ -2147,6 +2148,7 @@ module.exports = (function() {
     }
 
     function peg$parsequery() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$parseEOF();
@@ -2195,6 +2197,7 @@ module.exports = (function() {
     }
 
     function peg$parsesimpleStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parsealterStatement();
@@ -2370,6 +2373,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -2532,6 +2536,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterDatabase() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -2610,6 +2615,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterEvent() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11;
 
       s0 = peg$currPos;
@@ -2826,6 +2832,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterLogfileGroup() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -2881,6 +2888,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterLogfileGroupOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -2942,6 +2950,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterLogfileGroupOption() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsetsOptionInitialSize();
@@ -2956,6 +2965,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterServer() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -2984,6 +2994,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterTable() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -3053,6 +3064,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterTableActions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -3121,6 +3133,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterCommandList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$parsealterCommandsModifierList();
@@ -3163,6 +3176,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterCommandsModifierList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -3218,6 +3232,7 @@ module.exports = (function() {
     }
 
     function peg$parsestandaloneAlterCommands() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -3286,6 +3301,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterPartition() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -3787,6 +3803,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -3857,6 +3874,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterCommandsModifier() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsealterAlgorithmOption();
@@ -3871,6 +3889,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterListItem() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
       s0 = peg$currPos;
@@ -4754,6 +4773,7 @@ module.exports = (function() {
     }
 
     function peg$parseplace() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -4779,6 +4799,7 @@ module.exports = (function() {
     }
 
     function peg$parserestrict() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseRESTRICT_SYMBOL();
@@ -4790,6 +4811,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterOrderList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -4872,6 +4894,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterAlgorithmOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -4906,6 +4929,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterLockOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -4940,6 +4964,7 @@ module.exports = (function() {
     }
 
     function peg$parseindexLockAndAlgorithm() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -4985,6 +5010,7 @@ module.exports = (function() {
     }
 
     function peg$parsewithValidation() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -5022,6 +5048,7 @@ module.exports = (function() {
     }
 
     function peg$parseremovePartitioning() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -5044,6 +5071,7 @@ module.exports = (function() {
     }
 
     function peg$parseallOrPartitionNameList() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseALL_SYMBOL();
@@ -5055,6 +5083,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterTablespace() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14;
 
       s0 = peg$currPos;
@@ -5289,6 +5318,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterUndoTablespace() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -5341,6 +5371,7 @@ module.exports = (function() {
     }
 
     function peg$parseundoTableSpaceOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -5402,6 +5433,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterTablespaceOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -5463,6 +5495,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterTablespaceOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -5509,6 +5542,7 @@ module.exports = (function() {
     }
 
     function peg$parsechangeTablespaceOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -5546,6 +5580,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterView() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -5601,6 +5636,7 @@ module.exports = (function() {
     }
 
     function peg$parseviewTail() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -5632,6 +5668,7 @@ module.exports = (function() {
     }
 
     function peg$parseviewSelect() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -5657,6 +5694,7 @@ module.exports = (function() {
     }
 
     function peg$parseviewCheckOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -5697,6 +5735,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -5821,6 +5860,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateDatabase() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -5863,6 +5903,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateDatabaseOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parsedefaultCharset();
@@ -5897,6 +5938,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateTable() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
       s0 = peg$currPos;
@@ -6047,6 +6089,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableElementList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -6102,6 +6145,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableElement() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsecolumnDefinition();
@@ -6113,6 +6157,7 @@ module.exports = (function() {
     }
 
     function peg$parseduplicateAsQueryExpression() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -6150,6 +6195,7 @@ module.exports = (function() {
     }
 
     function peg$parsequeryExpressionOrParens() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsequeryExpression();
@@ -6161,6 +6207,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateRoutine() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -6204,6 +6251,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateProcedure() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
 
       s0 = peg$currPos;
@@ -6320,6 +6368,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateFunction() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
 
       s0 = peg$currPos;
@@ -6448,6 +6497,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateUdf() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -6512,6 +6562,7 @@ module.exports = (function() {
     }
 
     function peg$parseroutineCreateOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parseroutineOption();
@@ -6540,6 +6591,7 @@ module.exports = (function() {
     }
 
     function peg$parseroutineAlterOptions() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = [];
@@ -6557,6 +6609,7 @@ module.exports = (function() {
     }
 
     function peg$parseroutineOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -6702,6 +6755,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateIndex() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -6891,6 +6945,7 @@ module.exports = (function() {
     }
 
     function peg$parseindexNameAndType() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -6953,6 +7008,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateIndexTarget() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -6981,6 +7037,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateLogfileGroup() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -7039,6 +7096,7 @@ module.exports = (function() {
     }
 
     function peg$parselogfileGroupOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -7100,6 +7158,7 @@ module.exports = (function() {
     }
 
     function peg$parselogfileGroupOption() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsetsOptionInitialSize();
@@ -7123,6 +7182,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateServer() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -7175,6 +7235,7 @@ module.exports = (function() {
     }
 
     function peg$parseserverOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -7248,6 +7309,7 @@ module.exports = (function() {
     }
 
     function peg$parseserverOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -7372,6 +7434,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateTablespace() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -7444,6 +7507,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateUndoTablespace() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -7493,6 +7557,7 @@ module.exports = (function() {
     }
 
     function peg$parsetsDataFileName() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -7555,6 +7620,7 @@ module.exports = (function() {
     }
 
     function peg$parsetsDataFile() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -7577,6 +7643,7 @@ module.exports = (function() {
     }
 
     function peg$parsetablespaceOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -7638,6 +7705,7 @@ module.exports = (function() {
     }
 
     function peg$parsetablespaceOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parsetsOptionInitialSize();
@@ -7713,6 +7781,7 @@ module.exports = (function() {
     }
 
     function peg$parsetsOptionInitialSize() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -7744,6 +7813,7 @@ module.exports = (function() {
     }
 
     function peg$parsetsOptionUndoRedoBufferSize() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -7778,6 +7848,7 @@ module.exports = (function() {
     }
 
     function peg$parsetsOptionAutoextendSize() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -7809,6 +7880,7 @@ module.exports = (function() {
     }
 
     function peg$parsetsOptionMaxSize() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -7840,6 +7912,7 @@ module.exports = (function() {
     }
 
     function peg$parsetsOptionExtentSize() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -7871,6 +7944,7 @@ module.exports = (function() {
     }
 
     function peg$parsetsOptionNodegroup() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -7902,6 +7976,7 @@ module.exports = (function() {
     }
 
     function peg$parsetsOptionEngine() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -7942,6 +8017,7 @@ module.exports = (function() {
     }
 
     function peg$parsetsOptionWait() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseWAIT_SYMBOL();
@@ -7953,6 +8029,7 @@ module.exports = (function() {
     }
 
     function peg$parsetsOptionComment() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -7984,6 +8061,7 @@ module.exports = (function() {
     }
 
     function peg$parsetsOptionFileblockSize() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -8015,6 +8093,7 @@ module.exports = (function() {
     }
 
     function peg$parsetsOptionEncryption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -8046,6 +8125,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateView() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -8101,6 +8181,7 @@ module.exports = (function() {
     }
 
     function peg$parseviewReplaceOrAlgorithm() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -8135,6 +8216,7 @@ module.exports = (function() {
     }
 
     function peg$parseviewAlgorithm() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -8157,6 +8239,7 @@ module.exports = (function() {
     }
 
     function peg$parsealgorithm() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseUNDEFINED_SYMBOL();
@@ -8171,6 +8254,7 @@ module.exports = (function() {
     }
 
     function peg$parseviewSuid() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -8202,6 +8286,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateTrigger() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -8233,6 +8318,7 @@ module.exports = (function() {
     }
 
     function peg$parsetiming() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseBEFORE_SYMBOL();
@@ -8244,6 +8330,7 @@ module.exports = (function() {
     }
 
     function peg$parseevent() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -8311,6 +8398,7 @@ module.exports = (function() {
     }
 
     function peg$parsetriggerFollowsPrecedesClause() {
+peg$parseWHITESPACE();
       var s0;
 
       peg$reportedPos = peg$currPos;
@@ -8325,6 +8413,7 @@ module.exports = (function() {
     }
 
     function peg$parseordering() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -8350,6 +8439,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateEvent() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13;
 
       s0 = peg$currPos;
@@ -8524,6 +8614,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateRole() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -8555,6 +8646,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateSpatialReference() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -8661,6 +8753,7 @@ module.exports = (function() {
     }
 
     function peg$parsesrsAttribute() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -8770,6 +8863,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -8891,6 +8985,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropDatabase() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -8922,6 +9017,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropEvent() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -8953,6 +9049,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropFunction() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -8984,6 +9081,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropProcedure() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -9015,6 +9113,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropIndex() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -9067,6 +9166,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropLogfileGroup() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
       s0 = peg$currPos;
@@ -9157,6 +9257,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropLogfileGroupOption() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsetsOptionWait();
@@ -9168,6 +9269,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropServer() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -9199,6 +9301,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropTable() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -9254,6 +9357,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropTableSpace() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -9338,6 +9442,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropTrigger() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -9369,6 +9474,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropView() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -9412,6 +9518,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropRole() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -9443,6 +9550,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropSpatialReference() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -9486,6 +9594,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropUndoTablespace() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -9523,6 +9632,7 @@ module.exports = (function() {
     }
 
     function peg$parserenameTableStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -9593,6 +9703,7 @@ module.exports = (function() {
     }
 
     function peg$parserenamePair() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -9621,6 +9732,7 @@ module.exports = (function() {
     }
 
     function peg$parsetruncateTableStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -9652,6 +9764,7 @@ module.exports = (function() {
     }
 
     function peg$parseimportStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -9686,6 +9799,7 @@ module.exports = (function() {
     }
 
     function peg$parsecallStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -9740,6 +9854,7 @@ module.exports = (function() {
     }
 
     function peg$parsedeleteStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12;
 
       s0 = peg$currPos;
@@ -9953,6 +10068,7 @@ module.exports = (function() {
     }
 
     function peg$parsepartitionDelete() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -9999,6 +10115,7 @@ module.exports = (function() {
     }
 
     function peg$parsedeleteStatementOption() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseQUICK_SYMBOL();
@@ -10016,6 +10133,7 @@ module.exports = (function() {
     }
 
     function peg$parsedoStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -10081,6 +10199,7 @@ module.exports = (function() {
     }
 
     function peg$parsehandlerStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -10178,6 +10297,7 @@ module.exports = (function() {
     }
 
     function peg$parsehandlerReadOrScan() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$parseFIRST_SYMBOL();
@@ -10256,6 +10376,7 @@ module.exports = (function() {
     }
 
     function peg$parseinsertStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12;
 
       s0 = peg$currPos;
@@ -10415,6 +10536,7 @@ module.exports = (function() {
     }
 
     function peg$parseinsertLockOption() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseLOW_PRIORITY_SYMBOL();
@@ -10429,6 +10551,7 @@ module.exports = (function() {
     }
 
     function peg$parseinsertFromConstructor() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -10477,6 +10600,7 @@ module.exports = (function() {
     }
 
     function peg$parsefields() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -10532,6 +10656,7 @@ module.exports = (function() {
     }
 
     function peg$parseinsertValues() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -10557,6 +10682,7 @@ module.exports = (function() {
     }
 
     function peg$parseinsertQueryExpression() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$parsequeryExpressionOrParens();
@@ -10597,6 +10723,7 @@ module.exports = (function() {
     }
 
     function peg$parsevalueList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
       s0 = peg$currPos;
@@ -10697,6 +10824,7 @@ module.exports = (function() {
     }
 
     function peg$parsevalues() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -10761,6 +10889,7 @@ module.exports = (function() {
     }
 
     function peg$parsevaluesReference() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -10792,6 +10921,7 @@ module.exports = (function() {
     }
 
     function peg$parseinsertUpdateList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -10832,6 +10962,7 @@ module.exports = (function() {
     }
 
     function peg$parseloadStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12, s13, s14, s15, s16;
 
       s0 = peg$currPos;
@@ -10968,6 +11099,7 @@ module.exports = (function() {
     }
 
     function peg$parsedataOrXml() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseDATA_SYMBOL();
@@ -10979,6 +11111,7 @@ module.exports = (function() {
     }
 
     function peg$parsexmlRowsIdentifiedBy() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -11013,6 +11146,7 @@ module.exports = (function() {
     }
 
     function peg$parseloadDataFileTail() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -11087,6 +11221,7 @@ module.exports = (function() {
     }
 
     function peg$parseloadDataFileTargetList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -11118,6 +11253,7 @@ module.exports = (function() {
     }
 
     function peg$parsefieldOrVariableList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -11182,6 +11318,7 @@ module.exports = (function() {
     }
 
     function peg$parsereplaceStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -11260,6 +11397,7 @@ module.exports = (function() {
     }
 
     function peg$parseselectStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -11291,6 +11429,7 @@ module.exports = (function() {
     }
 
     function peg$parseselectStatementWithInto() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -11362,6 +11501,7 @@ module.exports = (function() {
     }
 
     function peg$parsequeryExpression() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -11491,6 +11631,7 @@ module.exports = (function() {
     }
 
     function peg$parsequeryExpressionBody() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -11605,6 +11746,7 @@ module.exports = (function() {
     }
 
     function peg$parsequeryExpressionParens() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -11653,6 +11795,7 @@ module.exports = (function() {
     }
 
     function peg$parsequeryPrimary() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parsequerySpecification();
@@ -11707,7 +11850,8 @@ module.exports = (function() {
     }
 
     function peg$parsequerySpecification() {
-      var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11;
+peg$parseWHITESPACE();
+      var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
 
       s0 = peg$currPos;
       s1 = peg$parseSELECT_SYMBOL();
@@ -11721,62 +11865,53 @@ module.exports = (function() {
         if (s2 !== peg$FAILED) {
           s3 = peg$parseselectItemList();
           if (s3 !== peg$FAILED) {
-            s4 = peg$parseintoClause();
+            s4 = peg$parsefromClause();
             if (s4 === peg$FAILED) {
               s4 = peg$c1;
             }
             if (s4 !== peg$FAILED) {
-              s5 = peg$parsefromClause();
+              s5 = peg$parsewhereClause();
               if (s5 === peg$FAILED) {
                 s5 = peg$c1;
               }
               if (s5 !== peg$FAILED) {
-                s6 = peg$parsewhereClause();
+                s6 = peg$parsegroupByClause();
                 if (s6 === peg$FAILED) {
                   s6 = peg$c1;
                 }
                 if (s6 !== peg$FAILED) {
-                  s7 = peg$parsegroupByClause();
+                  s7 = peg$parsehavingClause();
                   if (s7 === peg$FAILED) {
                     s7 = peg$c1;
                   }
                   if (s7 !== peg$FAILED) {
-                    s8 = peg$parsehavingClause();
+                    s8 = peg$currPos;
+                    peg$reportedPos = peg$currPos;
+                    s9 = peg$c2();
+                    if (s9) {
+                      s9 = peg$c3;
+                    } else {
+                      s9 = peg$c0;
+                    }
+                    if (s9 !== peg$FAILED) {
+                      s10 = peg$parsewindowClause();
+                      if (s10 !== peg$FAILED) {
+                        s9 = [s9, s10];
+                        s8 = s9;
+                      } else {
+                        peg$currPos = s8;
+                        s8 = peg$c0;
+                      }
+                    } else {
+                      peg$currPos = s8;
+                      s8 = peg$c0;
+                    }
                     if (s8 === peg$FAILED) {
                       s8 = peg$c1;
                     }
                     if (s8 !== peg$FAILED) {
-                      s9 = peg$currPos;
-                      peg$reportedPos = peg$currPos;
-                      s10 = peg$c2();
-                      if (s10) {
-                        s10 = peg$c3;
-                      } else {
-                        s10 = peg$c0;
-                      }
-                      if (s10 !== peg$FAILED) {
-                        s11 = peg$parsewindowClause();
-                        if (s11 !== peg$FAILED) {
-                          s10 = [s10, s11];
-                          s9 = s10;
-                        } else {
-                          peg$currPos = s9;
-                          s9 = peg$c0;
-                        }
-                      } else {
-                        peg$currPos = s9;
-                        s9 = peg$c0;
-                      }
-                      if (s9 === peg$FAILED) {
-                        s9 = peg$c1;
-                      }
-                      if (s9 !== peg$FAILED) {
-                        s1 = [s1, s2, s3, s4, s5, s6, s7, s8, s9];
-                        s0 = s1;
-                      } else {
-                        peg$currPos = s0;
-                        s0 = peg$c0;
-                      }
+                      s1 = [s1, s2, s3, s4, s5, s6, s7, s8];
+                      s0 = s1;
                     } else {
                       peg$currPos = s0;
                       s0 = peg$c0;
@@ -11814,6 +11949,7 @@ module.exports = (function() {
     }
 
     function peg$parsequerySpecOption() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseALL_SYMBOL();
@@ -11843,6 +11979,7 @@ module.exports = (function() {
     }
 
     function peg$parselimitClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -11865,6 +12002,7 @@ module.exports = (function() {
     }
 
     function peg$parsesimpleLimitClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -11887,6 +12025,7 @@ module.exports = (function() {
     }
 
     function peg$parselimitOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -11929,6 +12068,7 @@ module.exports = (function() {
     }
 
     function peg$parselimitOption() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseidentifier();
@@ -11949,6 +12089,7 @@ module.exports = (function() {
     }
 
     function peg$parseintoClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -12088,6 +12229,7 @@ module.exports = (function() {
     }
 
     function peg$parseprocedureAnalyseClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -12162,6 +12304,7 @@ module.exports = (function() {
     }
 
     function peg$parsehavingClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -12184,6 +12327,7 @@ module.exports = (function() {
     }
 
     function peg$parsewindowClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -12245,6 +12389,7 @@ module.exports = (function() {
     }
 
     function peg$parsewindowDefinition() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -12273,6 +12418,7 @@ module.exports = (function() {
     }
 
     function peg$parsewindowSpec() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -12301,6 +12447,7 @@ module.exports = (function() {
     }
 
     function peg$parsewindowSpecDetails() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -12367,6 +12514,7 @@ module.exports = (function() {
     }
 
     function peg$parsewindowFrameClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -12398,6 +12546,7 @@ module.exports = (function() {
     }
 
     function peg$parsewindowFrameUnits() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseROWS_SYMBOL();
@@ -12412,6 +12561,7 @@ module.exports = (function() {
     }
 
     function peg$parsewindowFrameExtent() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsewindowFrameStart();
@@ -12423,6 +12573,7 @@ module.exports = (function() {
     }
 
     function peg$parsewindowFrameStart() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -12525,6 +12676,7 @@ module.exports = (function() {
     }
 
     function peg$parsewindowFrameBetween() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -12559,6 +12711,7 @@ module.exports = (function() {
     }
 
     function peg$parsewindowFrameBound() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$parsewindowFrameStart();
@@ -12647,6 +12800,7 @@ module.exports = (function() {
     }
 
     function peg$parsewindowFrameExclusion() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -12706,6 +12860,7 @@ module.exports = (function() {
     }
 
     function peg$parsewithClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -12776,6 +12931,7 @@ module.exports = (function() {
     }
 
     function peg$parsecommonTableExpression() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -12813,6 +12969,7 @@ module.exports = (function() {
     }
 
     function peg$parsegroupByClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -12850,6 +13007,7 @@ module.exports = (function() {
     }
 
     function peg$parseolapOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -12901,6 +13059,7 @@ module.exports = (function() {
     }
 
     function peg$parseorderClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -12929,6 +13088,7 @@ module.exports = (function() {
     }
 
     function peg$parsedirection() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseASC_SYMBOL();
@@ -12940,6 +13100,7 @@ module.exports = (function() {
     }
 
     function peg$parsefromClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -12965,6 +13126,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableReferenceList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -13020,6 +13182,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableValueConstructor() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -13081,6 +13244,7 @@ module.exports = (function() {
     }
 
     function peg$parseexplicitTable() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -13103,6 +13267,7 @@ module.exports = (function() {
     }
 
     function peg$parserowValueExplicit() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -13140,6 +13305,7 @@ module.exports = (function() {
     }
 
     function peg$parseselectOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$parsequerySpecOption();
@@ -13209,6 +13375,7 @@ module.exports = (function() {
     }
 
     function peg$parselockingClauseList() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = [];
@@ -13226,6 +13393,7 @@ module.exports = (function() {
     }
 
     function peg$parselockingClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -13341,6 +13509,7 @@ module.exports = (function() {
     }
 
     function peg$parselockStrengh() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parseUPDATE_SYMBOL();
@@ -13372,6 +13541,7 @@ module.exports = (function() {
     }
 
     function peg$parselockedRowAction() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -13397,6 +13567,7 @@ module.exports = (function() {
     }
 
     function peg$parseselectItemList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -13455,6 +13626,7 @@ module.exports = (function() {
     }
 
     function peg$parseselectItem() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parsetableWild();
@@ -13483,6 +13655,7 @@ module.exports = (function() {
     }
 
     function peg$parseselectAlias() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -13511,6 +13684,7 @@ module.exports = (function() {
     }
 
     function peg$parsewhereClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -13533,6 +13707,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableReference() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -13612,6 +13787,7 @@ module.exports = (function() {
     }
 
     function peg$parseescapedTableReference() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -13639,6 +13815,7 @@ module.exports = (function() {
     }
 
     function peg$parsejoinedTable() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -13772,6 +13949,7 @@ module.exports = (function() {
     }
 
     function peg$parsenaturalJoinType() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -13838,6 +14016,7 @@ module.exports = (function() {
     }
 
     function peg$parseinnerJoinType() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -13869,6 +14048,7 @@ module.exports = (function() {
     }
 
     function peg$parseouterJoinType() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -13903,6 +14083,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableFactor() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parsesingleTable();
@@ -13943,6 +14124,7 @@ module.exports = (function() {
     }
 
     function peg$parsesingleTable() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -13986,6 +14168,7 @@ module.exports = (function() {
     }
 
     function peg$parsesingleTableParens() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -14017,6 +14200,7 @@ module.exports = (function() {
     }
 
     function peg$parsederivedTable() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -14118,6 +14302,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableReferenceListParens() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -14149,6 +14334,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableFunction() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -14210,6 +14396,7 @@ module.exports = (function() {
     }
 
     function peg$parsecolumnsClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -14283,6 +14470,7 @@ module.exports = (function() {
     }
 
     function peg$parsejtColumn() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -14416,6 +14604,7 @@ module.exports = (function() {
     }
 
     function peg$parseonEmptyOrError() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -14461,6 +14650,7 @@ module.exports = (function() {
     }
 
     function peg$parseonEmpty() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -14489,6 +14679,7 @@ module.exports = (function() {
     }
 
     function peg$parseonError() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -14517,6 +14708,7 @@ module.exports = (function() {
     }
 
     function peg$parsejtOnResponse() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parseERROR_SYMBOL();
@@ -14545,6 +14737,7 @@ module.exports = (function() {
     }
 
     function peg$parseunionOption() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseDISTINCT_SYMBOL();
@@ -14556,6 +14749,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableAlias() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -14604,6 +14798,7 @@ module.exports = (function() {
     }
 
     function peg$parseindexHintList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -14659,6 +14854,7 @@ module.exports = (function() {
     }
 
     function peg$parseindexHint() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -14755,6 +14951,7 @@ module.exports = (function() {
     }
 
     function peg$parseindexHintType() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseFORCE_SYMBOL();
@@ -14766,6 +14963,7 @@ module.exports = (function() {
     }
 
     function peg$parsekeyOrIndex() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseKEY_SYMBOL();
@@ -14777,6 +14975,7 @@ module.exports = (function() {
     }
 
     function peg$parseconstraintKeyType() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -14819,6 +15018,7 @@ module.exports = (function() {
     }
 
     function peg$parseindexHintClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -14875,6 +15075,7 @@ module.exports = (function() {
     }
 
     function peg$parseindexList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -14930,6 +15131,7 @@ module.exports = (function() {
     }
 
     function peg$parseindexListElement() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseidentifier();
@@ -14941,6 +15143,7 @@ module.exports = (function() {
     }
 
     function peg$parseupdateStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
 
       s0 = peg$currPos;
@@ -15049,6 +15252,7 @@ module.exports = (function() {
     }
 
     function peg$parsetransactionOrLockingStatement() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsetransactionStatement();
@@ -15066,6 +15270,7 @@ module.exports = (function() {
     }
 
     function peg$parsetransactionStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -15177,6 +15382,7 @@ module.exports = (function() {
     }
 
     function peg$parsebeginWork() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -15202,6 +15408,7 @@ module.exports = (function() {
     }
 
     function peg$parsetransactionCharacteristic() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -15262,6 +15469,7 @@ module.exports = (function() {
     }
 
     function peg$parsesavepointStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -15419,6 +15627,7 @@ module.exports = (function() {
     }
 
     function peg$parselockStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -15573,6 +15782,7 @@ module.exports = (function() {
     }
 
     function peg$parselockItem() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -15604,6 +15814,7 @@ module.exports = (function() {
     }
 
     function peg$parselockOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -15649,6 +15860,7 @@ module.exports = (function() {
     }
 
     function peg$parsexaStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
       s0 = peg$currPos;
@@ -15848,6 +16060,7 @@ module.exports = (function() {
     }
 
     function peg$parsexaConvert() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -15893,6 +16106,7 @@ module.exports = (function() {
     }
 
     function peg$parsexid() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -15955,6 +16169,7 @@ module.exports = (function() {
     }
 
     function peg$parseresetOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -16026,6 +16241,7 @@ module.exports = (function() {
     }
 
     function peg$parsemasterResetOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -16051,6 +16267,7 @@ module.exports = (function() {
     }
 
     function peg$parsereplicationStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -16282,6 +16499,7 @@ module.exports = (function() {
     }
 
     function peg$parsereplicationLoad() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -16333,6 +16551,7 @@ module.exports = (function() {
     }
 
     function peg$parsechangeMaster() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -16376,6 +16595,7 @@ module.exports = (function() {
     }
 
     function peg$parsechangeMasterOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -16431,6 +16651,7 @@ module.exports = (function() {
     }
 
     function peg$parsemasterOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -17129,6 +17350,7 @@ module.exports = (function() {
     }
 
     function peg$parseprivilegeCheckDef() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseuserIdentifierOrText();
@@ -17140,6 +17362,7 @@ module.exports = (function() {
     }
 
     function peg$parsetablePrimaryKeyCheckDef() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseSTREAM_SYMBOL();
@@ -17154,6 +17377,7 @@ module.exports = (function() {
     }
 
     function peg$parsemasterTlsCiphersuitesDef() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseSINGLE_QUOTED_TEXT();
@@ -17165,6 +17389,7 @@ module.exports = (function() {
     }
 
     function peg$parsemasterFileDef() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -17262,6 +17487,7 @@ module.exports = (function() {
     }
 
     function peg$parseserverIdList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -17340,6 +17566,7 @@ module.exports = (function() {
     }
 
     function peg$parsechangeReplication() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -17442,6 +17669,7 @@ module.exports = (function() {
     }
 
     function peg$parsefilterDefinition() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -17713,6 +17941,7 @@ module.exports = (function() {
     }
 
     function peg$parsefilterDbList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -17768,6 +17997,7 @@ module.exports = (function() {
     }
 
     function peg$parsefilterTableList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -17823,6 +18053,7 @@ module.exports = (function() {
     }
 
     function peg$parsefilterStringList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -17878,6 +18109,7 @@ module.exports = (function() {
     }
 
     function peg$parsefilterDbPairList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -17933,6 +18165,7 @@ module.exports = (function() {
     }
 
     function peg$parseslave() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -18037,6 +18270,7 @@ module.exports = (function() {
     }
 
     function peg$parseslaveUntilOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -18153,6 +18387,7 @@ module.exports = (function() {
     }
 
     function peg$parseslaveConnectionOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -18291,6 +18526,7 @@ module.exports = (function() {
     }
 
     function peg$parseslaveThreadOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -18346,6 +18582,7 @@ module.exports = (function() {
     }
 
     function peg$parseslaveThreadOption() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseRELAY_THREAD_SYMBOL();
@@ -18357,6 +18594,7 @@ module.exports = (function() {
     }
 
     function peg$parsegroupReplication() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -18382,6 +18620,7 @@ module.exports = (function() {
     }
 
     function peg$parsepreparedStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -18448,6 +18687,7 @@ module.exports = (function() {
     }
 
     function peg$parseexecuteStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -18493,6 +18733,7 @@ module.exports = (function() {
     }
 
     function peg$parseexecuteVarList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -18548,6 +18789,7 @@ module.exports = (function() {
     }
 
     function peg$parsecloneStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12;
 
       s0 = peg$currPos;
@@ -18713,6 +18955,7 @@ module.exports = (function() {
     }
 
     function peg$parsedataDirSSL() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$parsessl();
@@ -18762,6 +19005,7 @@ module.exports = (function() {
     }
 
     function peg$parsessl() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -18793,6 +19037,7 @@ module.exports = (function() {
     }
 
     function peg$parseaccountManagementStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -18859,6 +19104,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterUser() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -18916,6 +19162,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterUserTail() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
       s0 = peg$currPos;
@@ -19272,6 +19519,7 @@ module.exports = (function() {
     }
 
     function peg$parseuserFunction() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -19294,6 +19542,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateUser() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -19360,6 +19609,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateUserTail() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -19411,6 +19661,7 @@ module.exports = (function() {
     }
 
     function peg$parsedefaultRoleClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -19462,6 +19713,7 @@ module.exports = (function() {
     }
 
     function peg$parserequireClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -19493,6 +19745,7 @@ module.exports = (function() {
     }
 
     function peg$parseconnectOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -19654,6 +19907,7 @@ module.exports = (function() {
     }
 
     function peg$parseaccountLockPasswordExpireOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -19840,6 +20094,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropUser() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -19897,6 +20152,7 @@ module.exports = (function() {
     }
 
     function peg$parsegrant() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11;
 
       s0 = peg$currPos;
@@ -20135,6 +20391,7 @@ module.exports = (function() {
     }
 
     function peg$parsegrantTargetList() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -20186,6 +20443,7 @@ module.exports = (function() {
     }
 
     function peg$parsegrantOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -20264,6 +20522,7 @@ module.exports = (function() {
     }
 
     function peg$parseexceptRoleList() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -20286,6 +20545,7 @@ module.exports = (function() {
     }
 
     function peg$parsewithRoles() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -20340,6 +20600,7 @@ module.exports = (function() {
     }
 
     function peg$parsegrantAs() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -20371,6 +20632,7 @@ module.exports = (function() {
     }
 
     function peg$parseversionedRequireClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -20399,6 +20661,7 @@ module.exports = (function() {
     }
 
     function peg$parserenameUser() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11;
 
       s0 = peg$currPos;
@@ -20502,6 +20765,7 @@ module.exports = (function() {
     }
 
     function peg$parserevoke() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
 
       s0 = peg$currPos;
@@ -20716,6 +20980,7 @@ module.exports = (function() {
     }
 
     function peg$parseonTypeTo() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -20808,6 +21073,7 @@ module.exports = (function() {
     }
 
     function peg$parseaclType() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseTABLE_SYMBOL();
@@ -20822,6 +21088,7 @@ module.exports = (function() {
     }
 
     function peg$parseroleOrPrivilegesList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -20877,6 +21144,7 @@ module.exports = (function() {
     }
 
     function peg$parseroleOrPrivilege() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -21210,6 +21478,7 @@ module.exports = (function() {
     }
 
     function peg$parsegrantIdentifier() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -21321,6 +21590,7 @@ module.exports = (function() {
     }
 
     function peg$parserequireList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -21382,6 +21652,7 @@ module.exports = (function() {
     }
 
     function peg$parserequireListElement() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -21438,6 +21709,7 @@ module.exports = (function() {
     }
 
     function peg$parsegrantOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -21528,6 +21800,7 @@ module.exports = (function() {
     }
 
     function peg$parsesetRole() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -21675,6 +21948,7 @@ module.exports = (function() {
     }
 
     function peg$parseroleList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -21730,6 +22004,7 @@ module.exports = (function() {
     }
 
     function peg$parserole() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -21772,6 +22047,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableAdministrationStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -21982,6 +22258,7 @@ module.exports = (function() {
     }
 
     function peg$parsehistogram() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -22074,6 +22351,7 @@ module.exports = (function() {
     }
 
     function peg$parsecheckOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -22111,6 +22389,7 @@ module.exports = (function() {
     }
 
     function peg$parserepairType() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseQUICK_SYMBOL();
@@ -22125,6 +22404,7 @@ module.exports = (function() {
     }
 
     function peg$parseinstallUninstallStatment() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -22273,6 +22553,7 @@ module.exports = (function() {
     }
 
     function peg$parsesetStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -22295,6 +22576,7 @@ module.exports = (function() {
     }
 
     function peg$parsestartOptionValueList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
       s0 = peg$currPos;
@@ -22610,6 +22892,7 @@ module.exports = (function() {
     }
 
     function peg$parsetransactionCharacteristics() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -22669,6 +22952,7 @@ module.exports = (function() {
     }
 
     function peg$parsetransactionAccessMode() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -22694,6 +22978,7 @@ module.exports = (function() {
     }
 
     function peg$parseisolationLevel() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -22759,6 +23044,7 @@ module.exports = (function() {
     }
 
     function peg$parseoptionValueListContinued() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = [];
@@ -22800,6 +23086,7 @@ module.exports = (function() {
     }
 
     function peg$parseoptionValueNoOptionType() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -22951,6 +23238,7 @@ module.exports = (function() {
     }
 
     function peg$parseoptionValue() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -22988,6 +23276,7 @@ module.exports = (function() {
     }
 
     function peg$parsesetSystemVariable() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -23019,6 +23308,7 @@ module.exports = (function() {
     }
 
     function peg$parsestartOptionValueListFollowingOptionType() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -23058,6 +23348,7 @@ module.exports = (function() {
     }
 
     function peg$parseoptionValueFollowingOptionType() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -23086,6 +23377,7 @@ module.exports = (function() {
     }
 
     function peg$parsesetExprOrDefault() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parseexpr();
@@ -23132,6 +23424,7 @@ module.exports = (function() {
     }
 
     function peg$parseshowStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
       s0 = peg$currPos;
@@ -24359,6 +24652,7 @@ module.exports = (function() {
     }
 
     function peg$parseshowCommandType() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$parseFULL_SYMBOL();
@@ -24399,6 +24693,7 @@ module.exports = (function() {
     }
 
     function peg$parsenonBlocking() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -24430,6 +24725,7 @@ module.exports = (function() {
     }
 
     function peg$parsefromOrIn() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseFROM_SYMBOL();
@@ -24441,6 +24737,7 @@ module.exports = (function() {
     }
 
     function peg$parseinDb() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -24463,6 +24760,7 @@ module.exports = (function() {
     }
 
     function peg$parseprofileType() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -24537,6 +24835,7 @@ module.exports = (function() {
     }
 
     function peg$parseotherAdministrativeStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -24760,6 +25059,7 @@ module.exports = (function() {
     }
 
     function peg$parsekeyCacheListOrParts() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsekeyCacheList();
@@ -24771,6 +25071,7 @@ module.exports = (function() {
     }
 
     function peg$parsekeyCacheList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -24826,6 +25127,7 @@ module.exports = (function() {
     }
 
     function peg$parseassignToKeycache() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -24851,6 +25153,7 @@ module.exports = (function() {
     }
 
     function peg$parseassignToKeycachePartition() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -24900,6 +25203,7 @@ module.exports = (function() {
     }
 
     function peg$parsecacheKeyList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -24937,6 +25241,7 @@ module.exports = (function() {
     }
 
     function peg$parsekeyUsageElement() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseidentifier();
@@ -24948,6 +25253,7 @@ module.exports = (function() {
     }
 
     function peg$parsekeyUsageList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -25003,6 +25309,7 @@ module.exports = (function() {
     }
 
     function peg$parseflushOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$parseDES_KEY_FILE_SYMBOL();
@@ -25121,6 +25428,7 @@ module.exports = (function() {
     }
 
     function peg$parselogType() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseBINARY_SYMBOL();
@@ -25141,6 +25449,7 @@ module.exports = (function() {
     }
 
     function peg$parseflushTables() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -25209,6 +25518,7 @@ module.exports = (function() {
     }
 
     function peg$parseflushTablesOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -25266,6 +25576,7 @@ module.exports = (function() {
     }
 
     function peg$parsepreloadTail() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -25323,6 +25634,7 @@ module.exports = (function() {
     }
 
     function peg$parsepreloadList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -25378,6 +25690,7 @@ module.exports = (function() {
     }
 
     function peg$parsepreloadKeys() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -25426,6 +25739,7 @@ module.exports = (function() {
     }
 
     function peg$parseadminPartition() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -25460,6 +25774,7 @@ module.exports = (function() {
     }
 
     function peg$parseresourceGroupManagement() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsecreateResourceGroup();
@@ -25477,6 +25792,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateResourceGroup() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
 
       s0 = peg$currPos;
@@ -25562,6 +25878,7 @@ module.exports = (function() {
     }
 
     function peg$parseresourceGroupVcpuList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -25638,6 +25955,7 @@ module.exports = (function() {
     }
 
     function peg$parsevcpuNumOrRange() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -25677,6 +25995,7 @@ module.exports = (function() {
     }
 
     function peg$parseresourceGroupPriority() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -25708,6 +26027,7 @@ module.exports = (function() {
     }
 
     function peg$parseresourceGroupEnableDisable() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseENABLE_SYMBOL();
@@ -25719,6 +26039,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterResourceGroup() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -25789,6 +26110,7 @@ module.exports = (function() {
     }
 
     function peg$parsesetResourceGroup() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -25846,6 +26168,7 @@ module.exports = (function() {
     }
 
     function peg$parsethreadIdList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -25907,6 +26230,7 @@ module.exports = (function() {
     }
 
     function peg$parsedropResourceGroup() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -25950,6 +26274,7 @@ module.exports = (function() {
     }
 
     function peg$parseutilityStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parsedescribeStatement();
@@ -25990,6 +26315,7 @@ module.exports = (function() {
     }
 
     function peg$parsedescribeStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -26030,6 +26356,7 @@ module.exports = (function() {
     }
 
     function peg$parseexplainStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -26209,6 +26536,7 @@ module.exports = (function() {
     }
 
     function peg$parseexplainableStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$parseselectStatement();
@@ -26284,6 +26612,7 @@ module.exports = (function() {
     }
 
     function peg$parsehelpCommand() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -26306,6 +26635,7 @@ module.exports = (function() {
     }
 
     function peg$parseuseCommand() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -26328,6 +26658,7 @@ module.exports = (function() {
     }
 
     function peg$parseexpr() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -26356,6 +26687,7 @@ module.exports = (function() {
     }
 
     function peg$parseexprPrimary() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -26427,6 +26759,7 @@ module.exports = (function() {
     }
 
     function peg$parseexprTail() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -26492,6 +26825,7 @@ module.exports = (function() {
     }
 
     function peg$parseboolPri() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -26520,6 +26854,7 @@ module.exports = (function() {
     }
 
     function peg$parseboolPriTail() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -26660,6 +26995,7 @@ module.exports = (function() {
     }
 
     function peg$parsecompOp() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseEQUAL_OPERATOR();
@@ -26686,6 +27022,7 @@ module.exports = (function() {
     }
 
     function peg$parsepredicate() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -26789,6 +27126,7 @@ module.exports = (function() {
     }
 
     function peg$parsepredicateOperations() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -26920,6 +27258,7 @@ module.exports = (function() {
     }
 
     function peg$parsebitExpr() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -26948,6 +27287,7 @@ module.exports = (function() {
     }
 
     function peg$parsebitExprTail() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -27112,6 +27452,7 @@ module.exports = (function() {
     }
 
     function peg$parsesimpleExpr() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -27140,6 +27481,7 @@ module.exports = (function() {
     }
 
     function peg$parsesimpleExprPrimary() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -27751,6 +28093,7 @@ module.exports = (function() {
     }
 
     function peg$parsesimpleExprTail() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -27828,6 +28171,7 @@ module.exports = (function() {
     }
 
     function peg$parsearrayCast() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -27856,6 +28200,7 @@ module.exports = (function() {
     }
 
     function peg$parsejsonOperator() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -27919,6 +28264,7 @@ module.exports = (function() {
     }
 
     function peg$parsesumExpr() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
 
       s0 = peg$currPos;
@@ -28772,6 +29118,7 @@ module.exports = (function() {
     }
 
     function peg$parsegroupingOperation() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -28806,6 +29153,7 @@ module.exports = (function() {
     }
 
     function peg$parsewindowFunctionCall() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
       s0 = peg$currPos;
@@ -29042,6 +29390,7 @@ module.exports = (function() {
     }
 
     function peg$parsewindowingClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -29067,6 +29416,7 @@ module.exports = (function() {
     }
 
     function peg$parseleadLagInfo() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -29115,6 +29465,7 @@ module.exports = (function() {
     }
 
     function peg$parsenullTreatment() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -29140,6 +29491,7 @@ module.exports = (function() {
     }
 
     function peg$parsejsonFunction() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -29233,6 +29585,7 @@ module.exports = (function() {
     }
 
     function peg$parseinSumExpr() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -29258,6 +29611,7 @@ module.exports = (function() {
     }
 
     function peg$parseidentListArg() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$parseidentList();
@@ -29289,6 +29643,7 @@ module.exports = (function() {
     }
 
     function peg$parseidentList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -29344,6 +29699,7 @@ module.exports = (function() {
     }
 
     function peg$parsefulltextOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -29453,6 +29809,7 @@ module.exports = (function() {
     }
 
     function peg$parseruntimeFunctionCall() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
 
       s0 = peg$currPos;
@@ -31200,6 +31557,7 @@ module.exports = (function() {
     }
 
     function peg$parsegeometryFunction() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -31416,6 +31774,7 @@ module.exports = (function() {
     }
 
     function peg$parsetimeFunctionParameters() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -31447,6 +31806,7 @@ module.exports = (function() {
     }
 
     function peg$parsefractionalPrecision() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -31475,6 +31835,7 @@ module.exports = (function() {
     }
 
     function peg$parseweightStringLevels() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -31567,6 +31928,7 @@ module.exports = (function() {
     }
 
     function peg$parseweightStringLevelListItem() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -31615,6 +31977,7 @@ module.exports = (function() {
     }
 
     function peg$parsedateTimeTtype() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseDATE_SYMBOL();
@@ -31632,6 +31995,7 @@ module.exports = (function() {
     }
 
     function peg$parsetrimFunction() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -31793,6 +32157,7 @@ module.exports = (function() {
     }
 
     function peg$parsesubstringFunction() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
       s0 = peg$currPos;
@@ -31913,6 +32278,7 @@ module.exports = (function() {
     }
 
     function peg$parsefunctionCall() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -31982,6 +32348,7 @@ module.exports = (function() {
     }
 
     function peg$parseudfExprList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -32037,6 +32404,7 @@ module.exports = (function() {
     }
 
     function peg$parseudfExpr() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -32062,6 +32430,7 @@ module.exports = (function() {
     }
 
     function peg$parsevariable() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseuserVariable();
@@ -32073,6 +32442,7 @@ module.exports = (function() {
     }
 
     function peg$parseuserVariable() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -32098,6 +32468,7 @@ module.exports = (function() {
     }
 
     function peg$parsesystemVariable() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -32138,6 +32509,7 @@ module.exports = (function() {
     }
 
     function peg$parseinternalVariableName() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -32224,6 +32596,7 @@ module.exports = (function() {
     }
 
     function peg$parsewhenExpression() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -32246,6 +32619,7 @@ module.exports = (function() {
     }
 
     function peg$parsethenExpression() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -32268,6 +32642,7 @@ module.exports = (function() {
     }
 
     function peg$parseelseExpression() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -32290,6 +32665,7 @@ module.exports = (function() {
     }
 
     function peg$parsecastType() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -32554,6 +32930,7 @@ module.exports = (function() {
     }
 
     function peg$parseexprList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -32609,6 +32986,7 @@ module.exports = (function() {
     }
 
     function peg$parseexprListWithParentheses() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -32637,6 +33015,7 @@ module.exports = (function() {
     }
 
     function peg$parseexprWithParentheses() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -32665,6 +33044,7 @@ module.exports = (function() {
     }
 
     function peg$parsesimpleExprWithParentheses() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -32693,6 +33073,7 @@ module.exports = (function() {
     }
 
     function peg$parseorderList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -32748,6 +33129,7 @@ module.exports = (function() {
     }
 
     function peg$parseorderExpression() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -32773,6 +33155,7 @@ module.exports = (function() {
     }
 
     function peg$parsegroupList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -32828,6 +33211,7 @@ module.exports = (function() {
     }
 
     function peg$parsechannel() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -32868,6 +33252,7 @@ module.exports = (function() {
     }
 
     function peg$parsecompoundStatement() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsesimpleStatement();
@@ -32915,6 +33300,7 @@ module.exports = (function() {
     }
 
     function peg$parsereturnStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -32937,6 +33323,7 @@ module.exports = (function() {
     }
 
     function peg$parseifStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -32971,6 +33358,7 @@ module.exports = (function() {
     }
 
     function peg$parseifBody() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -33033,6 +33421,7 @@ module.exports = (function() {
     }
 
     function peg$parsethenStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -33055,6 +33444,7 @@ module.exports = (function() {
     }
 
     function peg$parsecompoundStatementList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = [];
@@ -33100,6 +33490,7 @@ module.exports = (function() {
     }
 
     function peg$parsecaseStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -33189,6 +33580,7 @@ module.exports = (function() {
     }
 
     function peg$parseelseStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -33211,6 +33603,7 @@ module.exports = (function() {
     }
 
     function peg$parselabeledBlock() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -33242,6 +33635,7 @@ module.exports = (function() {
     }
 
     function peg$parselabel() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -33264,6 +33658,7 @@ module.exports = (function() {
     }
 
     function peg$parsebeginEndBlock() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -33304,6 +33699,7 @@ module.exports = (function() {
     }
 
     function peg$parselabeledControl() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -33335,6 +33731,7 @@ module.exports = (function() {
     }
 
     function peg$parseunlabeledControl() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseloopBlock();
@@ -33349,6 +33746,7 @@ module.exports = (function() {
     }
 
     function peg$parseloopBlock() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -33383,6 +33781,7 @@ module.exports = (function() {
     }
 
     function peg$parsewhileDoBlock() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -33429,6 +33828,7 @@ module.exports = (function() {
     }
 
     function peg$parserepeatUntilBlock() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -33475,6 +33875,7 @@ module.exports = (function() {
     }
 
     function peg$parsespDeclarations() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = [];
@@ -33520,6 +33921,7 @@ module.exports = (function() {
     }
 
     function peg$parsespDeclaration() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -33551,6 +33953,7 @@ module.exports = (function() {
     }
 
     function peg$parsevariableDeclaration() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -33605,6 +34008,7 @@ module.exports = (function() {
     }
 
     function peg$parseconditionDeclaration() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -33639,6 +34043,7 @@ module.exports = (function() {
     }
 
     function peg$parsespCondition() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseulong_number();
@@ -33650,6 +34055,7 @@ module.exports = (function() {
     }
 
     function peg$parsesqlstate() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -33681,6 +34087,7 @@ module.exports = (function() {
     }
 
     function peg$parsehandlerDeclaration() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -33766,6 +34173,7 @@ module.exports = (function() {
     }
 
     function peg$parsehandlerCondition() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parsespCondition();
@@ -33800,6 +34208,7 @@ module.exports = (function() {
     }
 
     function peg$parsecursorDeclaration() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -33834,6 +34243,7 @@ module.exports = (function() {
     }
 
     function peg$parseiterateStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -33856,6 +34266,7 @@ module.exports = (function() {
     }
 
     function peg$parseleaveStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -33878,6 +34289,7 @@ module.exports = (function() {
     }
 
     function peg$parsegetDiagnostics() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11;
 
       s0 = peg$currPos;
@@ -34047,6 +34459,7 @@ module.exports = (function() {
     }
 
     function peg$parsesignalAllowedExpr() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseliteral();
@@ -34061,6 +34474,7 @@ module.exports = (function() {
     }
 
     function peg$parsestatementInformationItem() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -34095,6 +34509,7 @@ module.exports = (function() {
     }
 
     function peg$parseconditionInformationItem() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -34129,6 +34544,7 @@ module.exports = (function() {
     }
 
     function peg$parsesignalInformationItemName() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseCLASS_ORIGIN_SYMBOL();
@@ -34170,6 +34586,7 @@ module.exports = (function() {
     }
 
     function peg$parsesignalStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
       s0 = peg$currPos;
@@ -34257,6 +34674,7 @@ module.exports = (function() {
     }
 
     function peg$parseresignalStatement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9;
 
       s0 = peg$currPos;
@@ -34347,6 +34765,7 @@ module.exports = (function() {
     }
 
     function peg$parsesignalInformationItem() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -34375,6 +34794,7 @@ module.exports = (function() {
     }
 
     function peg$parsecursorOpen() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -34397,6 +34817,7 @@ module.exports = (function() {
     }
 
     function peg$parsecursorClose() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -34419,6 +34840,7 @@ module.exports = (function() {
     }
 
     function peg$parsecursorFetch() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -34479,6 +34901,7 @@ module.exports = (function() {
     }
 
     function peg$parseschedule() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -34570,6 +34993,7 @@ module.exports = (function() {
     }
 
     function peg$parsecolumnDefinition() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -34601,6 +35025,7 @@ module.exports = (function() {
     }
 
     function peg$parsecheckOrReferences() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -34632,6 +35057,7 @@ module.exports = (function() {
     }
 
     function peg$parsecheckConstraint() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -34654,6 +35080,7 @@ module.exports = (function() {
     }
 
     function peg$parseconstraintEnforcement() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -34679,6 +35106,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableConstraintDef() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7;
 
       s0 = peg$currPos;
@@ -34982,6 +35410,7 @@ module.exports = (function() {
     }
 
     function peg$parseconstraintName() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -35007,6 +35436,7 @@ module.exports = (function() {
     }
 
     function peg$parsefieldDefinition() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11, s12;
 
       s0 = peg$currPos;
@@ -35166,6 +35596,7 @@ module.exports = (function() {
     }
 
     function peg$parsecolumnAttribute() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -35516,6 +35947,7 @@ module.exports = (function() {
     }
 
     function peg$parsecolumnFormat() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseFIXED_SYMBOL();
@@ -35530,6 +35962,7 @@ module.exports = (function() {
     }
 
     function peg$parsestorageMedia() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseDISK_SYMBOL();
@@ -35544,6 +35977,7 @@ module.exports = (function() {
     }
 
     function peg$parsegcolAttribute() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -35626,6 +36060,7 @@ module.exports = (function() {
     }
 
     function peg$parsereferences() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
 
       s0 = peg$currPos;
@@ -35818,6 +36253,7 @@ module.exports = (function() {
     }
 
     function peg$parsedeleteOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parseRESTRICT_SYMBOL();
@@ -35863,6 +36299,7 @@ module.exports = (function() {
     }
 
     function peg$parsekeyList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -35930,6 +36367,7 @@ module.exports = (function() {
     }
 
     function peg$parsekeyPart() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -35964,6 +36402,7 @@ module.exports = (function() {
     }
 
     function peg$parsekeyListWithExpression() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -36031,6 +36470,7 @@ module.exports = (function() {
     }
 
     function peg$parsekeyPartOrExpression() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parsekeyPart();
@@ -36059,6 +36499,7 @@ module.exports = (function() {
     }
 
     function peg$parsekeyListVariants() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -36110,6 +36551,7 @@ module.exports = (function() {
     }
 
     function peg$parseindexType() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseBTREE_SYMBOL();
@@ -36124,6 +36566,7 @@ module.exports = (function() {
     }
 
     function peg$parseindexOption() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsecommonIndexOption();
@@ -36135,6 +36578,7 @@ module.exports = (function() {
     }
 
     function peg$parsecommonIndexOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -36206,6 +36650,7 @@ module.exports = (function() {
     }
 
     function peg$parsevisibility() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseVISIBLE_SYMBOL();
@@ -36217,6 +36662,7 @@ module.exports = (function() {
     }
 
     function peg$parseindexTypeClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -36242,6 +36688,7 @@ module.exports = (function() {
     }
 
     function peg$parsefulltextIndexOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$parsecommonIndexOption();
@@ -36273,6 +36720,7 @@ module.exports = (function() {
     }
 
     function peg$parsedataTypeDefinition() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -36295,6 +36743,7 @@ module.exports = (function() {
     }
 
     function peg$parsedataType() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -37067,6 +37516,7 @@ module.exports = (function() {
     }
 
     function peg$parsenchar() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parseNCHAR_SYMBOL();
@@ -37092,6 +37542,7 @@ module.exports = (function() {
     }
 
     function peg$parserealType() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parseREAL_SYMBOL();
@@ -37120,6 +37571,7 @@ module.exports = (function() {
     }
 
     function peg$parsefieldLength() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -37151,6 +37603,7 @@ module.exports = (function() {
     }
 
     function peg$parsefieldOptions() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = [];
@@ -37180,6 +37633,7 @@ module.exports = (function() {
     }
 
     function peg$parsecharsetWithOptBinary() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$parseascii();
@@ -37254,6 +37708,7 @@ module.exports = (function() {
     }
 
     function peg$parseascii() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -37296,6 +37751,7 @@ module.exports = (function() {
     }
 
     function peg$parseunicode() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -37338,6 +37794,7 @@ module.exports = (function() {
     }
 
     function peg$parsewsNumCodepoints() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -37366,6 +37823,7 @@ module.exports = (function() {
     }
 
     function peg$parsetypeDatetimePrecision() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -37394,6 +37852,7 @@ module.exports = (function() {
     }
 
     function peg$parsecharsetName() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parsetextOrIdentifier();
@@ -37428,6 +37887,7 @@ module.exports = (function() {
     }
 
     function peg$parsecollationName() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parsetextOrIdentifier();
@@ -37482,6 +37942,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateTableOptions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -37543,6 +38004,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateTableOptionsSpaceSeparated() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = [];
@@ -37560,6 +38022,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateTableOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -37997,6 +38460,7 @@ module.exports = (function() {
     }
 
     function peg$parseformat() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$parseDEFAULT_SYMBOL();
@@ -38084,6 +38548,7 @@ module.exports = (function() {
     }
 
     function peg$parsemethod() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$parseNO_SYMBOL();
@@ -38283,6 +38748,7 @@ module.exports = (function() {
     }
 
     function peg$parseternaryOption() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseulong_number();
@@ -38294,6 +38760,7 @@ module.exports = (function() {
     }
 
     function peg$parsedefaultCollation() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -38334,6 +38801,7 @@ module.exports = (function() {
     }
 
     function peg$parsedefaultEncryption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -38374,6 +38842,7 @@ module.exports = (function() {
     }
 
     function peg$parsedefaultCharset() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -38414,6 +38883,7 @@ module.exports = (function() {
     }
 
     function peg$parsepartitionClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -38483,6 +38953,7 @@ module.exports = (function() {
     }
 
     function peg$parsepartitionTypeDef() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -38648,6 +39119,7 @@ module.exports = (function() {
     }
 
     function peg$parsesubPartitions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8;
 
       s0 = peg$currPos;
@@ -38760,6 +39232,7 @@ module.exports = (function() {
     }
 
     function peg$parsepartitionKeyAlgorithm() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -38800,6 +39273,7 @@ module.exports = (function() {
     }
 
     function peg$parsepartitionDefinitions() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -38867,6 +39341,7 @@ module.exports = (function() {
     }
 
     function peg$parsepartitionDefinition() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10, s11;
 
       s0 = peg$currPos;
@@ -39029,6 +39504,7 @@ module.exports = (function() {
     }
 
     function peg$parsepartitionValuesIn() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$parsepartitionValueItemListParen();
@@ -39099,6 +39575,7 @@ module.exports = (function() {
     }
 
     function peg$parsepartitionOption() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -39281,6 +39758,7 @@ module.exports = (function() {
     }
 
     function peg$parsesubpartitionDefinition() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -39314,6 +39792,7 @@ module.exports = (function() {
     }
 
     function peg$parsepartitionValueItemListParen() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -39381,6 +39860,7 @@ module.exports = (function() {
     }
 
     function peg$parsepartitionValueItem() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsebitExpr();
@@ -39392,6 +39872,7 @@ module.exports = (function() {
     }
 
     function peg$parsedefinerClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -39420,6 +39901,7 @@ module.exports = (function() {
     }
 
     function peg$parseifExists() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -39442,6 +39924,7 @@ module.exports = (function() {
     }
 
     function peg$parseifNotExists() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -39470,6 +39953,7 @@ module.exports = (function() {
     }
 
     function peg$parseprocedureParameter() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -39501,6 +39985,7 @@ module.exports = (function() {
     }
 
     function peg$parsefunctionParameter() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -39523,6 +40008,7 @@ module.exports = (function() {
     }
 
     function peg$parsecollate() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -39545,6 +40031,7 @@ module.exports = (function() {
     }
 
     function peg$parsetypeWithOptCollate() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -39570,6 +40057,7 @@ module.exports = (function() {
     }
 
     function peg$parseschemaIdentifierPair() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -39610,6 +40098,7 @@ module.exports = (function() {
     }
 
     function peg$parseviewRefList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -39665,6 +40154,7 @@ module.exports = (function() {
     }
 
     function peg$parseupdateList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -39720,6 +40210,7 @@ module.exports = (function() {
     }
 
     function peg$parseupdateElement() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -39751,6 +40242,7 @@ module.exports = (function() {
     }
 
     function peg$parsecharsetClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -39773,6 +40265,7 @@ module.exports = (function() {
     }
 
     function peg$parsecharset() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -39798,6 +40291,7 @@ module.exports = (function() {
     }
 
     function peg$parsefieldsClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -39829,6 +40323,7 @@ module.exports = (function() {
     }
 
     function peg$parsefieldTerm() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -39912,6 +40407,7 @@ module.exports = (function() {
     }
 
     function peg$parselinesClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -39943,6 +40439,7 @@ module.exports = (function() {
     }
 
     function peg$parselineTerm() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -39974,6 +40471,7 @@ module.exports = (function() {
     }
 
     function peg$parseuserList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -40029,6 +40527,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateUserList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -40084,6 +40583,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterUserList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -40139,6 +40639,7 @@ module.exports = (function() {
     }
 
     function peg$parsecreateUserEntry() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
 
       s0 = peg$currPos;
@@ -40348,6 +40849,7 @@ module.exports = (function() {
     }
 
     function peg$parsealterUserEntry() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6, s7, s8, s9, s10;
 
       s0 = peg$currPos;
@@ -40531,6 +41033,7 @@ module.exports = (function() {
     }
 
     function peg$parseretainCurrentPassword() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -40559,6 +41062,7 @@ module.exports = (function() {
     }
 
     function peg$parsediscardOldPassword() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -40587,6 +41091,7 @@ module.exports = (function() {
     }
 
     function peg$parsereplacePassword() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -40609,6 +41114,7 @@ module.exports = (function() {
     }
 
     function peg$parseuserIdentifierOrText() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -40651,6 +41157,7 @@ module.exports = (function() {
     }
 
     function peg$parseuser() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parseuserIdentifierOrText();
@@ -40679,6 +41186,7 @@ module.exports = (function() {
     }
 
     function peg$parselikeClause() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -40701,6 +41209,7 @@ module.exports = (function() {
     }
 
     function peg$parselikeOrWhere() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parselikeClause();
@@ -40712,6 +41221,7 @@ module.exports = (function() {
     }
 
     function peg$parseonlineOption() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseONLINE_SYMBOL();
@@ -40723,6 +41233,7 @@ module.exports = (function() {
     }
 
     function peg$parsenoWriteToBinLog() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseLOCAL_SYMBOL();
@@ -40734,6 +41245,7 @@ module.exports = (function() {
     }
 
     function peg$parseusePartition() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -40768,6 +41280,7 @@ module.exports = (function() {
     }
 
     function peg$parsefieldIdentifier() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parsedotIdentifier();
@@ -40796,6 +41309,7 @@ module.exports = (function() {
     }
 
     function peg$parsecolumnName() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -40847,6 +41361,7 @@ module.exports = (function() {
     }
 
     function peg$parsecolumnInternalRefList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -40914,6 +41429,7 @@ module.exports = (function() {
     }
 
     function peg$parseinsertIdentifier() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsefieldIdentifier();
@@ -40925,6 +41441,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableWild() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -40976,6 +41493,7 @@ module.exports = (function() {
     }
 
     function peg$parseviewName() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsequalifiedIdentifier();
@@ -40987,6 +41505,7 @@ module.exports = (function() {
     }
 
     function peg$parseviewRef() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsequalifiedIdentifier();
@@ -40998,6 +41517,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableName() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsequalifiedIdentifier();
@@ -41009,6 +41529,7 @@ module.exports = (function() {
     }
 
     function peg$parsefilterTableRef() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -41031,6 +41552,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableRefWithWildcard() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -41104,6 +41626,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableRef() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsequalifiedIdentifier();
@@ -41115,6 +41638,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableRefList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -41170,6 +41694,7 @@ module.exports = (function() {
     }
 
     function peg$parsetableAliasRefList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -41225,6 +41750,7 @@ module.exports = (function() {
     }
 
     function peg$parselabelIdentifier() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsepureIdentifier();
@@ -41236,6 +41762,7 @@ module.exports = (function() {
     }
 
     function peg$parseroleIdentifier() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsepureIdentifier();
@@ -41247,6 +41774,7 @@ module.exports = (function() {
     }
 
     function peg$parsepureIdentifier() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parseIDENTIFIER();
@@ -41281,6 +41809,7 @@ module.exports = (function() {
     }
 
     function peg$parseidentifier() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsepureIdentifier();
@@ -41292,6 +41821,7 @@ module.exports = (function() {
     }
 
     function peg$parseidentifierList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -41347,6 +41877,7 @@ module.exports = (function() {
     }
 
     function peg$parseidentifierListWithParentheses() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -41375,6 +41906,7 @@ module.exports = (function() {
     }
 
     function peg$parsequalifiedIdentifier() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -41400,6 +41932,7 @@ module.exports = (function() {
     }
 
     function peg$parsesimpleIdentifier() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -41471,6 +42004,7 @@ module.exports = (function() {
     }
 
     function peg$parsedotIdentifier() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -41493,6 +42027,7 @@ module.exports = (function() {
     }
 
     function peg$parseulong_number() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseINT_NUMBER();
@@ -41516,6 +42051,7 @@ module.exports = (function() {
     }
 
     function peg$parsereal_ulong_number() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseINT_NUMBER();
@@ -41533,6 +42069,7 @@ module.exports = (function() {
     }
 
     function peg$parseulonglong_number() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseINT_NUMBER();
@@ -41553,6 +42090,7 @@ module.exports = (function() {
     }
 
     function peg$parsereal_ulonglong_number() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parseINT_NUMBER();
@@ -41590,6 +42128,7 @@ module.exports = (function() {
     }
 
     function peg$parseliteral() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parsetextLiteral();
@@ -41633,6 +42172,7 @@ module.exports = (function() {
     }
 
     function peg$parsesignedLiteral() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parseliteral();
@@ -41675,6 +42215,7 @@ module.exports = (function() {
     }
 
     function peg$parsestringList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -41742,6 +42283,7 @@ module.exports = (function() {
     }
 
     function peg$parsetextString() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseSINGLE_QUOTED_TEXT();
@@ -41756,6 +42298,7 @@ module.exports = (function() {
     }
 
     function peg$parsetextStringHash() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parseSINGLE_QUOTED_TEXT();
@@ -41787,6 +42330,7 @@ module.exports = (function() {
     }
 
     function peg$parsetextLiteral() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -41834,6 +42378,7 @@ module.exports = (function() {
     }
 
     function peg$parsetextStringLiteralList() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -41889,6 +42434,7 @@ module.exports = (function() {
     }
 
     function peg$parsenumLiteral() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseINT_NUMBER();
@@ -41909,6 +42455,7 @@ module.exports = (function() {
     }
 
     function peg$parseboolLiteral() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseTRUE_SYMBOL();
@@ -41920,6 +42467,7 @@ module.exports = (function() {
     }
 
     function peg$parsenullLiteral() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseNULL_SYMBOL();
@@ -41931,6 +42479,7 @@ module.exports = (function() {
     }
 
     function peg$parsetemporalLiteral() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -41987,6 +42536,7 @@ module.exports = (function() {
     }
 
     function peg$parsefloatOptions() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsefieldLength();
@@ -41998,6 +42548,7 @@ module.exports = (function() {
     }
 
     function peg$parseprecision() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -42038,6 +42589,7 @@ module.exports = (function() {
     }
 
     function peg$parsetextOrIdentifier() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseidentifier();
@@ -42049,6 +42601,7 @@ module.exports = (function() {
     }
 
     function peg$parselValueIdentifier() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsepureIdentifier();
@@ -42060,6 +42613,7 @@ module.exports = (function() {
     }
 
     function peg$parseroleIdentifierOrText() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseroleIdentifier();
@@ -42071,6 +42625,7 @@ module.exports = (function() {
     }
 
     function peg$parsesizeNumber() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsereal_ulonglong_number();
@@ -42082,6 +42637,7 @@ module.exports = (function() {
     }
 
     function peg$parseparentheses() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -42104,6 +42660,7 @@ module.exports = (function() {
     }
 
     function peg$parseequal() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseEQUAL_OPERATOR();
@@ -42115,6 +42672,7 @@ module.exports = (function() {
     }
 
     function peg$parseoptionType() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parsePERSIST_SYMBOL();
@@ -42135,6 +42693,7 @@ module.exports = (function() {
     }
 
     function peg$parsevarIdentType() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -42191,6 +42750,7 @@ module.exports = (function() {
     }
 
     function peg$parsesetVarIdentType() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -42281,6 +42841,7 @@ module.exports = (function() {
     }
 
     function peg$parsenotRule() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseNOT_SYMBOL();
@@ -42292,6 +42853,7 @@ module.exports = (function() {
     }
 
     function peg$parsenot2Rule() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseLOGICAL_NOT_OPERATOR();
@@ -42303,6 +42865,7 @@ module.exports = (function() {
     }
 
     function peg$parseinterval() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseintervalTimeStamp();
@@ -42344,6 +42907,7 @@ module.exports = (function() {
     }
 
     function peg$parseintervalTimeStamp() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseMICROSECOND_SYMBOL();
@@ -42376,6 +42940,7 @@ module.exports = (function() {
     }
 
     function peg$parseidentifierKeyword() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -42471,6 +43036,7 @@ module.exports = (function() {
     }
 
     function peg$parseidentifierKeywordsAmbiguous1RolesAndLabels() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseEXECUTE_SYMBOL();
@@ -42485,6 +43051,7 @@ module.exports = (function() {
     }
 
     function peg$parseidentifierKeywordsAmbiguous2Labels() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseASCII_SYMBOL();
@@ -42595,6 +43162,7 @@ module.exports = (function() {
     }
 
     function peg$parselabelKeyword() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -42659,6 +43227,7 @@ module.exports = (function() {
     }
 
     function peg$parseidentifierKeywordsAmbiguous3Roles() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseEVENT_SYMBOL();
@@ -42691,6 +43260,7 @@ module.exports = (function() {
     }
 
     function peg$parseidentifierKeywordsUnambiguous() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$parseACTION_SYMBOL();
@@ -43937,6 +44507,7 @@ module.exports = (function() {
     }
 
     function peg$parseroleKeyword() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseroleOrLabelKeyword();
@@ -43957,6 +44528,7 @@ module.exports = (function() {
     }
 
     function peg$parselValueKeyword() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseidentifierKeywordsUnambiguous();
@@ -43974,6 +44546,7 @@ module.exports = (function() {
     }
 
     function peg$parseidentifierKeywordsAmbiguous4SystemVariables() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseGLOBAL_SYMBOL();
@@ -43994,6 +44567,7 @@ module.exports = (function() {
     }
 
     function peg$parseroleOrIdentifierKeyword() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseACCOUNT_SYMBOL();
@@ -44191,6 +44765,7 @@ module.exports = (function() {
     }
 
     function peg$parseroleOrLabelKeyword() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$parseACTION_SYMBOL();
@@ -45255,6 +45830,7 @@ module.exports = (function() {
     }
 
     function peg$parseEQUAL_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 61) {
@@ -45269,6 +45845,7 @@ module.exports = (function() {
     }
 
     function peg$parseASSIGN_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c65) {
@@ -45283,6 +45860,7 @@ module.exports = (function() {
     }
 
     function peg$parseNULL_SAFE_EQUAL_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c67) {
@@ -45297,6 +45875,7 @@ module.exports = (function() {
     }
 
     function peg$parseGREATER_OR_EQUAL_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c69) {
@@ -45311,6 +45890,7 @@ module.exports = (function() {
     }
 
     function peg$parseGREATER_THAN_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 62) {
@@ -45325,6 +45905,7 @@ module.exports = (function() {
     }
 
     function peg$parseLESS_OR_EQUAL_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c73) {
@@ -45339,6 +45920,7 @@ module.exports = (function() {
     }
 
     function peg$parseLESS_THAN_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 60) {
@@ -45353,6 +45935,7 @@ module.exports = (function() {
     }
 
     function peg$parseNOT_EQUAL_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c77) {
@@ -45367,6 +45950,7 @@ module.exports = (function() {
     }
 
     function peg$parseNOT_EQUAL2_OPERATOR() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -45387,6 +45971,7 @@ module.exports = (function() {
     }
 
     function peg$parsePLUS_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 43) {
@@ -45401,6 +45986,7 @@ module.exports = (function() {
     }
 
     function peg$parseMINUS_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 45) {
@@ -45415,6 +46001,7 @@ module.exports = (function() {
     }
 
     function peg$parseMULT_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 42) {
@@ -45429,6 +46016,7 @@ module.exports = (function() {
     }
 
     function peg$parseDIV_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 47) {
@@ -45443,6 +46031,7 @@ module.exports = (function() {
     }
 
     function peg$parseMOD_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 37) {
@@ -45457,6 +46046,7 @@ module.exports = (function() {
     }
 
     function peg$parseLOGICAL_NOT_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 33) {
@@ -45471,6 +46061,7 @@ module.exports = (function() {
     }
 
     function peg$parseBITWISE_NOT_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 126) {
@@ -45485,6 +46076,7 @@ module.exports = (function() {
     }
 
     function peg$parseSHIFT_LEFT_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c96) {
@@ -45499,6 +46091,7 @@ module.exports = (function() {
     }
 
     function peg$parseSHIFT_RIGHT_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c98) {
@@ -45513,6 +46106,7 @@ module.exports = (function() {
     }
 
     function peg$parseLOGICAL_AND_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c100) {
@@ -45527,6 +46121,7 @@ module.exports = (function() {
     }
 
     function peg$parseBITWISE_AND_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 38) {
@@ -45541,6 +46136,7 @@ module.exports = (function() {
     }
 
     function peg$parseBITWISE_XOR_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 94) {
@@ -45555,6 +46151,7 @@ module.exports = (function() {
     }
 
     function peg$parseLOGICAL_OR_OPERATOR() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -45575,6 +46172,7 @@ module.exports = (function() {
     }
 
     function peg$parseBITWISE_OR_OPERATOR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 124) {
@@ -45589,6 +46187,7 @@ module.exports = (function() {
     }
 
     function peg$parseDOT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 46) {
@@ -45603,6 +46202,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOMMA_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 44) {
@@ -45617,6 +46217,7 @@ module.exports = (function() {
     }
 
     function peg$parseSEMICOLON_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 59) {
@@ -45631,6 +46232,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOLON_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 58) {
@@ -45645,6 +46247,7 @@ module.exports = (function() {
     }
 
     function peg$parseOPEN_PAR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 40) {
@@ -45659,6 +46262,7 @@ module.exports = (function() {
     }
 
     function peg$parseCLOSE_PAR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 41) {
@@ -45673,6 +46277,7 @@ module.exports = (function() {
     }
 
     function peg$parseOPEN_CURLY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 123) {
@@ -45687,6 +46292,7 @@ module.exports = (function() {
     }
 
     function peg$parseCLOSE_CURLY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 125) {
@@ -45701,6 +46307,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNDERLINE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 95) {
@@ -45715,6 +46322,7 @@ module.exports = (function() {
     }
 
     function peg$parseJSON_SEPARATOR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -45735,6 +46343,7 @@ module.exports = (function() {
     }
 
     function peg$parseJSON_UNQUOTED_SEPARATOR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -45755,6 +46364,7 @@ module.exports = (function() {
     }
 
     function peg$parseAT_SIGN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 64) {
@@ -45769,6 +46379,7 @@ module.exports = (function() {
     }
 
     function peg$parseAT_TEXT_SUFFIX() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -45797,6 +46408,7 @@ module.exports = (function() {
     }
 
     function peg$parseAT_AT_SIGN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c137) {
@@ -45811,6 +46423,7 @@ module.exports = (function() {
     }
 
     function peg$parseNULL2_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c139) {
@@ -45825,6 +46438,7 @@ module.exports = (function() {
     }
 
     function peg$parsePARAM_MARKER() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 63) {
@@ -45839,6 +46453,7 @@ module.exports = (function() {
     }
 
     function peg$parseA() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 97) {
@@ -45862,6 +46477,7 @@ module.exports = (function() {
     }
 
     function peg$parseB() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 98) {
@@ -45885,6 +46501,7 @@ module.exports = (function() {
     }
 
     function peg$parseC() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 99) {
@@ -45908,6 +46525,7 @@ module.exports = (function() {
     }
 
     function peg$parseD() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 100) {
@@ -45931,6 +46549,7 @@ module.exports = (function() {
     }
 
     function peg$parseE() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 101) {
@@ -45954,6 +46573,7 @@ module.exports = (function() {
     }
 
     function peg$parseF() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 102) {
@@ -45977,6 +46597,7 @@ module.exports = (function() {
     }
 
     function peg$parseG() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 103) {
@@ -46000,6 +46621,7 @@ module.exports = (function() {
     }
 
     function peg$parseH() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 104) {
@@ -46023,6 +46645,7 @@ module.exports = (function() {
     }
 
     function peg$parseI() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 105) {
@@ -46046,6 +46669,7 @@ module.exports = (function() {
     }
 
     function peg$parseJ() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 106) {
@@ -46069,6 +46693,7 @@ module.exports = (function() {
     }
 
     function peg$parseK() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 107) {
@@ -46092,6 +46717,7 @@ module.exports = (function() {
     }
 
     function peg$parseL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 108) {
@@ -46115,6 +46741,7 @@ module.exports = (function() {
     }
 
     function peg$parseM() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 109) {
@@ -46138,6 +46765,7 @@ module.exports = (function() {
     }
 
     function peg$parseN() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 110) {
@@ -46161,6 +46789,7 @@ module.exports = (function() {
     }
 
     function peg$parseO() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 111) {
@@ -46184,6 +46813,7 @@ module.exports = (function() {
     }
 
     function peg$parseP() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 112) {
@@ -46207,6 +46837,7 @@ module.exports = (function() {
     }
 
     function peg$parseQ() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 113) {
@@ -46230,6 +46861,7 @@ module.exports = (function() {
     }
 
     function peg$parseR() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 114) {
@@ -46253,6 +46885,7 @@ module.exports = (function() {
     }
 
     function peg$parseS() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 115) {
@@ -46276,6 +46909,7 @@ module.exports = (function() {
     }
 
     function peg$parseT() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 116) {
@@ -46299,6 +46933,7 @@ module.exports = (function() {
     }
 
     function peg$parseU() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 117) {
@@ -46322,6 +46957,7 @@ module.exports = (function() {
     }
 
     function peg$parseV() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 118) {
@@ -46345,6 +46981,7 @@ module.exports = (function() {
     }
 
     function peg$parseW() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 119) {
@@ -46368,6 +47005,7 @@ module.exports = (function() {
     }
 
     function peg$parseX() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 120) {
@@ -46391,6 +47029,7 @@ module.exports = (function() {
     }
 
     function peg$parseY() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 121) {
@@ -46414,6 +47053,7 @@ module.exports = (function() {
     }
 
     function peg$parseZ() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 122) {
@@ -46437,6 +47077,7 @@ module.exports = (function() {
     }
 
     function peg$parseDIGIT() {
+peg$parseWHITESPACE();
       var s0;
 
       if (peg$c247.test(input.charAt(peg$currPos))) {
@@ -46451,6 +47092,7 @@ module.exports = (function() {
     }
 
     function peg$parseDIGITS() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = [];
@@ -46468,6 +47110,7 @@ module.exports = (function() {
     }
 
     function peg$parseHEXDIGIT() {
+peg$parseWHITESPACE();
       var s0;
 
       if (peg$c249.test(input.charAt(peg$currPos))) {
@@ -46482,6 +47125,7 @@ module.exports = (function() {
     }
 
     function peg$parseHEX_NUMBER() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -46563,6 +47207,7 @@ module.exports = (function() {
     }
 
     function peg$parseBIN_NUMBER() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -46668,6 +47313,7 @@ module.exports = (function() {
     }
 
     function peg$parseINT_NUMBER() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -46682,6 +47328,7 @@ module.exports = (function() {
     }
 
     function peg$parseDECIMAL_NUMBER() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -46719,6 +47366,7 @@ module.exports = (function() {
     }
 
     function peg$parseFLOAT_NUMBER() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -46797,6 +47445,7 @@ module.exports = (function() {
     }
 
     function peg$parseDOT_IDENTIFIER() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -46837,6 +47486,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNDERSCORE_CHARSET() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -46887,6 +47537,7 @@ module.exports = (function() {
     }
 
     function peg$parseIDENTIFIER() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5, s6;
 
       s0 = peg$currPos;
@@ -47011,6 +47662,7 @@ module.exports = (function() {
     }
 
     function peg$parseNCHAR_TEXT() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -47039,6 +47691,7 @@ module.exports = (function() {
     }
 
     function peg$parseBACK_TICK() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 96) {
@@ -47053,6 +47706,7 @@ module.exports = (function() {
     }
 
     function peg$parseSINGLE_QUOTE() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 39) {
@@ -47067,6 +47721,7 @@ module.exports = (function() {
     }
 
     function peg$parseDOUBLE_QUOTE() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.charCodeAt(peg$currPos) === 34) {
@@ -47081,6 +47736,7 @@ module.exports = (function() {
     }
 
     function peg$parseBACK_TICK_QUOTED_ID() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -47120,6 +47776,7 @@ module.exports = (function() {
     }
 
     function peg$parseBACK_TICK_ESCAPE() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -47154,6 +47811,7 @@ module.exports = (function() {
     }
 
     function peg$parseBACK_TICK_CONTENT() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -47191,6 +47849,7 @@ module.exports = (function() {
     }
 
     function peg$parseDOUBLE_QUOTED_TEXT() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = [];
@@ -47248,6 +47907,7 @@ module.exports = (function() {
     }
 
     function peg$parseDOUBLE_QUOTED_CONTENT() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = [];
@@ -47267,6 +47927,7 @@ module.exports = (function() {
     }
 
     function peg$parseDOUBLE_QUOTE_ESCAPE() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -47301,6 +47962,7 @@ module.exports = (function() {
     }
 
     function peg$parseDOUBLE_QUOTE_CHAR() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -47338,6 +48000,7 @@ module.exports = (function() {
     }
 
     function peg$parseSINGLE_QUOTED_TEXT() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = [];
@@ -47395,6 +48058,7 @@ module.exports = (function() {
     }
 
     function peg$parseSINGLE_QUOTED_CONTENT() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = [];
@@ -47414,6 +48078,7 @@ module.exports = (function() {
     }
 
     function peg$parseSINGLE_QUOTE_ESCAPE() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -47448,6 +48113,7 @@ module.exports = (function() {
     }
 
     function peg$parseSINGLE_QUOTE_CHAR() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -47485,6 +48151,7 @@ module.exports = (function() {
     }
 
     function peg$parseVERSION_COMMENT_START() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -47549,6 +48216,7 @@ module.exports = (function() {
     }
 
     function peg$parseVERSION_COMMENT_CONTENT() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = [];
@@ -47632,6 +48300,7 @@ module.exports = (function() {
     }
 
     function peg$parseMYSQL_COMMENT_START() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -47652,6 +48321,7 @@ module.exports = (function() {
     }
 
     function peg$parseVERSION_COMMENT_END() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -47687,6 +48357,7 @@ module.exports = (function() {
     }
 
     function peg$parseBLOCK_COMMENT() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4;
 
       s0 = peg$currPos;
@@ -47742,6 +48413,7 @@ module.exports = (function() {
     }
 
     function peg$parseBLOCK_COMMENT_CONTENT() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = [];
@@ -47825,6 +48497,7 @@ module.exports = (function() {
     }
 
     function peg$parsePOUND_COMMENT() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3;
 
       s0 = peg$currPos;
@@ -47871,6 +48544,7 @@ module.exports = (function() {
     }
 
     function peg$parseDASHDASH_COMMENT() {
+peg$parseWHITESPACE();
       var s0, s1, s2, s3, s4, s5;
 
       s0 = peg$currPos;
@@ -47937,6 +48611,7 @@ module.exports = (function() {
     }
 
     function peg$parseDOUBLE_DASH() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c299) {
@@ -47951,6 +48626,7 @@ module.exports = (function() {
     }
 
     function peg$parseLINEBREAK() {
+peg$parseWHITESPACE();
       var s0;
 
       if (peg$c301.test(input.charAt(peg$currPos))) {
@@ -47965,6 +48641,7 @@ module.exports = (function() {
     }
 
     function peg$parseSIMPLE_IDENTIFIER() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = [];
@@ -48018,6 +48695,7 @@ module.exports = (function() {
     }
 
     function peg$parseML_COMMENT_HEAD() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c290) {
@@ -48032,6 +48710,7 @@ module.exports = (function() {
     }
 
     function peg$parseML_COMMENT_END() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c282) {
@@ -48046,6 +48725,7 @@ module.exports = (function() {
     }
 
     function peg$parseLETTER_WHEN_UNQUOTED() {
+peg$parseWHITESPACE();
       var s0;
 
       s0 = peg$parseDIGIT();
@@ -48057,6 +48737,7 @@ module.exports = (function() {
     }
 
     function peg$parseLETTER_WHEN_UNQUOTED_NO_DIGIT() {
+peg$parseWHITESPACE();
       var s0;
 
       if (peg$c305.test(input.charAt(peg$currPos))) {
@@ -48071,6 +48752,7 @@ module.exports = (function() {
     }
 
     function peg$parseLETTER_WITHOUT_FLOAT_PART() {
+peg$parseWHITESPACE();
       var s0;
 
       if (peg$c307.test(input.charAt(peg$currPos))) {
@@ -48085,6 +48767,7 @@ module.exports = (function() {
     }
 
     function peg$parseACCESSIBLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c309) {
@@ -48099,6 +48782,7 @@ module.exports = (function() {
     }
 
     function peg$parseACCOUNT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -48133,6 +48817,7 @@ module.exports = (function() {
     }
 
     function peg$parseACTION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c314) {
@@ -48147,6 +48832,7 @@ module.exports = (function() {
     }
 
     function peg$parseADD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c316) {
@@ -48161,6 +48847,7 @@ module.exports = (function() {
     }
 
     function peg$parseADDDATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -48181,6 +48868,7 @@ module.exports = (function() {
     }
 
     function peg$parseAFTER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c321) {
@@ -48195,6 +48883,7 @@ module.exports = (function() {
     }
 
     function peg$parseAGAINST_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c323) {
@@ -48209,6 +48898,7 @@ module.exports = (function() {
     }
 
     function peg$parseAGGREGATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c325) {
@@ -48223,6 +48913,7 @@ module.exports = (function() {
     }
 
     function peg$parseALGORITHM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c327) {
@@ -48237,6 +48928,7 @@ module.exports = (function() {
     }
 
     function peg$parseALL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c329) {
@@ -48251,6 +48943,7 @@ module.exports = (function() {
     }
 
     function peg$parseALTER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c331) {
@@ -48265,6 +48958,7 @@ module.exports = (function() {
     }
 
     function peg$parseALWAYS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -48299,6 +48993,7 @@ module.exports = (function() {
     }
 
     function peg$parseANALYSE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -48333,6 +49028,7 @@ module.exports = (function() {
     }
 
     function peg$parseANALYZE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c338) {
@@ -48347,6 +49043,7 @@ module.exports = (function() {
     }
 
     function peg$parseAND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c340) {
@@ -48361,6 +49058,7 @@ module.exports = (function() {
     }
 
     function peg$parseANY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c342) {
@@ -48375,6 +49073,7 @@ module.exports = (function() {
     }
 
     function peg$parseAS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c344) {
@@ -48389,6 +49088,7 @@ module.exports = (function() {
     }
 
     function peg$parseASC_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c346) {
@@ -48403,6 +49103,7 @@ module.exports = (function() {
     }
 
     function peg$parseASCII_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -48423,6 +49124,7 @@ module.exports = (function() {
     }
 
     function peg$parseASENSITIVE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c351) {
@@ -48437,6 +49139,7 @@ module.exports = (function() {
     }
 
     function peg$parseAT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c353) {
@@ -48451,6 +49154,7 @@ module.exports = (function() {
     }
 
     function peg$parseAUTHORS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -48485,6 +49189,7 @@ module.exports = (function() {
     }
 
     function peg$parseAUTOEXTEND_SIZE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 15) === peg$c358) {
@@ -48499,6 +49204,7 @@ module.exports = (function() {
     }
 
     function peg$parseAUTO_INCREMENT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 14) === peg$c360) {
@@ -48513,6 +49219,7 @@ module.exports = (function() {
     }
 
     function peg$parseAVG_ROW_LENGTH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 14) === peg$c362) {
@@ -48527,6 +49234,7 @@ module.exports = (function() {
     }
 
     function peg$parseAVG_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -48547,6 +49255,7 @@ module.exports = (function() {
     }
 
     function peg$parseBACKUP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c367) {
@@ -48561,6 +49270,7 @@ module.exports = (function() {
     }
 
     function peg$parseBEFORE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c369) {
@@ -48575,6 +49285,7 @@ module.exports = (function() {
     }
 
     function peg$parseBEGIN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c371) {
@@ -48589,6 +49300,7 @@ module.exports = (function() {
     }
 
     function peg$parseBETWEEN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c373) {
@@ -48603,6 +49315,7 @@ module.exports = (function() {
     }
 
     function peg$parseBIGINT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c375) {
@@ -48617,6 +49330,7 @@ module.exports = (function() {
     }
 
     function peg$parseBINARY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c377) {
@@ -48631,6 +49345,7 @@ module.exports = (function() {
     }
 
     function peg$parseBINLOG_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c379) {
@@ -48645,6 +49360,7 @@ module.exports = (function() {
     }
 
     function peg$parseBIN_NUM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c381) {
@@ -48659,6 +49375,7 @@ module.exports = (function() {
     }
 
     function peg$parseBIT_AND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -48679,6 +49396,7 @@ module.exports = (function() {
     }
 
     function peg$parseBIT_OR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -48699,6 +49417,7 @@ module.exports = (function() {
     }
 
     function peg$parseBIT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c389) {
@@ -48713,6 +49432,7 @@ module.exports = (function() {
     }
 
     function peg$parseBIT_XOR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -48733,6 +49453,7 @@ module.exports = (function() {
     }
 
     function peg$parseBLOB_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c394) {
@@ -48747,6 +49468,7 @@ module.exports = (function() {
     }
 
     function peg$parseBLOCK_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c396) {
@@ -48761,6 +49483,7 @@ module.exports = (function() {
     }
 
     function peg$parseBOOLEAN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c398) {
@@ -48775,6 +49498,7 @@ module.exports = (function() {
     }
 
     function peg$parseBOOL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c400) {
@@ -48789,6 +49513,7 @@ module.exports = (function() {
     }
 
     function peg$parseBOTH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c402) {
@@ -48803,6 +49528,7 @@ module.exports = (function() {
     }
 
     function peg$parseBTREE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c404) {
@@ -48817,6 +49543,7 @@ module.exports = (function() {
     }
 
     function peg$parseBY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c406) {
@@ -48831,6 +49558,7 @@ module.exports = (function() {
     }
 
     function peg$parseBYTE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c408) {
@@ -48845,6 +49573,7 @@ module.exports = (function() {
     }
 
     function peg$parseCACHE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c410) {
@@ -48859,6 +49588,7 @@ module.exports = (function() {
     }
 
     function peg$parseCALL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c412) {
@@ -48873,6 +49603,7 @@ module.exports = (function() {
     }
 
     function peg$parseCASCADE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c414) {
@@ -48887,6 +49618,7 @@ module.exports = (function() {
     }
 
     function peg$parseCASCADED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c416) {
@@ -48901,6 +49633,7 @@ module.exports = (function() {
     }
 
     function peg$parseCASE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c418) {
@@ -48915,6 +49648,7 @@ module.exports = (function() {
     }
 
     function peg$parseCAST_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -48935,6 +49669,7 @@ module.exports = (function() {
     }
 
     function peg$parseCATALOG_NAME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c423) {
@@ -48949,6 +49684,7 @@ module.exports = (function() {
     }
 
     function peg$parseCHAIN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c425) {
@@ -48963,6 +49699,7 @@ module.exports = (function() {
     }
 
     function peg$parseCHANGE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c427) {
@@ -48977,6 +49714,7 @@ module.exports = (function() {
     }
 
     function peg$parseCHANGED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c429) {
@@ -48991,6 +49729,7 @@ module.exports = (function() {
     }
 
     function peg$parseCHANNEL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -49025,6 +49764,7 @@ module.exports = (function() {
     }
 
     function peg$parseCHARSET_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c434) {
@@ -49039,6 +49779,7 @@ module.exports = (function() {
     }
 
     function peg$parseCHARACTER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -49059,6 +49800,7 @@ module.exports = (function() {
     }
 
     function peg$parseCHAR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c439) {
@@ -49073,6 +49815,7 @@ module.exports = (function() {
     }
 
     function peg$parseCHECKSUM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c441) {
@@ -49087,6 +49830,7 @@ module.exports = (function() {
     }
 
     function peg$parseCHECK_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c443) {
@@ -49101,6 +49845,7 @@ module.exports = (function() {
     }
 
     function peg$parseCIPHER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c445) {
@@ -49115,6 +49860,7 @@ module.exports = (function() {
     }
 
     function peg$parseCLASS_ORIGIN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c447) {
@@ -49129,6 +49875,7 @@ module.exports = (function() {
     }
 
     function peg$parseCLIENT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c449) {
@@ -49143,6 +49890,7 @@ module.exports = (function() {
     }
 
     function peg$parseCLOSE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c451) {
@@ -49157,6 +49905,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOALESCE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c453) {
@@ -49171,6 +49920,7 @@ module.exports = (function() {
     }
 
     function peg$parseCODE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c455) {
@@ -49185,6 +49935,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOLLATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c457) {
@@ -49199,6 +49950,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOLLATION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c459) {
@@ -49213,6 +49965,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOLUMNS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c461) {
@@ -49227,6 +49980,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOLUMN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c463) {
@@ -49241,6 +49995,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOLUMN_NAME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c465) {
@@ -49255,6 +50010,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOLUMN_FORMAT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 13) === peg$c467) {
@@ -49269,6 +50025,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOMMENT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c469) {
@@ -49283,6 +50040,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOMMITTED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c471) {
@@ -49297,6 +50055,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOMMIT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c473) {
@@ -49311,6 +50070,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOMPACT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c475) {
@@ -49325,6 +50085,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOMPLETION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c477) {
@@ -49339,6 +50100,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOMPRESSED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c479) {
@@ -49353,6 +50115,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOMPRESSION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -49387,6 +50150,7 @@ module.exports = (function() {
     }
 
     function peg$parseCONCURRENT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c483) {
@@ -49401,6 +50165,7 @@ module.exports = (function() {
     }
 
     function peg$parseCONDITION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c485) {
@@ -49415,6 +50180,7 @@ module.exports = (function() {
     }
 
     function peg$parseCONNECTION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c487) {
@@ -49429,6 +50195,7 @@ module.exports = (function() {
     }
 
     function peg$parseCONSISTENT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c489) {
@@ -49443,6 +50210,7 @@ module.exports = (function() {
     }
 
     function peg$parseCONSTRAINT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c491) {
@@ -49457,6 +50225,7 @@ module.exports = (function() {
     }
 
     function peg$parseCONSTRAINT_CATALOG_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 18) === peg$c493) {
@@ -49471,6 +50240,7 @@ module.exports = (function() {
     }
 
     function peg$parseCONSTRAINT_NAME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 15) === peg$c495) {
@@ -49485,6 +50255,7 @@ module.exports = (function() {
     }
 
     function peg$parseCONSTRAINT_SCHEMA_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 17) === peg$c497) {
@@ -49499,6 +50270,7 @@ module.exports = (function() {
     }
 
     function peg$parseCONTAINS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c499) {
@@ -49513,6 +50285,7 @@ module.exports = (function() {
     }
 
     function peg$parseCONTEXT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c501) {
@@ -49527,6 +50300,7 @@ module.exports = (function() {
     }
 
     function peg$parseCONTINUE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c503) {
@@ -49541,6 +50315,7 @@ module.exports = (function() {
     }
 
     function peg$parseCONTRIBUTORS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -49575,6 +50350,7 @@ module.exports = (function() {
     }
 
     function peg$parseCONVERT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c507) {
@@ -49589,6 +50365,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOUNT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -49609,6 +50386,7 @@ module.exports = (function() {
     }
 
     function peg$parseCPU_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c512) {
@@ -49623,6 +50401,7 @@ module.exports = (function() {
     }
 
     function peg$parseCREATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c514) {
@@ -49637,6 +50416,7 @@ module.exports = (function() {
     }
 
     function peg$parseCROSS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c516) {
@@ -49651,6 +50431,7 @@ module.exports = (function() {
     }
 
     function peg$parseCUBE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c518) {
@@ -49665,6 +50446,7 @@ module.exports = (function() {
     }
 
     function peg$parseCURDATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -49685,6 +50467,7 @@ module.exports = (function() {
     }
 
     function peg$parseCURRENT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -49719,6 +50502,7 @@ module.exports = (function() {
     }
 
     function peg$parseCURRENT_DATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -49739,6 +50523,7 @@ module.exports = (function() {
     }
 
     function peg$parseCURRENT_TIME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -49759,6 +50544,7 @@ module.exports = (function() {
     }
 
     function peg$parseCURRENT_TIMESTAMP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -49779,6 +50565,7 @@ module.exports = (function() {
     }
 
     function peg$parseCURRENT_USER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c534) {
@@ -49793,6 +50580,7 @@ module.exports = (function() {
     }
 
     function peg$parseCURSOR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c536) {
@@ -49807,6 +50595,7 @@ module.exports = (function() {
     }
 
     function peg$parseCURSOR_NAME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c538) {
@@ -49821,6 +50610,7 @@ module.exports = (function() {
     }
 
     function peg$parseCURTIME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -49841,6 +50631,7 @@ module.exports = (function() {
     }
 
     function peg$parseDATABASE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c542) {
@@ -49855,6 +50646,7 @@ module.exports = (function() {
     }
 
     function peg$parseDATABASES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c544) {
@@ -49869,6 +50661,7 @@ module.exports = (function() {
     }
 
     function peg$parseDATAFILE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c546) {
@@ -49883,6 +50676,7 @@ module.exports = (function() {
     }
 
     function peg$parseDATA_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c548) {
@@ -49897,6 +50691,7 @@ module.exports = (function() {
     }
 
     function peg$parseDATETIME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c550) {
@@ -49911,6 +50706,7 @@ module.exports = (function() {
     }
 
     function peg$parseDATE_ADD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -49931,6 +50727,7 @@ module.exports = (function() {
     }
 
     function peg$parseDATE_SUB_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -49951,6 +50748,7 @@ module.exports = (function() {
     }
 
     function peg$parseDATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c558) {
@@ -49965,6 +50763,7 @@ module.exports = (function() {
     }
 
     function peg$parseDAYOFMONTH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -49985,6 +50784,7 @@ module.exports = (function() {
     }
 
     function peg$parseDAY_HOUR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c563) {
@@ -49999,6 +50799,7 @@ module.exports = (function() {
     }
 
     function peg$parseDAY_MICROSECOND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 15) === peg$c565) {
@@ -50013,6 +50814,7 @@ module.exports = (function() {
     }
 
     function peg$parseDAY_MINUTE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c567) {
@@ -50027,6 +50829,7 @@ module.exports = (function() {
     }
 
     function peg$parseDAY_SECOND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c569) {
@@ -50041,6 +50844,7 @@ module.exports = (function() {
     }
 
     function peg$parseDAY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c571) {
@@ -50055,6 +50859,7 @@ module.exports = (function() {
     }
 
     function peg$parseDEALLOCATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c573) {
@@ -50069,6 +50874,7 @@ module.exports = (function() {
     }
 
     function peg$parseDEC_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -50089,6 +50895,7 @@ module.exports = (function() {
     }
 
     function peg$parseDECIMAL_NUM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c578) {
@@ -50103,6 +50910,7 @@ module.exports = (function() {
     }
 
     function peg$parseDECIMAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c580) {
@@ -50117,6 +50925,7 @@ module.exports = (function() {
     }
 
     function peg$parseDECLARE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c582) {
@@ -50131,6 +50940,7 @@ module.exports = (function() {
     }
 
     function peg$parseDEFAULT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c584) {
@@ -50145,6 +50955,7 @@ module.exports = (function() {
     }
 
     function peg$parseDEFAULT_AUTH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -50179,6 +50990,7 @@ module.exports = (function() {
     }
 
     function peg$parseDEFINER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c588) {
@@ -50193,6 +51005,7 @@ module.exports = (function() {
     }
 
     function peg$parseDELAYED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c590) {
@@ -50207,6 +51020,7 @@ module.exports = (function() {
     }
 
     function peg$parseDELAY_KEY_WRITE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 15) === peg$c592) {
@@ -50221,6 +51035,7 @@ module.exports = (function() {
     }
 
     function peg$parseDELETE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c594) {
@@ -50235,6 +51050,7 @@ module.exports = (function() {
     }
 
     function peg$parseDESC_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c596) {
@@ -50249,6 +51065,7 @@ module.exports = (function() {
     }
 
     function peg$parseDESCRIBE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c598) {
@@ -50263,6 +51080,7 @@ module.exports = (function() {
     }
 
     function peg$parseDES_KEY_FILE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -50297,6 +51115,7 @@ module.exports = (function() {
     }
 
     function peg$parseDETERMINISTIC_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 13) === peg$c602) {
@@ -50311,6 +51130,7 @@ module.exports = (function() {
     }
 
     function peg$parseDIAGNOSTICS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c604) {
@@ -50325,6 +51145,7 @@ module.exports = (function() {
     }
 
     function peg$parseDIRECTORY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c606) {
@@ -50339,6 +51160,7 @@ module.exports = (function() {
     }
 
     function peg$parseDISABLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c608) {
@@ -50353,6 +51175,7 @@ module.exports = (function() {
     }
 
     function peg$parseDISCARD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c610) {
@@ -50367,6 +51190,7 @@ module.exports = (function() {
     }
 
     function peg$parseDISK_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c612) {
@@ -50381,6 +51205,7 @@ module.exports = (function() {
     }
 
     function peg$parseDISTINCT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c614) {
@@ -50395,6 +51220,7 @@ module.exports = (function() {
     }
 
     function peg$parseDISTINCTROW_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -50415,6 +51241,7 @@ module.exports = (function() {
     }
 
     function peg$parseDIV_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c619) {
@@ -50429,6 +51256,7 @@ module.exports = (function() {
     }
 
     function peg$parseDOUBLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c621) {
@@ -50443,6 +51271,7 @@ module.exports = (function() {
     }
 
     function peg$parseDO_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c623) {
@@ -50457,6 +51286,7 @@ module.exports = (function() {
     }
 
     function peg$parseDROP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c625) {
@@ -50471,6 +51301,7 @@ module.exports = (function() {
     }
 
     function peg$parseDUAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c627) {
@@ -50485,6 +51316,7 @@ module.exports = (function() {
     }
 
     function peg$parseDUMPFILE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c629) {
@@ -50499,6 +51331,7 @@ module.exports = (function() {
     }
 
     function peg$parseDUPLICATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c631) {
@@ -50513,6 +51346,7 @@ module.exports = (function() {
     }
 
     function peg$parseDYNAMIC_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c633) {
@@ -50527,6 +51361,7 @@ module.exports = (function() {
     }
 
     function peg$parseEACH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c635) {
@@ -50541,6 +51376,7 @@ module.exports = (function() {
     }
 
     function peg$parseELSE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c637) {
@@ -50555,6 +51391,7 @@ module.exports = (function() {
     }
 
     function peg$parseELSEIF_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c639) {
@@ -50569,6 +51406,7 @@ module.exports = (function() {
     }
 
     function peg$parseENABLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c641) {
@@ -50583,6 +51421,7 @@ module.exports = (function() {
     }
 
     function peg$parseENCLOSED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c643) {
@@ -50597,6 +51436,7 @@ module.exports = (function() {
     }
 
     function peg$parseENCRYPTION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -50631,6 +51471,7 @@ module.exports = (function() {
     }
 
     function peg$parseEND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c648) {
@@ -50645,6 +51486,7 @@ module.exports = (function() {
     }
 
     function peg$parseENDS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c650) {
@@ -50659,6 +51501,7 @@ module.exports = (function() {
     }
 
     function peg$parseEND_OF_INPUT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c652) {
@@ -50673,6 +51516,7 @@ module.exports = (function() {
     }
 
     function peg$parseENGINES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c654) {
@@ -50687,6 +51531,7 @@ module.exports = (function() {
     }
 
     function peg$parseENGINE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c656) {
@@ -50701,6 +51546,7 @@ module.exports = (function() {
     }
 
     function peg$parseENUM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c658) {
@@ -50715,6 +51561,7 @@ module.exports = (function() {
     }
 
     function peg$parseERROR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c660) {
@@ -50729,6 +51576,7 @@ module.exports = (function() {
     }
 
     function peg$parseERRORS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c662) {
@@ -50743,6 +51591,7 @@ module.exports = (function() {
     }
 
     function peg$parseESCAPED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c664) {
@@ -50757,6 +51606,7 @@ module.exports = (function() {
     }
 
     function peg$parseESCAPE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c666) {
@@ -50771,6 +51621,7 @@ module.exports = (function() {
     }
 
     function peg$parseEVENTS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c668) {
@@ -50785,6 +51636,7 @@ module.exports = (function() {
     }
 
     function peg$parseEVENT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c670) {
@@ -50799,6 +51651,7 @@ module.exports = (function() {
     }
 
     function peg$parseEVERY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c672) {
@@ -50813,6 +51666,7 @@ module.exports = (function() {
     }
 
     function peg$parseEXCHANGE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c674) {
@@ -50827,6 +51681,7 @@ module.exports = (function() {
     }
 
     function peg$parseEXECUTE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c676) {
@@ -50841,6 +51696,7 @@ module.exports = (function() {
     }
 
     function peg$parseEXISTS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c678) {
@@ -50855,6 +51711,7 @@ module.exports = (function() {
     }
 
     function peg$parseEXIT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c680) {
@@ -50869,6 +51726,7 @@ module.exports = (function() {
     }
 
     function peg$parseEXPANSION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c682) {
@@ -50883,6 +51741,7 @@ module.exports = (function() {
     }
 
     function peg$parseEXPIRE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -50917,6 +51776,7 @@ module.exports = (function() {
     }
 
     function peg$parseEXPLAIN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c687) {
@@ -50931,6 +51791,7 @@ module.exports = (function() {
     }
 
     function peg$parseEXPORT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -50965,6 +51826,7 @@ module.exports = (function() {
     }
 
     function peg$parseEXTENDED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c691) {
@@ -50979,6 +51841,7 @@ module.exports = (function() {
     }
 
     function peg$parseEXTENT_SIZE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c693) {
@@ -50993,6 +51856,7 @@ module.exports = (function() {
     }
 
     function peg$parseEXTRACT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -51013,6 +51877,7 @@ module.exports = (function() {
     }
 
     function peg$parseFALSE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c698) {
@@ -51027,6 +51892,7 @@ module.exports = (function() {
     }
 
     function peg$parseFAST_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c700) {
@@ -51041,6 +51907,7 @@ module.exports = (function() {
     }
 
     function peg$parseFAULTS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c702) {
@@ -51055,6 +51922,7 @@ module.exports = (function() {
     }
 
     function peg$parseFETCH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c704) {
@@ -51069,6 +51937,7 @@ module.exports = (function() {
     }
 
     function peg$parseFIELDS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -51089,6 +51958,7 @@ module.exports = (function() {
     }
 
     function peg$parseFILE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c709) {
@@ -51103,6 +51973,7 @@ module.exports = (function() {
     }
 
     function peg$parseFILE_BLOCK_SIZE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -51137,6 +52008,7 @@ module.exports = (function() {
     }
 
     function peg$parseFILTER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -51171,6 +52043,7 @@ module.exports = (function() {
     }
 
     function peg$parseFIRST_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c716) {
@@ -51185,6 +52058,7 @@ module.exports = (function() {
     }
 
     function peg$parseFIXED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c718) {
@@ -51199,6 +52073,7 @@ module.exports = (function() {
     }
 
     function peg$parseFLOAT4_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -51219,6 +52094,7 @@ module.exports = (function() {
     }
 
     function peg$parseFLOAT8_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -51239,6 +52115,7 @@ module.exports = (function() {
     }
 
     function peg$parseFLOAT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c726) {
@@ -51253,6 +52130,7 @@ module.exports = (function() {
     }
 
     function peg$parseFLUSH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c728) {
@@ -51267,6 +52145,7 @@ module.exports = (function() {
     }
 
     function peg$parseFOLLOWS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -51301,6 +52180,7 @@ module.exports = (function() {
     }
 
     function peg$parseFORCE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c732) {
@@ -51315,6 +52195,7 @@ module.exports = (function() {
     }
 
     function peg$parseFOREIGN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c734) {
@@ -51329,6 +52210,7 @@ module.exports = (function() {
     }
 
     function peg$parseFOR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c736) {
@@ -51343,6 +52225,7 @@ module.exports = (function() {
     }
 
     function peg$parseFORMAT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c738) {
@@ -51357,6 +52240,7 @@ module.exports = (function() {
     }
 
     function peg$parseFOUND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c740) {
@@ -51371,6 +52255,7 @@ module.exports = (function() {
     }
 
     function peg$parseFROM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c742) {
@@ -51385,6 +52270,7 @@ module.exports = (function() {
     }
 
     function peg$parseFULL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c744) {
@@ -51399,6 +52285,7 @@ module.exports = (function() {
     }
 
     function peg$parseFULLTEXT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c746) {
@@ -51413,6 +52300,7 @@ module.exports = (function() {
     }
 
     function peg$parseFUNCTION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c748) {
@@ -51427,6 +52315,7 @@ module.exports = (function() {
     }
 
     function peg$parseGET_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -51461,6 +52350,7 @@ module.exports = (function() {
     }
 
     function peg$parseGENERAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c752) {
@@ -51475,6 +52365,7 @@ module.exports = (function() {
     }
 
     function peg$parseGENERATED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -51509,6 +52400,7 @@ module.exports = (function() {
     }
 
     function peg$parseGROUP_REPLICATION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -51543,6 +52435,7 @@ module.exports = (function() {
     }
 
     function peg$parseGEOMETRYCOLLECTION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 18) === peg$c758) {
@@ -51557,6 +52450,7 @@ module.exports = (function() {
     }
 
     function peg$parseGEOMETRY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c760) {
@@ -51571,6 +52465,7 @@ module.exports = (function() {
     }
 
     function peg$parseGET_FORMAT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c762) {
@@ -51585,6 +52480,7 @@ module.exports = (function() {
     }
 
     function peg$parseGLOBAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c764) {
@@ -51599,6 +52495,7 @@ module.exports = (function() {
     }
 
     function peg$parseGRANT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c766) {
@@ -51613,6 +52510,7 @@ module.exports = (function() {
     }
 
     function peg$parseGRANTS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c768) {
@@ -51627,6 +52525,7 @@ module.exports = (function() {
     }
 
     function peg$parseGROUP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c770) {
@@ -51641,6 +52540,7 @@ module.exports = (function() {
     }
 
     function peg$parseGROUP_CONCAT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -51661,6 +52561,7 @@ module.exports = (function() {
     }
 
     function peg$parseHANDLER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c775) {
@@ -51675,6 +52576,7 @@ module.exports = (function() {
     }
 
     function peg$parseHASH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c777) {
@@ -51689,6 +52591,7 @@ module.exports = (function() {
     }
 
     function peg$parseHAVING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c779) {
@@ -51703,6 +52606,7 @@ module.exports = (function() {
     }
 
     function peg$parseHELP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c781) {
@@ -51717,6 +52621,7 @@ module.exports = (function() {
     }
 
     function peg$parseHIGH_PRIORITY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 13) === peg$c783) {
@@ -51731,6 +52636,7 @@ module.exports = (function() {
     }
 
     function peg$parseHOST_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c785) {
@@ -51745,6 +52651,7 @@ module.exports = (function() {
     }
 
     function peg$parseHOSTS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c787) {
@@ -51759,6 +52666,7 @@ module.exports = (function() {
     }
 
     function peg$parseHOUR_MICROSECOND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 16) === peg$c789) {
@@ -51773,6 +52681,7 @@ module.exports = (function() {
     }
 
     function peg$parseHOUR_MINUTE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c791) {
@@ -51787,6 +52696,7 @@ module.exports = (function() {
     }
 
     function peg$parseHOUR_SECOND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c793) {
@@ -51801,6 +52711,7 @@ module.exports = (function() {
     }
 
     function peg$parseHOUR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c795) {
@@ -51815,6 +52726,7 @@ module.exports = (function() {
     }
 
     function peg$parseIDENTIFIED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c797) {
@@ -51829,6 +52741,7 @@ module.exports = (function() {
     }
 
     function peg$parseIF_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c799) {
@@ -51843,6 +52756,7 @@ module.exports = (function() {
     }
 
     function peg$parseIGNORE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c801) {
@@ -51857,6 +52771,7 @@ module.exports = (function() {
     }
 
     function peg$parseIGNORE_SERVER_IDS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 17) === peg$c803) {
@@ -51871,6 +52786,7 @@ module.exports = (function() {
     }
 
     function peg$parseIMPORT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c805) {
@@ -51885,6 +52801,7 @@ module.exports = (function() {
     }
 
     function peg$parseINDEXES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c807) {
@@ -51899,6 +52816,7 @@ module.exports = (function() {
     }
 
     function peg$parseINDEX_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c809) {
@@ -51913,6 +52831,7 @@ module.exports = (function() {
     }
 
     function peg$parseINFILE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c811) {
@@ -51927,6 +52846,7 @@ module.exports = (function() {
     }
 
     function peg$parseINITIAL_SIZE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c813) {
@@ -51941,6 +52861,7 @@ module.exports = (function() {
     }
 
     function peg$parseINNER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c815) {
@@ -51955,6 +52876,7 @@ module.exports = (function() {
     }
 
     function peg$parseINOUT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c817) {
@@ -51969,6 +52891,7 @@ module.exports = (function() {
     }
 
     function peg$parseINSENSITIVE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c819) {
@@ -51983,6 +52906,7 @@ module.exports = (function() {
     }
 
     function peg$parseINSERT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c821) {
@@ -51997,6 +52921,7 @@ module.exports = (function() {
     }
 
     function peg$parseINSERT_METHOD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 13) === peg$c823) {
@@ -52011,6 +52936,7 @@ module.exports = (function() {
     }
 
     function peg$parseINSTANCE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -52045,6 +52971,7 @@ module.exports = (function() {
     }
 
     function peg$parseINSTALL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c828) {
@@ -52059,6 +52986,7 @@ module.exports = (function() {
     }
 
     function peg$parseINTEGER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -52079,6 +53007,7 @@ module.exports = (function() {
     }
 
     function peg$parseINTERVAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c833) {
@@ -52093,6 +53022,7 @@ module.exports = (function() {
     }
 
     function peg$parseINTO_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c835) {
@@ -52107,6 +53037,7 @@ module.exports = (function() {
     }
 
     function peg$parseINT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c837) {
@@ -52121,6 +53052,7 @@ module.exports = (function() {
     }
 
     function peg$parseINVOKER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c839) {
@@ -52135,6 +53067,7 @@ module.exports = (function() {
     }
 
     function peg$parseIN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c841) {
@@ -52149,6 +53082,7 @@ module.exports = (function() {
     }
 
     function peg$parseIO_AFTER_GTIDS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 14) === peg$c843) {
@@ -52163,6 +53097,7 @@ module.exports = (function() {
     }
 
     function peg$parseIO_BEFORE_GTIDS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 15) === peg$c845) {
@@ -52177,6 +53112,7 @@ module.exports = (function() {
     }
 
     function peg$parseIO_THREAD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -52197,6 +53133,7 @@ module.exports = (function() {
     }
 
     function peg$parseIO_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c850) {
@@ -52211,6 +53148,7 @@ module.exports = (function() {
     }
 
     function peg$parseIPC_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c852) {
@@ -52225,6 +53163,7 @@ module.exports = (function() {
     }
 
     function peg$parseIS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c854) {
@@ -52239,6 +53178,7 @@ module.exports = (function() {
     }
 
     function peg$parseISOLATION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c856) {
@@ -52253,6 +53193,7 @@ module.exports = (function() {
     }
 
     function peg$parseISSUER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c858) {
@@ -52267,6 +53208,7 @@ module.exports = (function() {
     }
 
     function peg$parseITERATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c860) {
@@ -52281,6 +53223,7 @@ module.exports = (function() {
     }
 
     function peg$parseJOIN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c862) {
@@ -52295,6 +53238,7 @@ module.exports = (function() {
     }
 
     function peg$parseJSON_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -52329,6 +53273,7 @@ module.exports = (function() {
     }
 
     function peg$parseKEYS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c867) {
@@ -52343,6 +53288,7 @@ module.exports = (function() {
     }
 
     function peg$parseKEY_BLOCK_SIZE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 14) === peg$c869) {
@@ -52357,6 +53303,7 @@ module.exports = (function() {
     }
 
     function peg$parseKEY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c871) {
@@ -52371,6 +53318,7 @@ module.exports = (function() {
     }
 
     function peg$parseKILL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c873) {
@@ -52385,6 +53333,7 @@ module.exports = (function() {
     }
 
     function peg$parseLANGUAGE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c875) {
@@ -52399,6 +53348,7 @@ module.exports = (function() {
     }
 
     function peg$parseLAST_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c877) {
@@ -52413,6 +53363,7 @@ module.exports = (function() {
     }
 
     function peg$parseLEADING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c879) {
@@ -52427,6 +53378,7 @@ module.exports = (function() {
     }
 
     function peg$parseLEAVES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c881) {
@@ -52441,6 +53393,7 @@ module.exports = (function() {
     }
 
     function peg$parseLEAVE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c883) {
@@ -52455,6 +53408,7 @@ module.exports = (function() {
     }
 
     function peg$parseLEFT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c885) {
@@ -52469,6 +53423,7 @@ module.exports = (function() {
     }
 
     function peg$parseLESS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c887) {
@@ -52483,6 +53438,7 @@ module.exports = (function() {
     }
 
     function peg$parseLEVEL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c889) {
@@ -52497,6 +53453,7 @@ module.exports = (function() {
     }
 
     function peg$parseLIKE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c891) {
@@ -52511,6 +53468,7 @@ module.exports = (function() {
     }
 
     function peg$parseLIMIT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c893) {
@@ -52525,6 +53483,7 @@ module.exports = (function() {
     }
 
     function peg$parseLINEAR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c895) {
@@ -52539,6 +53498,7 @@ module.exports = (function() {
     }
 
     function peg$parseLINES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c897) {
@@ -52553,6 +53513,7 @@ module.exports = (function() {
     }
 
     function peg$parseLINESTRING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c899) {
@@ -52567,6 +53528,7 @@ module.exports = (function() {
     }
 
     function peg$parseLIST_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c901) {
@@ -52581,6 +53543,7 @@ module.exports = (function() {
     }
 
     function peg$parseLOAD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c903) {
@@ -52595,6 +53558,7 @@ module.exports = (function() {
     }
 
     function peg$parseLOCALTIME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -52615,6 +53579,7 @@ module.exports = (function() {
     }
 
     function peg$parseLOCALTIMESTAMP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -52635,6 +53600,7 @@ module.exports = (function() {
     }
 
     function peg$parseLOCAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c909) {
@@ -52649,6 +53615,7 @@ module.exports = (function() {
     }
 
     function peg$parseLOCATOR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c911) {
@@ -52663,6 +53630,7 @@ module.exports = (function() {
     }
 
     function peg$parseLOCKS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c913) {
@@ -52677,6 +53645,7 @@ module.exports = (function() {
     }
 
     function peg$parseLOCK_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c915) {
@@ -52691,6 +53660,7 @@ module.exports = (function() {
     }
 
     function peg$parseLOGFILE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c917) {
@@ -52705,6 +53675,7 @@ module.exports = (function() {
     }
 
     function peg$parseLOGS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c919) {
@@ -52719,6 +53690,7 @@ module.exports = (function() {
     }
 
     function peg$parseLONGBLOB_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c921) {
@@ -52733,6 +53705,7 @@ module.exports = (function() {
     }
 
     function peg$parseLONGTEXT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c923) {
@@ -52747,6 +53720,7 @@ module.exports = (function() {
     }
 
     function peg$parseLONG_NUM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c925) {
@@ -52761,6 +53735,7 @@ module.exports = (function() {
     }
 
     function peg$parseLONG_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c927) {
@@ -52775,6 +53750,7 @@ module.exports = (function() {
     }
 
     function peg$parseLOOP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c929) {
@@ -52789,6 +53765,7 @@ module.exports = (function() {
     }
 
     function peg$parseLOW_PRIORITY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c931) {
@@ -52803,6 +53780,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_AUTO_POSITION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -52837,6 +53815,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_BIND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -52871,6 +53850,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_CONNECT_RETRY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 20) === peg$c939) {
@@ -52885,6 +53865,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_DELAY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c941) {
@@ -52899,6 +53880,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_HOST_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c943) {
@@ -52913,6 +53895,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_LOG_FILE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 15) === peg$c945) {
@@ -52927,6 +53910,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_LOG_POS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 14) === peg$c947) {
@@ -52941,6 +53925,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_PASSWORD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 15) === peg$c949) {
@@ -52955,6 +53940,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_PORT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c951) {
@@ -52969,6 +53955,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_RETRY_COUNT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -53003,6 +53990,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_SERVER_ID_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 16) === peg$c956) {
@@ -53017,6 +54005,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_SSL_CAPATH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 17) === peg$c958) {
@@ -53031,6 +54020,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_SSL_CA_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 13) === peg$c960) {
@@ -53045,6 +54035,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_SSL_CERT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 15) === peg$c962) {
@@ -53059,6 +54050,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_SSL_CIPHER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 17) === peg$c964) {
@@ -53073,6 +54065,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_SSL_CRL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -53107,6 +54100,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_SSL_CRLPATH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -53141,6 +54135,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_SSL_KEY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 14) === peg$c971) {
@@ -53155,6 +54150,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_SSL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c973) {
@@ -53169,6 +54165,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_SSL_VERIFY_SERVER_CERT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 29) === peg$c975) {
@@ -53186,6 +54183,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c977) {
@@ -53200,6 +54198,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_TLS_VERSION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -53234,6 +54233,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_USER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c981) {
@@ -53248,6 +54248,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_HEARTBEAT_PERIOD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 23) === peg$c983) {
@@ -53265,6 +54266,7 @@ module.exports = (function() {
     }
 
     function peg$parseMATCH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c985) {
@@ -53279,6 +54281,7 @@ module.exports = (function() {
     }
 
     function peg$parseMAX_CONNECTIONS_PER_HOUR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 24) === peg$c987) {
@@ -53293,6 +54296,7 @@ module.exports = (function() {
     }
 
     function peg$parseMAX_QUERIES_PER_HOUR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 20) === peg$c989) {
@@ -53307,6 +54311,7 @@ module.exports = (function() {
     }
 
     function peg$parseMAX_ROWS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c991) {
@@ -53321,6 +54326,7 @@ module.exports = (function() {
     }
 
     function peg$parseMAX_SIZE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c993) {
@@ -53335,6 +54341,7 @@ module.exports = (function() {
     }
 
     function peg$parseMAX_STATEMENT_TIME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -53369,6 +54376,7 @@ module.exports = (function() {
     }
 
     function peg$parseMAX_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -53389,6 +54397,7 @@ module.exports = (function() {
     }
 
     function peg$parseMAX_UPDATES_PER_HOUR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 20) === peg$c1001) {
@@ -53403,6 +54412,7 @@ module.exports = (function() {
     }
 
     function peg$parseMAX_USER_CONNECTIONS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 20) === peg$c1003) {
@@ -53417,6 +54427,7 @@ module.exports = (function() {
     }
 
     function peg$parseMAXVALUE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1005) {
@@ -53431,6 +54442,7 @@ module.exports = (function() {
     }
 
     function peg$parseMEDIUMBLOB_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1007) {
@@ -53445,6 +54457,7 @@ module.exports = (function() {
     }
 
     function peg$parseMEDIUMINT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1009) {
@@ -53459,6 +54472,7 @@ module.exports = (function() {
     }
 
     function peg$parseMEDIUMTEXT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1011) {
@@ -53473,6 +54487,7 @@ module.exports = (function() {
     }
 
     function peg$parseMEDIUM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1013) {
@@ -53487,6 +54502,7 @@ module.exports = (function() {
     }
 
     function peg$parseMEMORY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1015) {
@@ -53501,6 +54517,7 @@ module.exports = (function() {
     }
 
     function peg$parseMERGE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1017) {
@@ -53515,6 +54532,7 @@ module.exports = (function() {
     }
 
     function peg$parseMESSAGE_TEXT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c1019) {
@@ -53529,6 +54547,7 @@ module.exports = (function() {
     }
 
     function peg$parseMICROSECOND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c1021) {
@@ -53543,6 +54562,7 @@ module.exports = (function() {
     }
 
     function peg$parseMID_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -53563,6 +54583,7 @@ module.exports = (function() {
     }
 
     function peg$parseMIDDLEINT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -53583,6 +54604,7 @@ module.exports = (function() {
     }
 
     function peg$parseMIGRATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1029) {
@@ -53597,6 +54619,7 @@ module.exports = (function() {
     }
 
     function peg$parseMINUTE_MICROSECOND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 18) === peg$c1031) {
@@ -53611,6 +54634,7 @@ module.exports = (function() {
     }
 
     function peg$parseMINUTE_SECOND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 13) === peg$c1033) {
@@ -53625,6 +54649,7 @@ module.exports = (function() {
     }
 
     function peg$parseMINUTE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1035) {
@@ -53639,6 +54664,7 @@ module.exports = (function() {
     }
 
     function peg$parseMIN_ROWS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1037) {
@@ -53653,6 +54679,7 @@ module.exports = (function() {
     }
 
     function peg$parseMIN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -53673,6 +54700,7 @@ module.exports = (function() {
     }
 
     function peg$parseMODE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1042) {
@@ -53687,6 +54715,7 @@ module.exports = (function() {
     }
 
     function peg$parseMODIFIES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1044) {
@@ -53701,6 +54730,7 @@ module.exports = (function() {
     }
 
     function peg$parseMODIFY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1046) {
@@ -53715,6 +54745,7 @@ module.exports = (function() {
     }
 
     function peg$parseMOD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c1048) {
@@ -53729,6 +54760,7 @@ module.exports = (function() {
     }
 
     function peg$parseMONTH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1050) {
@@ -53743,6 +54775,7 @@ module.exports = (function() {
     }
 
     function peg$parseMULTILINESTRING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 15) === peg$c1052) {
@@ -53757,6 +54790,7 @@ module.exports = (function() {
     }
 
     function peg$parseMULTIPOINT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1054) {
@@ -53771,6 +54805,7 @@ module.exports = (function() {
     }
 
     function peg$parseMULTIPOLYGON_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c1056) {
@@ -53785,6 +54820,7 @@ module.exports = (function() {
     }
 
     function peg$parseMUTEX_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1058) {
@@ -53799,6 +54835,7 @@ module.exports = (function() {
     }
 
     function peg$parseMYSQL_ERRNO_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c1060) {
@@ -53813,6 +54850,7 @@ module.exports = (function() {
     }
 
     function peg$parseNAMES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1062) {
@@ -53827,6 +54865,7 @@ module.exports = (function() {
     }
 
     function peg$parseNAME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1064) {
@@ -53841,6 +54880,7 @@ module.exports = (function() {
     }
 
     function peg$parseNATIONAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1066) {
@@ -53855,6 +54895,7 @@ module.exports = (function() {
     }
 
     function peg$parseNATURAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1068) {
@@ -53869,6 +54910,7 @@ module.exports = (function() {
     }
 
     function peg$parseNCHAR_STRING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c1070) {
@@ -53883,6 +54925,7 @@ module.exports = (function() {
     }
 
     function peg$parseNCHAR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1072) {
@@ -53897,6 +54940,7 @@ module.exports = (function() {
     }
 
     function peg$parseNDB_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -53917,6 +54961,7 @@ module.exports = (function() {
     }
 
     function peg$parseNDBCLUSTER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1077) {
@@ -53931,6 +54976,7 @@ module.exports = (function() {
     }
 
     function peg$parseNEG_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c1079) {
@@ -53945,6 +54991,7 @@ module.exports = (function() {
     }
 
     function peg$parseNEVER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -53979,6 +55026,7 @@ module.exports = (function() {
     }
 
     function peg$parseNEW_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c1084) {
@@ -53993,6 +55041,7 @@ module.exports = (function() {
     }
 
     function peg$parseNEXT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1086) {
@@ -54007,6 +55056,7 @@ module.exports = (function() {
     }
 
     function peg$parseNODEGROUP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1088) {
@@ -54021,6 +55071,7 @@ module.exports = (function() {
     }
 
     function peg$parseNONE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1090) {
@@ -54035,6 +55086,7 @@ module.exports = (function() {
     }
 
     function peg$parseNONBLOCKING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -54069,6 +55121,7 @@ module.exports = (function() {
     }
 
     function peg$parseNOT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -54089,6 +55142,7 @@ module.exports = (function() {
     }
 
     function peg$parseNOW_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -54109,6 +55163,7 @@ module.exports = (function() {
     }
 
     function peg$parseNO_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c1101) {
@@ -54123,6 +55178,7 @@ module.exports = (function() {
     }
 
     function peg$parseNO_WAIT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1103) {
@@ -54137,6 +55193,7 @@ module.exports = (function() {
     }
 
     function peg$parseNO_WRITE_TO_BINLOG_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 18) === peg$c1105) {
@@ -54151,6 +55208,7 @@ module.exports = (function() {
     }
 
     function peg$parseNULL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1107) {
@@ -54165,6 +55223,7 @@ module.exports = (function() {
     }
 
     function peg$parseNUMBER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -54199,6 +55258,7 @@ module.exports = (function() {
     }
 
     function peg$parseNUMERIC_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1111) {
@@ -54213,6 +55273,7 @@ module.exports = (function() {
     }
 
     function peg$parseNVARCHAR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1113) {
@@ -54227,6 +55288,7 @@ module.exports = (function() {
     }
 
     function peg$parseOFFLINE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1115) {
@@ -54241,6 +55303,7 @@ module.exports = (function() {
     }
 
     function peg$parseOFFSET_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1117) {
@@ -54255,6 +55318,7 @@ module.exports = (function() {
     }
 
     function peg$parseOLD_PASSWORD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -54289,6 +55353,7 @@ module.exports = (function() {
     }
 
     function peg$parseON_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c1122) {
@@ -54303,6 +55368,7 @@ module.exports = (function() {
     }
 
     function peg$parseONE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c1124) {
@@ -54317,6 +55383,7 @@ module.exports = (function() {
     }
 
     function peg$parseONLINE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1126) {
@@ -54331,6 +55398,7 @@ module.exports = (function() {
     }
 
     function peg$parseONLY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -54365,6 +55433,7 @@ module.exports = (function() {
     }
 
     function peg$parseOPEN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1130) {
@@ -54379,6 +55448,7 @@ module.exports = (function() {
     }
 
     function peg$parseOPTIMIZE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1132) {
@@ -54393,6 +55463,7 @@ module.exports = (function() {
     }
 
     function peg$parseOPTIMIZER_COSTS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -54427,6 +55498,7 @@ module.exports = (function() {
     }
 
     function peg$parseOPTIONS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1136) {
@@ -54441,6 +55513,7 @@ module.exports = (function() {
     }
 
     function peg$parseOPTION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1138) {
@@ -54455,6 +55528,7 @@ module.exports = (function() {
     }
 
     function peg$parseOPTIONALLY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1140) {
@@ -54469,6 +55543,7 @@ module.exports = (function() {
     }
 
     function peg$parseORDER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1142) {
@@ -54483,6 +55558,7 @@ module.exports = (function() {
     }
 
     function peg$parseOR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c1144) {
@@ -54497,6 +55573,7 @@ module.exports = (function() {
     }
 
     function peg$parseOUTER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1146) {
@@ -54511,6 +55588,7 @@ module.exports = (function() {
     }
 
     function peg$parseOUTFILE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1148) {
@@ -54525,6 +55603,7 @@ module.exports = (function() {
     }
 
     function peg$parseOUT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c1150) {
@@ -54539,6 +55618,7 @@ module.exports = (function() {
     }
 
     function peg$parseOWNER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1152) {
@@ -54553,6 +55633,7 @@ module.exports = (function() {
     }
 
     function peg$parsePACK_KEYS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1154) {
@@ -54567,6 +55648,7 @@ module.exports = (function() {
     }
 
     function peg$parsePAGE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1156) {
@@ -54581,6 +55663,7 @@ module.exports = (function() {
     }
 
     function peg$parsePARSER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1158) {
@@ -54595,6 +55678,7 @@ module.exports = (function() {
     }
 
     function peg$parsePARTIAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1160) {
@@ -54609,6 +55693,7 @@ module.exports = (function() {
     }
 
     function peg$parsePARTITIONING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c1162) {
@@ -54623,6 +55708,7 @@ module.exports = (function() {
     }
 
     function peg$parsePARTITIONS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1164) {
@@ -54637,6 +55723,7 @@ module.exports = (function() {
     }
 
     function peg$parsePARTITION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1166) {
@@ -54651,6 +55738,7 @@ module.exports = (function() {
     }
 
     function peg$parsePASSWORD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1168) {
@@ -54665,6 +55753,7 @@ module.exports = (function() {
     }
 
     function peg$parsePHASE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1170) {
@@ -54679,6 +55768,7 @@ module.exports = (function() {
     }
 
     function peg$parsePLUGINS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1172) {
@@ -54693,6 +55783,7 @@ module.exports = (function() {
     }
 
     function peg$parsePLUGIN_DIR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -54727,6 +55818,7 @@ module.exports = (function() {
     }
 
     function peg$parsePLUGIN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1176) {
@@ -54741,6 +55833,7 @@ module.exports = (function() {
     }
 
     function peg$parsePOINT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1178) {
@@ -54755,6 +55848,7 @@ module.exports = (function() {
     }
 
     function peg$parsePOLYGON_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1180) {
@@ -54769,6 +55863,7 @@ module.exports = (function() {
     }
 
     function peg$parsePORT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1182) {
@@ -54783,6 +55878,7 @@ module.exports = (function() {
     }
 
     function peg$parsePOSITION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -54803,6 +55899,7 @@ module.exports = (function() {
     }
 
     function peg$parsePRECEDES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -54837,6 +55934,7 @@ module.exports = (function() {
     }
 
     function peg$parsePRECISION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1189) {
@@ -54851,6 +55949,7 @@ module.exports = (function() {
     }
 
     function peg$parsePREPARE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1191) {
@@ -54865,6 +55964,7 @@ module.exports = (function() {
     }
 
     function peg$parsePRESERVE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1193) {
@@ -54879,6 +55979,7 @@ module.exports = (function() {
     }
 
     function peg$parsePREV_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1195) {
@@ -54893,6 +55994,7 @@ module.exports = (function() {
     }
 
     function peg$parsePRIMARY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1197) {
@@ -54907,6 +56009,7 @@ module.exports = (function() {
     }
 
     function peg$parsePRIVILEGES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1199) {
@@ -54921,6 +56024,7 @@ module.exports = (function() {
     }
 
     function peg$parsePROCEDURE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1201) {
@@ -54935,6 +56039,7 @@ module.exports = (function() {
     }
 
     function peg$parsePROCESS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1203) {
@@ -54949,6 +56054,7 @@ module.exports = (function() {
     }
 
     function peg$parsePROCESSLIST_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c1205) {
@@ -54963,6 +56069,7 @@ module.exports = (function() {
     }
 
     function peg$parsePROFILE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1207) {
@@ -54977,6 +56084,7 @@ module.exports = (function() {
     }
 
     function peg$parsePROFILES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1209) {
@@ -54991,6 +56099,7 @@ module.exports = (function() {
     }
 
     function peg$parsePROXY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1211) {
@@ -55005,6 +56114,7 @@ module.exports = (function() {
     }
 
     function peg$parsePURGE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1213) {
@@ -55019,6 +56129,7 @@ module.exports = (function() {
     }
 
     function peg$parseQUARTER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1215) {
@@ -55033,6 +56144,7 @@ module.exports = (function() {
     }
 
     function peg$parseQUERY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1217) {
@@ -55047,6 +56159,7 @@ module.exports = (function() {
     }
 
     function peg$parseQUICK_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1219) {
@@ -55061,6 +56174,7 @@ module.exports = (function() {
     }
 
     function peg$parseRANGE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1221) {
@@ -55075,6 +56189,7 @@ module.exports = (function() {
     }
 
     function peg$parseREADS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1223) {
@@ -55089,6 +56204,7 @@ module.exports = (function() {
     }
 
     function peg$parseREAD_ONLY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1225) {
@@ -55103,6 +56219,7 @@ module.exports = (function() {
     }
 
     function peg$parseREAD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1227) {
@@ -55117,6 +56234,7 @@ module.exports = (function() {
     }
 
     function peg$parseREAD_WRITE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1229) {
@@ -55131,6 +56249,7 @@ module.exports = (function() {
     }
 
     function peg$parseREAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1231) {
@@ -55145,6 +56264,7 @@ module.exports = (function() {
     }
 
     function peg$parseREBUILD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1233) {
@@ -55159,6 +56279,7 @@ module.exports = (function() {
     }
 
     function peg$parseRECOVER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1235) {
@@ -55173,6 +56294,7 @@ module.exports = (function() {
     }
 
     function peg$parseREDOFILE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -55207,6 +56329,7 @@ module.exports = (function() {
     }
 
     function peg$parseREDO_BUFFER_SIZE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 16) === peg$c1239) {
@@ -55221,6 +56344,7 @@ module.exports = (function() {
     }
 
     function peg$parseREDUNDANT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1241) {
@@ -55235,6 +56359,7 @@ module.exports = (function() {
     }
 
     function peg$parseREFERENCES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1243) {
@@ -55249,6 +56374,7 @@ module.exports = (function() {
     }
 
     function peg$parseREGEXP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1245) {
@@ -55263,6 +56389,7 @@ module.exports = (function() {
     }
 
     function peg$parseRELAY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1247) {
@@ -55277,6 +56404,7 @@ module.exports = (function() {
     }
 
     function peg$parseRELAYLOG_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1249) {
@@ -55291,6 +56419,7 @@ module.exports = (function() {
     }
 
     function peg$parseRELAY_LOG_FILE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 14) === peg$c1251) {
@@ -55305,6 +56434,7 @@ module.exports = (function() {
     }
 
     function peg$parseRELAY_LOG_POS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 13) === peg$c1253) {
@@ -55319,6 +56449,7 @@ module.exports = (function() {
     }
 
     function peg$parseRELAY_THREAD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c1255) {
@@ -55333,6 +56464,7 @@ module.exports = (function() {
     }
 
     function peg$parseRELEASE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1257) {
@@ -55347,6 +56479,7 @@ module.exports = (function() {
     }
 
     function peg$parseRELOAD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1259) {
@@ -55361,6 +56494,7 @@ module.exports = (function() {
     }
 
     function peg$parseREMOVE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1261) {
@@ -55375,6 +56509,7 @@ module.exports = (function() {
     }
 
     function peg$parseRENAME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1263) {
@@ -55389,6 +56524,7 @@ module.exports = (function() {
     }
 
     function peg$parseREORGANIZE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1265) {
@@ -55403,6 +56539,7 @@ module.exports = (function() {
     }
 
     function peg$parseREPAIR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1267) {
@@ -55417,6 +56554,7 @@ module.exports = (function() {
     }
 
     function peg$parseREPEATABLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1269) {
@@ -55431,6 +56569,7 @@ module.exports = (function() {
     }
 
     function peg$parseREPEAT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -55451,6 +56590,7 @@ module.exports = (function() {
     }
 
     function peg$parseREPLACE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -55471,6 +56611,7 @@ module.exports = (function() {
     }
 
     function peg$parseREPLICATION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c1277) {
@@ -55485,6 +56626,7 @@ module.exports = (function() {
     }
 
     function peg$parseREPLICATE_DO_DB_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -55519,6 +56661,7 @@ module.exports = (function() {
     }
 
     function peg$parseREPLICATE_IGNORE_DB_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -55553,6 +56696,7 @@ module.exports = (function() {
     }
 
     function peg$parseREPLICATE_DO_TABLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -55587,6 +56731,7 @@ module.exports = (function() {
     }
 
     function peg$parseREPLICATE_IGNORE_TABLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -55621,6 +56766,7 @@ module.exports = (function() {
     }
 
     function peg$parseREPLICATE_WILD_DO_TABLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -55655,6 +56801,7 @@ module.exports = (function() {
     }
 
     function peg$parseREPLICATE_WILD_IGNORE_TABLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -55689,6 +56836,7 @@ module.exports = (function() {
     }
 
     function peg$parseREPLICATE_REWRITE_DB_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -55723,6 +56871,7 @@ module.exports = (function() {
     }
 
     function peg$parseREQUIRE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1293) {
@@ -55737,6 +56886,7 @@ module.exports = (function() {
     }
 
     function peg$parseRESET_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1295) {
@@ -55751,6 +56901,7 @@ module.exports = (function() {
     }
 
     function peg$parseRESIGNAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1297) {
@@ -55765,6 +56916,7 @@ module.exports = (function() {
     }
 
     function peg$parseRESTORE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1299) {
@@ -55779,6 +56931,7 @@ module.exports = (function() {
     }
 
     function peg$parseRESTRICT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1301) {
@@ -55793,6 +56946,7 @@ module.exports = (function() {
     }
 
     function peg$parseRESUME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1303) {
@@ -55807,6 +56961,7 @@ module.exports = (function() {
     }
 
     function peg$parseRETURNED_SQLSTATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 17) === peg$c1305) {
@@ -55821,6 +56976,7 @@ module.exports = (function() {
     }
 
     function peg$parseRETURNS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1307) {
@@ -55835,6 +56991,7 @@ module.exports = (function() {
     }
 
     function peg$parseRETURN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1309) {
@@ -55852,6 +57009,7 @@ module.exports = (function() {
     }
 
     function peg$parseREVERSE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1311) {
@@ -55866,6 +57024,7 @@ module.exports = (function() {
     }
 
     function peg$parseREVOKE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1313) {
@@ -55880,6 +57039,7 @@ module.exports = (function() {
     }
 
     function peg$parseRIGHT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1315) {
@@ -55894,6 +57054,7 @@ module.exports = (function() {
     }
 
     function peg$parseRLIKE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -55914,6 +57075,7 @@ module.exports = (function() {
     }
 
     function peg$parseROLLBACK_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1320) {
@@ -55928,6 +57090,7 @@ module.exports = (function() {
     }
 
     function peg$parseROLLUP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1322) {
@@ -55942,6 +57105,7 @@ module.exports = (function() {
     }
 
     function peg$parseROTATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -55976,6 +57140,7 @@ module.exports = (function() {
     }
 
     function peg$parseROUTINE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1326) {
@@ -55990,6 +57155,7 @@ module.exports = (function() {
     }
 
     function peg$parseROWS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1328) {
@@ -56004,6 +57170,7 @@ module.exports = (function() {
     }
 
     function peg$parseROW_COUNT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1330) {
@@ -56018,6 +57185,7 @@ module.exports = (function() {
     }
 
     function peg$parseROW_FORMAT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1332) {
@@ -56032,6 +57200,7 @@ module.exports = (function() {
     }
 
     function peg$parseROW_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c1334) {
@@ -56046,6 +57215,7 @@ module.exports = (function() {
     }
 
     function peg$parseRTREE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1336) {
@@ -56060,6 +57230,7 @@ module.exports = (function() {
     }
 
     function peg$parseSAVEPOINT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1338) {
@@ -56074,6 +57245,7 @@ module.exports = (function() {
     }
 
     function peg$parseSCHEDULE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1340) {
@@ -56088,6 +57260,7 @@ module.exports = (function() {
     }
 
     function peg$parseSCHEMA_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -56108,6 +57281,7 @@ module.exports = (function() {
     }
 
     function peg$parseSCHEMA_NAME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c1345) {
@@ -56122,6 +57296,7 @@ module.exports = (function() {
     }
 
     function peg$parseSCHEMAS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -56142,6 +57317,7 @@ module.exports = (function() {
     }
 
     function peg$parseSECOND_MICROSECOND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 18) === peg$c1350) {
@@ -56156,6 +57332,7 @@ module.exports = (function() {
     }
 
     function peg$parseSECOND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1352) {
@@ -56170,6 +57347,7 @@ module.exports = (function() {
     }
 
     function peg$parseSECURITY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1354) {
@@ -56184,6 +57362,7 @@ module.exports = (function() {
     }
 
     function peg$parseSELECT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1356) {
@@ -56198,6 +57377,7 @@ module.exports = (function() {
     }
 
     function peg$parseSENSITIVE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1358) {
@@ -56212,6 +57392,7 @@ module.exports = (function() {
     }
 
     function peg$parseSEPARATOR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1360) {
@@ -56226,6 +57407,7 @@ module.exports = (function() {
     }
 
     function peg$parseSERIALIZABLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c1362) {
@@ -56240,6 +57422,7 @@ module.exports = (function() {
     }
 
     function peg$parseSERIAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1364) {
@@ -56254,6 +57437,7 @@ module.exports = (function() {
     }
 
     function peg$parseSESSION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1366) {
@@ -56268,6 +57452,7 @@ module.exports = (function() {
     }
 
     function peg$parseSERVER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1368) {
@@ -56282,6 +57467,7 @@ module.exports = (function() {
     }
 
     function peg$parseSERVER_OPTIONS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 14) === peg$c1370) {
@@ -56296,6 +57482,7 @@ module.exports = (function() {
     }
 
     function peg$parseSESSION_USER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -56316,6 +57503,7 @@ module.exports = (function() {
     }
 
     function peg$parseSET_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c1375) {
@@ -56330,6 +57518,7 @@ module.exports = (function() {
     }
 
     function peg$parseSET_VAR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1377) {
@@ -56344,6 +57533,7 @@ module.exports = (function() {
     }
 
     function peg$parseSHARE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1379) {
@@ -56358,6 +57548,7 @@ module.exports = (function() {
     }
 
     function peg$parseSHOW_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1381) {
@@ -56372,6 +57563,7 @@ module.exports = (function() {
     }
 
     function peg$parseSHUTDOWN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1383) {
@@ -56386,6 +57578,7 @@ module.exports = (function() {
     }
 
     function peg$parseSIGNAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1385) {
@@ -56400,6 +57593,7 @@ module.exports = (function() {
     }
 
     function peg$parseSIGNED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1387) {
@@ -56414,6 +57608,7 @@ module.exports = (function() {
     }
 
     function peg$parseSIMPLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1389) {
@@ -56428,6 +57623,7 @@ module.exports = (function() {
     }
 
     function peg$parseSLAVE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1391) {
@@ -56442,6 +57638,7 @@ module.exports = (function() {
     }
 
     function peg$parseSLOW_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1393) {
@@ -56456,6 +57653,7 @@ module.exports = (function() {
     }
 
     function peg$parseSMALLINT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1395) {
@@ -56470,6 +57668,7 @@ module.exports = (function() {
     }
 
     function peg$parseSNAPSHOT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1397) {
@@ -56484,6 +57683,7 @@ module.exports = (function() {
     }
 
     function peg$parseSOME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -56504,6 +57704,7 @@ module.exports = (function() {
     }
 
     function peg$parseSOCKET_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1402) {
@@ -56518,6 +57719,7 @@ module.exports = (function() {
     }
 
     function peg$parseSONAME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1404) {
@@ -56532,6 +57734,7 @@ module.exports = (function() {
     }
 
     function peg$parseSOUNDS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1406) {
@@ -56546,6 +57749,7 @@ module.exports = (function() {
     }
 
     function peg$parseSOURCE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1408) {
@@ -56560,6 +57764,7 @@ module.exports = (function() {
     }
 
     function peg$parseSPATIAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1410) {
@@ -56574,6 +57779,7 @@ module.exports = (function() {
     }
 
     function peg$parseSPECIFIC_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1412) {
@@ -56588,6 +57794,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQLEXCEPTION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c1414) {
@@ -56602,6 +57809,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQLSTATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1416) {
@@ -56616,6 +57824,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQLWARNING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1418) {
@@ -56630,6 +57839,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_AFTER_GTIDS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 15) === peg$c1420) {
@@ -56644,6 +57854,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_AFTER_MTS_GAPS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -56678,6 +57889,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_BEFORE_GTIDS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 16) === peg$c1424) {
@@ -56692,6 +57904,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_BIG_RESULT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 14) === peg$c1426) {
@@ -56706,6 +57919,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_BUFFER_RESULT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 17) === peg$c1428) {
@@ -56720,6 +57934,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_CACHE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -56754,6 +57969,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_CALC_FOUND_ROWS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 19) === peg$c1432) {
@@ -56768,6 +57984,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_NO_CACHE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c1434) {
@@ -56782,6 +57999,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_SMALL_RESULT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 16) === peg$c1436) {
@@ -56796,6 +58014,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c1438) {
@@ -56810,6 +58029,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_THREAD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1440) {
@@ -56824,6 +58044,7 @@ module.exports = (function() {
     }
 
     function peg$parseSSL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c1442) {
@@ -56838,6 +58059,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTACKED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -56872,6 +58094,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTARTING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1446) {
@@ -56886,6 +58109,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTARTS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1448) {
@@ -56900,6 +58124,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTART_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1450) {
@@ -56914,6 +58139,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTATS_AUTO_RECALC_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 17) === peg$c1452) {
@@ -56928,6 +58154,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTATS_PERSISTENT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 16) === peg$c1454) {
@@ -56942,6 +58169,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTATS_SAMPLE_PAGES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 18) === peg$c1456) {
@@ -56956,6 +58184,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTATUS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1458) {
@@ -56970,6 +58199,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTDDEV_SAMP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -56990,6 +58220,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTDDEV_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -57010,6 +58241,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTDDEV_POP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -57030,6 +58262,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -57050,6 +58283,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTOP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1470) {
@@ -57064,6 +58298,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTORAGE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1472) {
@@ -57078,6 +58313,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTORED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -57112,6 +58348,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTRAIGHT_JOIN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 13) === peg$c1476) {
@@ -57126,6 +58363,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTRING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1478) {
@@ -57140,6 +58378,7 @@ module.exports = (function() {
     }
 
     function peg$parseSUBCLASS_ORIGIN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 15) === peg$c1480) {
@@ -57154,6 +58393,7 @@ module.exports = (function() {
     }
 
     function peg$parseSUBDATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -57174,6 +58414,7 @@ module.exports = (function() {
     }
 
     function peg$parseSUBJECT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1485) {
@@ -57188,6 +58429,7 @@ module.exports = (function() {
     }
 
     function peg$parseSUBPARTITIONS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 13) === peg$c1487) {
@@ -57202,6 +58444,7 @@ module.exports = (function() {
     }
 
     function peg$parseSUBPARTITION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 12) === peg$c1489) {
@@ -57216,6 +58459,7 @@ module.exports = (function() {
     }
 
     function peg$parseSUBSTR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -57236,6 +58480,7 @@ module.exports = (function() {
     }
 
     function peg$parseSUBSTRING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -57256,6 +58501,7 @@ module.exports = (function() {
     }
 
     function peg$parseSUM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -57276,6 +58522,7 @@ module.exports = (function() {
     }
 
     function peg$parseSUPER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1498) {
@@ -57290,6 +58537,7 @@ module.exports = (function() {
     }
 
     function peg$parseSUSPEND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1500) {
@@ -57304,6 +58552,7 @@ module.exports = (function() {
     }
 
     function peg$parseSWAPS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1502) {
@@ -57318,6 +58567,7 @@ module.exports = (function() {
     }
 
     function peg$parseSWITCHES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1504) {
@@ -57332,6 +58582,7 @@ module.exports = (function() {
     }
 
     function peg$parseSYSDATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -57352,6 +58603,7 @@ module.exports = (function() {
     }
 
     function peg$parseSYSTEM_USER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -57372,6 +58624,7 @@ module.exports = (function() {
     }
 
     function peg$parseTABLES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1511) {
@@ -57386,6 +58639,7 @@ module.exports = (function() {
     }
 
     function peg$parseTABLESPACE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1513) {
@@ -57400,6 +58654,7 @@ module.exports = (function() {
     }
 
     function peg$parseTABLE_REF_PRIORITY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -57434,6 +58689,7 @@ module.exports = (function() {
     }
 
     function peg$parseTABLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1517) {
@@ -57448,6 +58704,7 @@ module.exports = (function() {
     }
 
     function peg$parseTABLE_CHECKSUM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 14) === peg$c1519) {
@@ -57462,6 +58719,7 @@ module.exports = (function() {
     }
 
     function peg$parseTABLE_NAME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1521) {
@@ -57476,6 +58734,7 @@ module.exports = (function() {
     }
 
     function peg$parseTEMPORARY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1523) {
@@ -57490,6 +58749,7 @@ module.exports = (function() {
     }
 
     function peg$parseTEMPTABLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1525) {
@@ -57504,6 +58764,7 @@ module.exports = (function() {
     }
 
     function peg$parseTERMINATED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1527) {
@@ -57518,6 +58779,7 @@ module.exports = (function() {
     }
 
     function peg$parseTEXT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1529) {
@@ -57532,6 +58794,7 @@ module.exports = (function() {
     }
 
     function peg$parseTHAN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1531) {
@@ -57546,6 +58809,7 @@ module.exports = (function() {
     }
 
     function peg$parseTHEN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1533) {
@@ -57560,6 +58824,7 @@ module.exports = (function() {
     }
 
     function peg$parseTIMESTAMP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1535) {
@@ -57574,6 +58839,7 @@ module.exports = (function() {
     }
 
     function peg$parseTIMESTAMP_ADD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 13) === peg$c1537) {
@@ -57588,6 +58854,7 @@ module.exports = (function() {
     }
 
     function peg$parseTIMESTAMP_DIFF_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 14) === peg$c1539) {
@@ -57602,6 +58869,7 @@ module.exports = (function() {
     }
 
     function peg$parseTIME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1541) {
@@ -57616,6 +58884,7 @@ module.exports = (function() {
     }
 
     function peg$parseTINYBLOB_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1543) {
@@ -57630,6 +58899,7 @@ module.exports = (function() {
     }
 
     function peg$parseTINYINT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1545) {
@@ -57644,6 +58914,7 @@ module.exports = (function() {
     }
 
     function peg$parseTINYTEXT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1547) {
@@ -57658,6 +58929,7 @@ module.exports = (function() {
     }
 
     function peg$parseTO_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c1549) {
@@ -57672,6 +58944,7 @@ module.exports = (function() {
     }
 
     function peg$parseTRAILING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1551) {
@@ -57686,6 +58959,7 @@ module.exports = (function() {
     }
 
     function peg$parseTRANSACTION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c1553) {
@@ -57700,6 +58974,7 @@ module.exports = (function() {
     }
 
     function peg$parseTRIGGERS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1555) {
@@ -57714,6 +58989,7 @@ module.exports = (function() {
     }
 
     function peg$parseTRIGGER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1557) {
@@ -57728,6 +59004,7 @@ module.exports = (function() {
     }
 
     function peg$parseTRIM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -57748,6 +59025,7 @@ module.exports = (function() {
     }
 
     function peg$parseTRUE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1562) {
@@ -57762,6 +59040,7 @@ module.exports = (function() {
     }
 
     function peg$parseTRUNCATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1564) {
@@ -57776,6 +59055,7 @@ module.exports = (function() {
     }
 
     function peg$parseTYPES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1566) {
@@ -57790,6 +59070,7 @@ module.exports = (function() {
     }
 
     function peg$parseTYPE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1568) {
@@ -57804,6 +59085,7 @@ module.exports = (function() {
     }
 
     function peg$parseUDF_RETURNS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c1570) {
@@ -57818,6 +59100,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNCOMMITTED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 11) === peg$c1572) {
@@ -57832,6 +59115,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNDEFINED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1574) {
@@ -57846,6 +59130,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNDOFILE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1576) {
@@ -57860,6 +59145,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNDO_BUFFER_SIZE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 16) === peg$c1578) {
@@ -57874,6 +59160,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNDO_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1580) {
@@ -57888,6 +59175,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNICODE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1582) {
@@ -57902,6 +59190,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNINSTALL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1584) {
@@ -57916,6 +59205,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1586) {
@@ -57930,6 +59220,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNIQUE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1588) {
@@ -57944,6 +59235,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNKNOWN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1590) {
@@ -57958,6 +59250,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNLOCK_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1592) {
@@ -57972,6 +59265,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNSIGNED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1594) {
@@ -57986,6 +59280,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNTIL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1596) {
@@ -58000,6 +59295,7 @@ module.exports = (function() {
     }
 
     function peg$parseUPDATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1598) {
@@ -58014,6 +59310,7 @@ module.exports = (function() {
     }
 
     function peg$parseUPGRADE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1600) {
@@ -58028,6 +59325,7 @@ module.exports = (function() {
     }
 
     function peg$parseUSAGE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1602) {
@@ -58042,6 +59340,7 @@ module.exports = (function() {
     }
 
     function peg$parseUSER_RESOURCES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 14) === peg$c1604) {
@@ -58056,6 +59355,7 @@ module.exports = (function() {
     }
 
     function peg$parseUSER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1606) {
@@ -58070,6 +59370,7 @@ module.exports = (function() {
     }
 
     function peg$parseUSE_FRM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1608) {
@@ -58084,6 +59385,7 @@ module.exports = (function() {
     }
 
     function peg$parseUSE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c1610) {
@@ -58098,6 +59400,7 @@ module.exports = (function() {
     }
 
     function peg$parseUSING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1612) {
@@ -58112,6 +59415,7 @@ module.exports = (function() {
     }
 
     function peg$parseUTC_DATE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1614) {
@@ -58126,6 +59430,7 @@ module.exports = (function() {
     }
 
     function peg$parseUTC_TIMESTAMP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 13) === peg$c1616) {
@@ -58140,6 +59445,7 @@ module.exports = (function() {
     }
 
     function peg$parseUTC_TIME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1618) {
@@ -58154,6 +59460,7 @@ module.exports = (function() {
     }
 
     function peg$parseVALIDATION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -58188,6 +59495,7 @@ module.exports = (function() {
     }
 
     function peg$parseVALUES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 6) === peg$c1622) {
@@ -58202,6 +59510,7 @@ module.exports = (function() {
     }
 
     function peg$parseVALUE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1624) {
@@ -58216,6 +59525,7 @@ module.exports = (function() {
     }
 
     function peg$parseVARBINARY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1626) {
@@ -58230,6 +59540,7 @@ module.exports = (function() {
     }
 
     function peg$parseVARCHAR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1628) {
@@ -58244,6 +59555,7 @@ module.exports = (function() {
     }
 
     function peg$parseVARCHARACTER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -58264,6 +59576,7 @@ module.exports = (function() {
     }
 
     function peg$parseVARIABLES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 9) === peg$c1633) {
@@ -58278,6 +59591,7 @@ module.exports = (function() {
     }
 
     function peg$parseVARIANCE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -58298,6 +59612,7 @@ module.exports = (function() {
     }
 
     function peg$parseVARYING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1638) {
@@ -58312,6 +59627,7 @@ module.exports = (function() {
     }
 
     function peg$parseVAR_POP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -58332,6 +59648,7 @@ module.exports = (function() {
     }
 
     function peg$parseVAR_SAMP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -58352,6 +59669,7 @@ module.exports = (function() {
     }
 
     function peg$parseVIEW_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1645) {
@@ -58366,6 +59684,7 @@ module.exports = (function() {
     }
 
     function peg$parseVIRTUAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -58400,6 +59719,7 @@ module.exports = (function() {
     }
 
     function peg$parseWAIT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1649) {
@@ -58414,6 +59734,7 @@ module.exports = (function() {
     }
 
     function peg$parseWARNINGS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1651) {
@@ -58428,6 +59749,7 @@ module.exports = (function() {
     }
 
     function peg$parseWEEK_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1653) {
@@ -58442,6 +59764,7 @@ module.exports = (function() {
     }
 
     function peg$parseWEIGHT_STRING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 13) === peg$c1655) {
@@ -58456,6 +59779,7 @@ module.exports = (function() {
     }
 
     function peg$parseWHEN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1657) {
@@ -58470,6 +59794,7 @@ module.exports = (function() {
     }
 
     function peg$parseWHERE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1659) {
@@ -58484,6 +59809,7 @@ module.exports = (function() {
     }
 
     function peg$parseWHILE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1661) {
@@ -58498,6 +59824,7 @@ module.exports = (function() {
     }
 
     function peg$parseWITH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1663) {
@@ -58512,6 +59839,7 @@ module.exports = (function() {
     }
 
     function peg$parseWITHOUT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1665) {
@@ -58526,6 +59854,7 @@ module.exports = (function() {
     }
 
     function peg$parseWORK_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1667) {
@@ -58540,6 +59869,7 @@ module.exports = (function() {
     }
 
     function peg$parseWRAPPER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 7) === peg$c1669) {
@@ -58554,6 +59884,7 @@ module.exports = (function() {
     }
 
     function peg$parseWRITE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 5) === peg$c1671) {
@@ -58568,6 +59899,7 @@ module.exports = (function() {
     }
 
     function peg$parseX509_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1673) {
@@ -58582,6 +59914,7 @@ module.exports = (function() {
     }
 
     function peg$parseXA_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 2) === peg$c1675) {
@@ -58596,6 +59929,7 @@ module.exports = (function() {
     }
 
     function peg$parseXID_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -58630,6 +59964,7 @@ module.exports = (function() {
     }
 
     function peg$parseXML_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c1679) {
@@ -58644,6 +59979,7 @@ module.exports = (function() {
     }
 
     function peg$parseXOR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 3) === peg$c1681) {
@@ -58658,6 +59994,7 @@ module.exports = (function() {
     }
 
     function peg$parseYEAR_MONTH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 10) === peg$c1683) {
@@ -58672,6 +60009,7 @@ module.exports = (function() {
     }
 
     function peg$parseYEAR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 4) === peg$c1685) {
@@ -58686,6 +60024,7 @@ module.exports = (function() {
     }
 
     function peg$parseZEROFILL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0;
 
       if (input.substr(peg$currPos, 8) === peg$c1687) {
@@ -58700,6 +60039,7 @@ module.exports = (function() {
     }
 
     function peg$parsePERSIST_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -58734,6 +60074,7 @@ module.exports = (function() {
     }
 
     function peg$parseROLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -58768,6 +60109,7 @@ module.exports = (function() {
     }
 
     function peg$parseADMIN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -58802,6 +60144,7 @@ module.exports = (function() {
     }
 
     function peg$parseINVISIBLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -58836,6 +60179,7 @@ module.exports = (function() {
     }
 
     function peg$parseVISIBLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -58870,6 +60214,7 @@ module.exports = (function() {
     }
 
     function peg$parseEXCEPT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -58904,6 +60249,7 @@ module.exports = (function() {
     }
 
     function peg$parseCOMPONENT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -58938,6 +60284,7 @@ module.exports = (function() {
     }
 
     function peg$parseRECURSIVE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -58972,6 +60319,7 @@ module.exports = (function() {
     }
 
     function peg$parseJSON_OBJECTAGG_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59006,6 +60354,7 @@ module.exports = (function() {
     }
 
     function peg$parseJSON_ARRAYAGG_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59040,6 +60389,7 @@ module.exports = (function() {
     }
 
     function peg$parseOF_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59074,6 +60424,7 @@ module.exports = (function() {
     }
 
     function peg$parseSKIP_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59108,6 +60459,7 @@ module.exports = (function() {
     }
 
     function peg$parseLOCKED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59142,6 +60494,7 @@ module.exports = (function() {
     }
 
     function peg$parseNOWAIT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59176,6 +60529,7 @@ module.exports = (function() {
     }
 
     function peg$parseGROUPING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59210,6 +60564,7 @@ module.exports = (function() {
     }
 
     function peg$parsePERSIST_ONLY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59244,6 +60599,7 @@ module.exports = (function() {
     }
 
     function peg$parseHISTOGRAM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59278,6 +60634,7 @@ module.exports = (function() {
     }
 
     function peg$parseBUCKETS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59312,6 +60669,7 @@ module.exports = (function() {
     }
 
     function peg$parseREMOTE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59346,6 +60704,7 @@ module.exports = (function() {
     }
 
     function peg$parseCLONE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59380,6 +60739,7 @@ module.exports = (function() {
     }
 
     function peg$parseCUME_DIST_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59414,6 +60774,7 @@ module.exports = (function() {
     }
 
     function peg$parseDENSE_RANK_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59448,6 +60809,7 @@ module.exports = (function() {
     }
 
     function peg$parseEXCLUDE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59482,6 +60844,7 @@ module.exports = (function() {
     }
 
     function peg$parseFIRST_VALUE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59516,6 +60879,7 @@ module.exports = (function() {
     }
 
     function peg$parseFOLLOWING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59550,6 +60914,7 @@ module.exports = (function() {
     }
 
     function peg$parseGROUPS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59584,6 +60949,7 @@ module.exports = (function() {
     }
 
     function peg$parseLAG_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59618,6 +60984,7 @@ module.exports = (function() {
     }
 
     function peg$parseLAST_VALUE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59652,6 +61019,7 @@ module.exports = (function() {
     }
 
     function peg$parseLEAD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59686,6 +61054,7 @@ module.exports = (function() {
     }
 
     function peg$parseNTH_VALUE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59720,6 +61089,7 @@ module.exports = (function() {
     }
 
     function peg$parseNTILE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59754,6 +61124,7 @@ module.exports = (function() {
     }
 
     function peg$parseNULLS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59788,6 +61159,7 @@ module.exports = (function() {
     }
 
     function peg$parseOTHERS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59822,6 +61194,7 @@ module.exports = (function() {
     }
 
     function peg$parseOVER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59856,6 +61229,7 @@ module.exports = (function() {
     }
 
     function peg$parsePERCENT_RANK_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59890,6 +61264,7 @@ module.exports = (function() {
     }
 
     function peg$parsePRECEDING_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59924,6 +61299,7 @@ module.exports = (function() {
     }
 
     function peg$parseRANK_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59958,6 +61334,7 @@ module.exports = (function() {
     }
 
     function peg$parseRESPECT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -59992,6 +61369,7 @@ module.exports = (function() {
     }
 
     function peg$parseROW_NUMBER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60026,6 +61404,7 @@ module.exports = (function() {
     }
 
     function peg$parseTIES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60060,6 +61439,7 @@ module.exports = (function() {
     }
 
     function peg$parseUNBOUNDED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60094,6 +61474,7 @@ module.exports = (function() {
     }
 
     function peg$parseWINDOW_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60128,6 +61509,7 @@ module.exports = (function() {
     }
 
     function peg$parseEMPTY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60162,6 +61544,7 @@ module.exports = (function() {
     }
 
     function peg$parseJSON_TABLE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60196,6 +61579,7 @@ module.exports = (function() {
     }
 
     function peg$parseNESTED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60230,6 +61614,7 @@ module.exports = (function() {
     }
 
     function peg$parseORDINALITY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60264,6 +61649,7 @@ module.exports = (function() {
     }
 
     function peg$parsePATH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60298,6 +61684,7 @@ module.exports = (function() {
     }
 
     function peg$parseHISTORY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60332,6 +61719,7 @@ module.exports = (function() {
     }
 
     function peg$parseREUSE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60366,6 +61754,7 @@ module.exports = (function() {
     }
 
     function peg$parseSRID_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60400,6 +61789,7 @@ module.exports = (function() {
     }
 
     function peg$parseTHREAD_PRIORITY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60434,6 +61824,7 @@ module.exports = (function() {
     }
 
     function peg$parseRESOURCE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60468,6 +61859,7 @@ module.exports = (function() {
     }
 
     function peg$parseSYSTEM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60502,6 +61894,7 @@ module.exports = (function() {
     }
 
     function peg$parseVCPU_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60536,6 +61929,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_PUBLIC_KEY_PATH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60570,6 +61964,7 @@ module.exports = (function() {
     }
 
     function peg$parseGET_MASTER_PUBLIC_KEY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60604,6 +61999,7 @@ module.exports = (function() {
     }
 
     function peg$parseRESTART_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60638,6 +62034,7 @@ module.exports = (function() {
     }
 
     function peg$parseDEFINITION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60672,6 +62069,7 @@ module.exports = (function() {
     }
 
     function peg$parseDESCRIPTION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60706,6 +62104,7 @@ module.exports = (function() {
     }
 
     function peg$parseORGANIZATION_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60740,6 +62139,7 @@ module.exports = (function() {
     }
 
     function peg$parseREFERENCE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60774,6 +62174,7 @@ module.exports = (function() {
     }
 
     function peg$parseOPTIONAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60808,6 +62209,7 @@ module.exports = (function() {
     }
 
     function peg$parseSECONDARY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60842,6 +62244,7 @@ module.exports = (function() {
     }
 
     function peg$parseSECONDARY_ENGINE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60876,6 +62279,7 @@ module.exports = (function() {
     }
 
     function peg$parseSECONDARY_LOAD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60910,6 +62314,7 @@ module.exports = (function() {
     }
 
     function peg$parseSECONDARY_UNLOAD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60944,6 +62349,7 @@ module.exports = (function() {
     }
 
     function peg$parseACTIVE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -60978,6 +62384,7 @@ module.exports = (function() {
     }
 
     function peg$parseINACTIVE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61012,6 +62419,7 @@ module.exports = (function() {
     }
 
     function peg$parseLATERAL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61046,6 +62454,7 @@ module.exports = (function() {
     }
 
     function peg$parseRETAIN_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61080,6 +62489,7 @@ module.exports = (function() {
     }
 
     function peg$parseOLD_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61114,6 +62524,7 @@ module.exports = (function() {
     }
 
     function peg$parseNETWORK_NAMESPACE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61148,6 +62559,7 @@ module.exports = (function() {
     }
 
     function peg$parseENFORCED_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61182,6 +62594,7 @@ module.exports = (function() {
     }
 
     function peg$parseARRAY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61216,6 +62629,7 @@ module.exports = (function() {
     }
 
     function peg$parseOJ_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61250,6 +62664,7 @@ module.exports = (function() {
     }
 
     function peg$parseMEMBER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61284,6 +62699,7 @@ module.exports = (function() {
     }
 
     function peg$parseRANDOM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61318,6 +62734,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_COMPRESSION_ALGORITHM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61352,6 +62769,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_ZSTD_COMPRESSION_LEVEL_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61386,6 +62804,7 @@ module.exports = (function() {
     }
 
     function peg$parsePRIVILEGE_CHECKS_USER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61420,6 +62839,7 @@ module.exports = (function() {
     }
 
     function peg$parseMASTER_TLS_CIPHERSUITES_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61454,6 +62874,7 @@ module.exports = (function() {
     }
 
     function peg$parseREQUIRE_ROW_FORMAT_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61488,6 +62909,7 @@ module.exports = (function() {
     }
 
     function peg$parsePASSWORD_LOCK_TIME_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61522,6 +62944,7 @@ module.exports = (function() {
     }
 
     function peg$parseFAILED_LOGIN_ATTEMPTS_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61556,6 +62979,7 @@ module.exports = (function() {
     }
 
     function peg$parseREQUIRE_TABLE_PRIMARY_KEY_CHECK_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61590,6 +63014,7 @@ module.exports = (function() {
     }
 
     function peg$parseSTREAM_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61624,6 +63049,7 @@ module.exports = (function() {
     }
 
     function peg$parseOFF_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1, s2;
 
       s0 = peg$currPos;
@@ -61658,6 +63084,7 @@ module.exports = (function() {
     }
 
     function peg$parseINT1_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -61678,6 +63105,7 @@ module.exports = (function() {
     }
 
     function peg$parseINT2_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -61698,6 +63126,7 @@ module.exports = (function() {
     }
 
     function peg$parseINT3_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -61718,6 +63147,7 @@ module.exports = (function() {
     }
 
     function peg$parseINT4_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -61738,6 +63168,7 @@ module.exports = (function() {
     }
 
     function peg$parseINT8_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -61758,6 +63189,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_TSI_SECOND_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -61778,6 +63210,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_TSI_MINUTE_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -61798,6 +63231,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_TSI_HOUR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -61818,6 +63252,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_TSI_DAY_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -61838,6 +63273,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_TSI_WEEK_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -61858,6 +63294,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_TSI_MONTH_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -61878,6 +63315,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_TSI_QUARTER_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -61898,6 +63336,7 @@ module.exports = (function() {
     }
 
     function peg$parseSQL_TSI_YEAR_SYMBOL() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -61918,15 +63357,26 @@ module.exports = (function() {
     }
 
     function peg$parseWHITESPACE() {
-      var s0, s1;
+      var s0, s1, s2;
 
       s0 = peg$currPos;
+      s1 = [];
       if (peg$c1907.test(input.charAt(peg$currPos))) {
-        s1 = input.charAt(peg$currPos);
+        s2 = input.charAt(peg$currPos);
         peg$currPos++;
       } else {
-        s1 = peg$FAILED;
+        s2 = peg$FAILED;
         if (peg$silentFails === 0) { peg$fail(peg$c1908); }
+      }
+      while (s2 !== peg$FAILED) {
+        s1.push(s2);
+        if (peg$c1907.test(input.charAt(peg$currPos))) {
+          s2 = input.charAt(peg$currPos);
+          peg$currPos++;
+        } else {
+          s2 = peg$FAILED;
+          if (peg$silentFails === 0) { peg$fail(peg$c1908); }
+        }
       }
       if (s1 !== peg$FAILED) {
         peg$reportedPos = s0;
@@ -61938,6 +63388,7 @@ module.exports = (function() {
     }
 
     function peg$parseINVALID_INPUT() {
+peg$parseWHITESPACE();
       var s0;
 
       if (peg$c1909.test(input.charAt(peg$currPos))) {
@@ -61997,6 +63448,7 @@ module.exports = (function() {
     }
 
     function peg$parseEOF() {
+peg$parseWHITESPACE();
       var s0, s1;
 
       s0 = peg$currPos;
@@ -62030,13 +63482,6 @@ module.exports = (function() {
         }
       };
       const serverVersion = serverInfo.getServerVersion();
-
-      function override(rule) {
-        return function() {
-          WHITESPACE();  // Skip leading whitespace before every match
-          return rule.apply(this, arguments);
-        };
-      }
 
 
     peg$result = peg$startRuleFunction();
