@@ -1,0 +1,14 @@
+{
+  "name": "canopy",
+  "version": "1.0.0",
+  "description": "Attempt with canopy: https://canopy.jcoglan.com/langs/javascript.html",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "canopy": "^0.4.1"
+  }
+}
