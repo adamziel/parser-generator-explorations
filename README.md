@@ -13,6 +13,7 @@ What we have so far:
 * [An abandoned Ohm exploration](https://github.com/adamziel/parser-generator-explorations/blob/7f08b9d563cfb3c04d7b5b743904ac6be4e99196/ohm-js/README.md#L11) – Ohn seems promising, but there's no clear way of generating a static parser and the grammar conversion is quite laborous.
 * [A failed Pegen exploration](https://github.com/TheLartians/PEGParser) – Pegen failed to parse the MySQL grammar due to a recursion error.
 * [A C PEG exploration in progress](https://github.com/adamziel/parser-generator-explorations/blob/7f08b9d563cfb3c04d7b5b743904ac6be4e99196/peg/) 
+* [A failed PHP PEG exploration](https://github.com/adamziel/parser-generator-explorations/blob/7f08b9d563cfb3c04d7b5b743904ac6be4e99196/php-peg/) – the parser doesn't produce AST and doesn't seem to correctly process the math expressions included as examples.
 
 Next steps:
 
