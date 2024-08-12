@@ -10,3 +10,7 @@ going on.
 
 Therefore, I'm abandoning this approach and will try to generate
 a parser that provides better debugging tools.
+
+Oh, it's even worse! PEG.js doesn't properly tokenize the input. This means
+that `SELECT 12 FROM` is ambiguous with `SELECT 12F` because the generated
+parser won't realize `FROM` is an identifier.

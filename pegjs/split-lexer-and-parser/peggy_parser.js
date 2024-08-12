@@ -933,59 +933,62 @@ function peg$parse(input, options) {
   var peg$c755 = "DOUBLE_QUOTED_TEXT";
   var peg$c756 = "SINGLE_QUOTED_TEXT";
   var peg$c757 = "HEX_NUMBER";
-  var peg$c758 = "BIN_NUMBER";
-  var peg$c759 = "DECIMAL_NUMBER";
-  var peg$c760 = "INT_NUMBER";
-  var peg$c761 = "FLOAT_NUMBER";
-  var peg$c762 = "UNDERSCORE_CHARSET";
-  var peg$c763 = "DOT_IDENTIFIER";
-  var peg$c764 = "INVALID_INPUT";
-  var peg$c765 = "LINEBREAK";
-  var peg$c766 = "START_SYMBOL";
-  var peg$c767 = "UNLOCK_SYMBOL";
-  var peg$c768 = "CLONE_SYMBOL";
-  var peg$c769 = "GET_SYMBOL";
-  var peg$c770 = "ASCII_SYMBOL";
-  var peg$c771 = "BIT_SYMBOL";
-  var peg$c772 = "BUCKETS_SYMBOL";
-  var peg$c773 = "COMPONENT_SYMBOL";
-  var peg$c774 = "NOW_SYMBOL";
-  var peg$c775 = "DEFINITION_SYMBOL";
-  var peg$c776 = "DENSE_RANK_SYMBOL";
-  var peg$c777 = "DESCRIPTION_SYMBOL";
-  var peg$c778 = "FAILED_LOGIN_ATTEMPTS_SYMBOL";
-  var peg$c779 = "FOLLOWING_SYMBOL";
-  var peg$c780 = "GROUPING_SYMBOL";
-  var peg$c781 = "GROUPS_SYMBOL";
-  var peg$c782 = "LAG_SYMBOL";
-  var peg$c783 = "LONG_SYMBOL";
-  var peg$c784 = "MASTER_COMPRESSION_ALGORITHM_SYMBOL";
-  var peg$c785 = "NOT2_SYMBOL";
-  var peg$c786 = "NO_SYMBOL";
-  var peg$c787 = "REFERENCE_SYMBOL";
-  var peg$c788 = "RETURN_SYMBOL";
-  var peg$c789 = "SPECIFIC_SYMBOL";
-  var peg$c790 = "AUTHORS_SYMBOL";
-  var peg$c791 = "ADDDATE_SYMBOL";
-  var peg$c792 = "CONCAT_PIPES_SYMBOL";
-  var peg$c793 = "ACTIVE_SYMBOL";
-  var peg$c794 = "ADMIN_SYMBOL";
-  var peg$c795 = "EXCLUDE_SYMBOL";
-  var peg$c796 = "INACTIVE_SYMBOL";
-  var peg$c797 = "LOCKED_SYMBOL";
-  var peg$c798 = "ROUTINE_SYMBOL";
-  var peg$c799 = "UNTIL_SYMBOL";
-  var peg$c800 = "ARRAY_SYMBOL";
-  var peg$c801 = "PASSWORD_LOCK_TIME_SYMBOL";
-  var peg$c802 = "NCHAR_TEXT";
-  var peg$c803 = "LONG_NUMBER";
-  var peg$c804 = "ULONGLONG_NUMBER";
-  var peg$c805 = "CUME_DIST_SYMBO";
-  var peg$c806 = "CUME_DIST_SYMBOL";
-  var peg$c807 = "FOUND_ROWS_SYMBOL";
-  var peg$c808 = "CONCAT_SYMBOL";
-  var peg$c809 = "EOF";
+  var peg$c758 = "0b";
+  var peg$c759 = "b'";
+  var peg$c760 = "'";
+  var peg$c761 = "DECIMAL_NUMBER";
+  var peg$c762 = "INT_NUMBER";
+  var peg$c763 = "FLOAT_NUMBER";
+  var peg$c764 = "UNDERSCORE_CHARSET";
+  var peg$c765 = "DOT_IDENTIFIER";
+  var peg$c766 = "INVALID_INPUT";
+  var peg$c767 = "LINEBREAK";
+  var peg$c768 = "START_SYMBOL";
+  var peg$c769 = "UNLOCK_SYMBOL";
+  var peg$c770 = "CLONE_SYMBOL";
+  var peg$c771 = "GET_SYMBOL";
+  var peg$c772 = "ASCII_SYMBOL";
+  var peg$c773 = "BIT_SYMBOL";
+  var peg$c774 = "BUCKETS_SYMBOL";
+  var peg$c775 = "COMPONENT_SYMBOL";
+  var peg$c776 = "NOW_SYMBOL";
+  var peg$c777 = "DEFINITION_SYMBOL";
+  var peg$c778 = "DENSE_RANK_SYMBOL";
+  var peg$c779 = "DESCRIPTION_SYMBOL";
+  var peg$c780 = "FAILED_LOGIN_ATTEMPTS_SYMBOL";
+  var peg$c781 = "FOLLOWING_SYMBOL";
+  var peg$c782 = "GROUPING_SYMBOL";
+  var peg$c783 = "GROUPS_SYMBOL";
+  var peg$c784 = "LAG_SYMBOL";
+  var peg$c785 = "LONG_SYMBOL";
+  var peg$c786 = "MASTER_COMPRESSION_ALGORITHM_SYMBOL";
+  var peg$c787 = "NOT2_SYMBOL";
+  var peg$c788 = "NO_SYMBOL";
+  var peg$c789 = "REFERENCE_SYMBOL";
+  var peg$c790 = "RETURN_SYMBOL";
+  var peg$c791 = "SPECIFIC_SYMBOL";
+  var peg$c792 = "AUTHORS_SYMBOL";
+  var peg$c793 = "ADDDATE_SYMBOL";
+  var peg$c794 = "CONCAT_PIPES_SYMBOL";
+  var peg$c795 = "ACTIVE_SYMBOL";
+  var peg$c796 = "ADMIN_SYMBOL";
+  var peg$c797 = "EXCLUDE_SYMBOL";
+  var peg$c798 = "INACTIVE_SYMBOL";
+  var peg$c799 = "LOCKED_SYMBOL";
+  var peg$c800 = "ROUTINE_SYMBOL";
+  var peg$c801 = "UNTIL_SYMBOL";
+  var peg$c802 = "ARRAY_SYMBOL";
+  var peg$c803 = "PASSWORD_LOCK_TIME_SYMBOL";
+  var peg$c804 = "NCHAR_TEXT";
+  var peg$c805 = "LONG_NUMBER";
+  var peg$c806 = "ULONGLONG_NUMBER";
+  var peg$c807 = "CUME_DIST_SYMBO";
+  var peg$c808 = "CUME_DIST_SYMBOL";
+  var peg$c809 = "FOUND_ROWS_SYMBOL";
+  var peg$c810 = "CONCAT_SYMBOL";
+  var peg$c811 = "EOF";
 
+  var peg$r0 = /^[01]/;
 
   var peg$e0 = peg$literalExpectation("EQUAL_OPERATOR", false);
   var peg$e1 = peg$literalExpectation("ASSIGN_OPERATOR", false);
@@ -1745,58 +1748,61 @@ function peg$parse(input, options) {
   var peg$e755 = peg$literalExpectation("DOUBLE_QUOTED_TEXT", false);
   var peg$e756 = peg$literalExpectation("SINGLE_QUOTED_TEXT", false);
   var peg$e757 = peg$literalExpectation("HEX_NUMBER", false);
-  var peg$e758 = peg$literalExpectation("BIN_NUMBER", false);
-  var peg$e759 = peg$literalExpectation("DECIMAL_NUMBER", false);
-  var peg$e760 = peg$literalExpectation("INT_NUMBER", false);
-  var peg$e761 = peg$literalExpectation("FLOAT_NUMBER", false);
-  var peg$e762 = peg$literalExpectation("UNDERSCORE_CHARSET", false);
-  var peg$e763 = peg$literalExpectation("DOT_IDENTIFIER", false);
-  var peg$e764 = peg$literalExpectation("INVALID_INPUT", false);
-  var peg$e765 = peg$literalExpectation("LINEBREAK", false);
-  var peg$e766 = peg$literalExpectation("START_SYMBOL", false);
-  var peg$e767 = peg$literalExpectation("UNLOCK_SYMBOL", false);
-  var peg$e768 = peg$literalExpectation("CLONE_SYMBOL", false);
-  var peg$e769 = peg$literalExpectation("GET_SYMBOL", false);
-  var peg$e770 = peg$literalExpectation("ASCII_SYMBOL", false);
-  var peg$e771 = peg$literalExpectation("BIT_SYMBOL", false);
-  var peg$e772 = peg$literalExpectation("BUCKETS_SYMBOL", false);
-  var peg$e773 = peg$literalExpectation("COMPONENT_SYMBOL", false);
-  var peg$e774 = peg$literalExpectation("NOW_SYMBOL", false);
-  var peg$e775 = peg$literalExpectation("DEFINITION_SYMBOL", false);
-  var peg$e776 = peg$literalExpectation("DENSE_RANK_SYMBOL", false);
-  var peg$e777 = peg$literalExpectation("DESCRIPTION_SYMBOL", false);
-  var peg$e778 = peg$literalExpectation("FAILED_LOGIN_ATTEMPTS_SYMBOL", false);
-  var peg$e779 = peg$literalExpectation("FOLLOWING_SYMBOL", false);
-  var peg$e780 = peg$literalExpectation("GROUPING_SYMBOL", false);
-  var peg$e781 = peg$literalExpectation("GROUPS_SYMBOL", false);
-  var peg$e782 = peg$literalExpectation("LAG_SYMBOL", false);
-  var peg$e783 = peg$literalExpectation("LONG_SYMBOL", false);
-  var peg$e784 = peg$literalExpectation("MASTER_COMPRESSION_ALGORITHM_SYMBOL", false);
-  var peg$e785 = peg$literalExpectation("NOT2_SYMBOL", false);
-  var peg$e786 = peg$literalExpectation("NO_SYMBOL", false);
-  var peg$e787 = peg$literalExpectation("REFERENCE_SYMBOL", false);
-  var peg$e788 = peg$literalExpectation("RETURN_SYMBOL", false);
-  var peg$e789 = peg$literalExpectation("SPECIFIC_SYMBOL", false);
-  var peg$e790 = peg$literalExpectation("AUTHORS_SYMBOL", false);
-  var peg$e791 = peg$literalExpectation("ADDDATE_SYMBOL", false);
-  var peg$e792 = peg$literalExpectation("CONCAT_PIPES_SYMBOL", false);
-  var peg$e793 = peg$literalExpectation("ACTIVE_SYMBOL", false);
-  var peg$e794 = peg$literalExpectation("ADMIN_SYMBOL", false);
-  var peg$e795 = peg$literalExpectation("EXCLUDE_SYMBOL", false);
-  var peg$e796 = peg$literalExpectation("INACTIVE_SYMBOL", false);
-  var peg$e797 = peg$literalExpectation("LOCKED_SYMBOL", false);
-  var peg$e798 = peg$literalExpectation("ROUTINE_SYMBOL", false);
-  var peg$e799 = peg$literalExpectation("UNTIL_SYMBOL", false);
-  var peg$e800 = peg$literalExpectation("ARRAY_SYMBOL", false);
-  var peg$e801 = peg$literalExpectation("PASSWORD_LOCK_TIME_SYMBOL", false);
-  var peg$e802 = peg$literalExpectation("NCHAR_TEXT", false);
-  var peg$e803 = peg$literalExpectation("LONG_NUMBER", false);
-  var peg$e804 = peg$literalExpectation("ULONGLONG_NUMBER", false);
-  var peg$e805 = peg$literalExpectation("CUME_DIST_SYMBO", false);
-  var peg$e806 = peg$literalExpectation("CUME_DIST_SYMBOL", false);
-  var peg$e807 = peg$literalExpectation("FOUND_ROWS_SYMBOL", false);
-  var peg$e808 = peg$literalExpectation("CONCAT_SYMBOL", false);
-  var peg$e809 = peg$literalExpectation("EOF", false);
+  var peg$e758 = peg$literalExpectation("0b", false);
+  var peg$e759 = peg$classExpectation(["0", "1"], false, false);
+  var peg$e760 = peg$literalExpectation("b'", false);
+  var peg$e761 = peg$literalExpectation("'", false);
+  var peg$e762 = peg$literalExpectation("DECIMAL_NUMBER", false);
+  var peg$e763 = peg$literalExpectation("INT_NUMBER", false);
+  var peg$e764 = peg$literalExpectation("FLOAT_NUMBER", false);
+  var peg$e765 = peg$literalExpectation("UNDERSCORE_CHARSET", false);
+  var peg$e766 = peg$literalExpectation("DOT_IDENTIFIER", false);
+  var peg$e767 = peg$literalExpectation("INVALID_INPUT", false);
+  var peg$e768 = peg$literalExpectation("LINEBREAK", false);
+  var peg$e769 = peg$literalExpectation("START_SYMBOL", false);
+  var peg$e770 = peg$literalExpectation("UNLOCK_SYMBOL", false);
+  var peg$e771 = peg$literalExpectation("CLONE_SYMBOL", false);
+  var peg$e772 = peg$literalExpectation("GET_SYMBOL", false);
+  var peg$e773 = peg$literalExpectation("ASCII_SYMBOL", false);
+  var peg$e774 = peg$literalExpectation("BIT_SYMBOL", false);
+  var peg$e775 = peg$literalExpectation("BUCKETS_SYMBOL", false);
+  var peg$e776 = peg$literalExpectation("COMPONENT_SYMBOL", false);
+  var peg$e777 = peg$literalExpectation("NOW_SYMBOL", false);
+  var peg$e778 = peg$literalExpectation("DEFINITION_SYMBOL", false);
+  var peg$e779 = peg$literalExpectation("DENSE_RANK_SYMBOL", false);
+  var peg$e780 = peg$literalExpectation("DESCRIPTION_SYMBOL", false);
+  var peg$e781 = peg$literalExpectation("FAILED_LOGIN_ATTEMPTS_SYMBOL", false);
+  var peg$e782 = peg$literalExpectation("FOLLOWING_SYMBOL", false);
+  var peg$e783 = peg$literalExpectation("GROUPING_SYMBOL", false);
+  var peg$e784 = peg$literalExpectation("GROUPS_SYMBOL", false);
+  var peg$e785 = peg$literalExpectation("LAG_SYMBOL", false);
+  var peg$e786 = peg$literalExpectation("LONG_SYMBOL", false);
+  var peg$e787 = peg$literalExpectation("MASTER_COMPRESSION_ALGORITHM_SYMBOL", false);
+  var peg$e788 = peg$literalExpectation("NOT2_SYMBOL", false);
+  var peg$e789 = peg$literalExpectation("NO_SYMBOL", false);
+  var peg$e790 = peg$literalExpectation("REFERENCE_SYMBOL", false);
+  var peg$e791 = peg$literalExpectation("RETURN_SYMBOL", false);
+  var peg$e792 = peg$literalExpectation("SPECIFIC_SYMBOL", false);
+  var peg$e793 = peg$literalExpectation("AUTHORS_SYMBOL", false);
+  var peg$e794 = peg$literalExpectation("ADDDATE_SYMBOL", false);
+  var peg$e795 = peg$literalExpectation("CONCAT_PIPES_SYMBOL", false);
+  var peg$e796 = peg$literalExpectation("ACTIVE_SYMBOL", false);
+  var peg$e797 = peg$literalExpectation("ADMIN_SYMBOL", false);
+  var peg$e798 = peg$literalExpectation("EXCLUDE_SYMBOL", false);
+  var peg$e799 = peg$literalExpectation("INACTIVE_SYMBOL", false);
+  var peg$e800 = peg$literalExpectation("LOCKED_SYMBOL", false);
+  var peg$e801 = peg$literalExpectation("ROUTINE_SYMBOL", false);
+  var peg$e802 = peg$literalExpectation("UNTIL_SYMBOL", false);
+  var peg$e803 = peg$literalExpectation("ARRAY_SYMBOL", false);
+  var peg$e804 = peg$literalExpectation("PASSWORD_LOCK_TIME_SYMBOL", false);
+  var peg$e805 = peg$literalExpectation("NCHAR_TEXT", false);
+  var peg$e806 = peg$literalExpectation("LONG_NUMBER", false);
+  var peg$e807 = peg$literalExpectation("ULONGLONG_NUMBER", false);
+  var peg$e808 = peg$literalExpectation("CUME_DIST_SYMBO", false);
+  var peg$e809 = peg$literalExpectation("CUME_DIST_SYMBOL", false);
+  var peg$e810 = peg$literalExpectation("FOUND_ROWS_SYMBOL", false);
+  var peg$e811 = peg$literalExpectation("CONCAT_SYMBOL", false);
+  var peg$e812 = peg$literalExpectation("EOF", false);
 
   var peg$f0 = function() {serverVersion >= 80000};
   var peg$f1 = function() {serverVersion >= 80000};
@@ -2054,6 +2060,7 @@ function peg$parse(input, options) {
   var peg$f217 = function() {serverVersion >= 80011};
   var peg$f218 = function() {serverVersion < 80017};
   var peg$f219 = function() {serverVersion >= 80019};
+  var peg$f220 = function(num) { return { type: "BIN_NUMBER", value: num }; };
   var peg$currPos = options.peg$currPos | 0;
   var peg$savedPos = peg$currPos;
   var peg$posDetailsCache = [{ line: 1, column: 1 }];
@@ -51852,14 +51859,119 @@ function peg$parse(input, options) {
   }
 
   function peg$parseBIN_NUMBER() {
-    var s0;
+    var s0, s1;
 
-    if (input.substr(peg$currPos, 10) === peg$c758) {
-      s0 = peg$c758;
-      peg$currPos += 10;
+    s0 = peg$currPos;
+    s1 = peg$parseBIN_NUMBER_ALT();
+    if (s1 !== peg$FAILED) {
+      peg$savedPos = s0;
+      s1 = peg$f220(s1);
+    }
+    s0 = s1;
+
+    return s0;
+  }
+
+  function peg$parseBIN_NUMBER_ALT() {
+    var s0, s1, s2, s3;
+
+    s0 = peg$currPos;
+    if (input.substr(peg$currPos, 2) === peg$c758) {
+      s1 = peg$c758;
+      peg$currPos += 2;
     } else {
-      s0 = peg$FAILED;
+      s1 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e758); }
+    }
+    if (s1 !== peg$FAILED) {
+      s2 = [];
+      s3 = input.charAt(peg$currPos);
+      if (peg$r0.test(s3)) {
+        peg$currPos++;
+      } else {
+        s3 = peg$FAILED;
+        if (peg$silentFails === 0) { peg$fail(peg$e759); }
+      }
+      if (s3 !== peg$FAILED) {
+        while (s3 !== peg$FAILED) {
+          s2.push(s3);
+          s3 = input.charAt(peg$currPos);
+          if (peg$r0.test(s3)) {
+            peg$currPos++;
+          } else {
+            s3 = peg$FAILED;
+            if (peg$silentFails === 0) { peg$fail(peg$e759); }
+          }
+        }
+      } else {
+        s2 = peg$FAILED;
+      }
+      if (s2 !== peg$FAILED) {
+        s1 = [s1, s2];
+        s0 = s1;
+      } else {
+        peg$currPos = s0;
+        s0 = peg$FAILED;
+      }
+    } else {
+      peg$currPos = s0;
+      s0 = peg$FAILED;
+    }
+    if (s0 === peg$FAILED) {
+      s0 = peg$currPos;
+      if (input.substr(peg$currPos, 2) === peg$c759) {
+        s1 = peg$c759;
+        peg$currPos += 2;
+      } else {
+        s1 = peg$FAILED;
+        if (peg$silentFails === 0) { peg$fail(peg$e760); }
+      }
+      if (s1 !== peg$FAILED) {
+        s2 = [];
+        s3 = input.charAt(peg$currPos);
+        if (peg$r0.test(s3)) {
+          peg$currPos++;
+        } else {
+          s3 = peg$FAILED;
+          if (peg$silentFails === 0) { peg$fail(peg$e759); }
+        }
+        if (s3 !== peg$FAILED) {
+          while (s3 !== peg$FAILED) {
+            s2.push(s3);
+            s3 = input.charAt(peg$currPos);
+            if (peg$r0.test(s3)) {
+              peg$currPos++;
+            } else {
+              s3 = peg$FAILED;
+              if (peg$silentFails === 0) { peg$fail(peg$e759); }
+            }
+          }
+        } else {
+          s2 = peg$FAILED;
+        }
+        if (s2 !== peg$FAILED) {
+          if (input.charCodeAt(peg$currPos) === 39) {
+            s3 = peg$c760;
+            peg$currPos++;
+          } else {
+            s3 = peg$FAILED;
+            if (peg$silentFails === 0) { peg$fail(peg$e761); }
+          }
+          if (s3 !== peg$FAILED) {
+            s1 = [s1, s2, s3];
+            s0 = s1;
+          } else {
+            peg$currPos = s0;
+            s0 = peg$FAILED;
+          }
+        } else {
+          peg$currPos = s0;
+          s0 = peg$FAILED;
+        }
+      } else {
+        peg$currPos = s0;
+        s0 = peg$FAILED;
+      }
     }
 
     return s0;
@@ -51868,51 +51980,9 @@ function peg$parse(input, options) {
   function peg$parseDECIMAL_NUMBER() {
     var s0;
 
-    if (input.substr(peg$currPos, 14) === peg$c759) {
-      s0 = peg$c759;
-      peg$currPos += 14;
-    } else {
-      s0 = peg$FAILED;
-      if (peg$silentFails === 0) { peg$fail(peg$e759); }
-    }
-
-    return s0;
-  }
-
-  function peg$parseINT_NUMBER() {
-    var s0;
-
-    if (input.substr(peg$currPos, 10) === peg$c760) {
-      s0 = peg$c760;
-      peg$currPos += 10;
-    } else {
-      s0 = peg$FAILED;
-      if (peg$silentFails === 0) { peg$fail(peg$e760); }
-    }
-
-    return s0;
-  }
-
-  function peg$parseFLOAT_NUMBER() {
-    var s0;
-
-    if (input.substr(peg$currPos, 12) === peg$c761) {
+    if (input.substr(peg$currPos, 14) === peg$c761) {
       s0 = peg$c761;
-      peg$currPos += 12;
-    } else {
-      s0 = peg$FAILED;
-      if (peg$silentFails === 0) { peg$fail(peg$e761); }
-    }
-
-    return s0;
-  }
-
-  function peg$parseUNDERSCORE_CHARSET() {
-    var s0;
-
-    if (input.substr(peg$currPos, 18) === peg$c762) {
-      s0 = peg$c762;
-      peg$currPos += 18;
+      peg$currPos += 14;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e762); }
@@ -51921,12 +51991,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseDOT_IDENTIFIER() {
+  function peg$parseINT_NUMBER() {
     var s0;
 
-    if (input.substr(peg$currPos, 14) === peg$c763) {
-      s0 = peg$c763;
-      peg$currPos += 14;
+    if (input.substr(peg$currPos, 10) === peg$c762) {
+      s0 = peg$c762;
+      peg$currPos += 10;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e763); }
@@ -51935,12 +52005,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseINVALID_INPUT() {
+  function peg$parseFLOAT_NUMBER() {
     var s0;
 
-    if (input.substr(peg$currPos, 13) === peg$c764) {
-      s0 = peg$c764;
-      peg$currPos += 13;
+    if (input.substr(peg$currPos, 12) === peg$c763) {
+      s0 = peg$c763;
+      peg$currPos += 12;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e764); }
@@ -51949,12 +52019,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseLINEBREAK() {
+  function peg$parseUNDERSCORE_CHARSET() {
     var s0;
 
-    if (input.substr(peg$currPos, 9) === peg$c765) {
-      s0 = peg$c765;
-      peg$currPos += 9;
+    if (input.substr(peg$currPos, 18) === peg$c764) {
+      s0 = peg$c764;
+      peg$currPos += 18;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e765); }
@@ -51963,12 +52033,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseSTART_SYMBOL() {
+  function peg$parseDOT_IDENTIFIER() {
     var s0;
 
-    if (input.substr(peg$currPos, 12) === peg$c766) {
-      s0 = peg$c766;
-      peg$currPos += 12;
+    if (input.substr(peg$currPos, 14) === peg$c765) {
+      s0 = peg$c765;
+      peg$currPos += 14;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e766); }
@@ -51977,11 +52047,11 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseUNLOCK_SYMBOL() {
+  function peg$parseINVALID_INPUT() {
     var s0;
 
-    if (input.substr(peg$currPos, 13) === peg$c767) {
-      s0 = peg$c767;
+    if (input.substr(peg$currPos, 13) === peg$c766) {
+      s0 = peg$c766;
       peg$currPos += 13;
     } else {
       s0 = peg$FAILED;
@@ -51991,12 +52061,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseCLONE_SYMBOL() {
+  function peg$parseLINEBREAK() {
     var s0;
 
-    if (input.substr(peg$currPos, 12) === peg$c768) {
-      s0 = peg$c768;
-      peg$currPos += 12;
+    if (input.substr(peg$currPos, 9) === peg$c767) {
+      s0 = peg$c767;
+      peg$currPos += 9;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e768); }
@@ -52005,12 +52075,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseGET_SYMBOL() {
+  function peg$parseSTART_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 10) === peg$c769) {
-      s0 = peg$c769;
-      peg$currPos += 10;
+    if (input.substr(peg$currPos, 12) === peg$c768) {
+      s0 = peg$c768;
+      peg$currPos += 12;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e769); }
@@ -52019,12 +52089,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseASCII_SYMBOL() {
+  function peg$parseUNLOCK_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 12) === peg$c770) {
-      s0 = peg$c770;
-      peg$currPos += 12;
+    if (input.substr(peg$currPos, 13) === peg$c769) {
+      s0 = peg$c769;
+      peg$currPos += 13;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e770); }
@@ -52033,12 +52103,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseBIT_SYMBOL() {
+  function peg$parseCLONE_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 10) === peg$c771) {
-      s0 = peg$c771;
-      peg$currPos += 10;
+    if (input.substr(peg$currPos, 12) === peg$c770) {
+      s0 = peg$c770;
+      peg$currPos += 12;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e771); }
@@ -52047,12 +52117,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseBUCKETS_SYMBOL() {
+  function peg$parseGET_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 14) === peg$c772) {
-      s0 = peg$c772;
-      peg$currPos += 14;
+    if (input.substr(peg$currPos, 10) === peg$c771) {
+      s0 = peg$c771;
+      peg$currPos += 10;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e772); }
@@ -52061,12 +52131,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseCOMPONENT_SYMBOL() {
+  function peg$parseASCII_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 16) === peg$c773) {
-      s0 = peg$c773;
-      peg$currPos += 16;
+    if (input.substr(peg$currPos, 12) === peg$c772) {
+      s0 = peg$c772;
+      peg$currPos += 12;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e773); }
@@ -52075,11 +52145,11 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseNOW_SYMBOL() {
+  function peg$parseBIT_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 10) === peg$c774) {
-      s0 = peg$c774;
+    if (input.substr(peg$currPos, 10) === peg$c773) {
+      s0 = peg$c773;
       peg$currPos += 10;
     } else {
       s0 = peg$FAILED;
@@ -52089,12 +52159,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseDEFINITION_SYMBOL() {
+  function peg$parseBUCKETS_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 17) === peg$c775) {
-      s0 = peg$c775;
-      peg$currPos += 17;
+    if (input.substr(peg$currPos, 14) === peg$c774) {
+      s0 = peg$c774;
+      peg$currPos += 14;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e775); }
@@ -52103,12 +52173,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseDENSE_RANK_SYMBOL() {
+  function peg$parseCOMPONENT_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 17) === peg$c776) {
-      s0 = peg$c776;
-      peg$currPos += 17;
+    if (input.substr(peg$currPos, 16) === peg$c775) {
+      s0 = peg$c775;
+      peg$currPos += 16;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e776); }
@@ -52117,12 +52187,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseDESCRIPTION_SYMBOL() {
+  function peg$parseNOW_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 18) === peg$c777) {
-      s0 = peg$c777;
-      peg$currPos += 18;
+    if (input.substr(peg$currPos, 10) === peg$c776) {
+      s0 = peg$c776;
+      peg$currPos += 10;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e777); }
@@ -52131,12 +52201,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseFAILED_LOGIN_ATTEMPTS_SYMBOL() {
+  function peg$parseDEFINITION_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 28) === peg$c778) {
-      s0 = peg$c778;
-      peg$currPos += 28;
+    if (input.substr(peg$currPos, 17) === peg$c777) {
+      s0 = peg$c777;
+      peg$currPos += 17;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e778); }
@@ -52145,12 +52215,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseFOLLOWING_SYMBOL() {
+  function peg$parseDENSE_RANK_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 16) === peg$c779) {
-      s0 = peg$c779;
-      peg$currPos += 16;
+    if (input.substr(peg$currPos, 17) === peg$c778) {
+      s0 = peg$c778;
+      peg$currPos += 17;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e779); }
@@ -52159,12 +52229,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseGROUPING_SYMBOL() {
+  function peg$parseDESCRIPTION_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 15) === peg$c780) {
-      s0 = peg$c780;
-      peg$currPos += 15;
+    if (input.substr(peg$currPos, 18) === peg$c779) {
+      s0 = peg$c779;
+      peg$currPos += 18;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e780); }
@@ -52173,12 +52243,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseGROUPS_SYMBOL() {
+  function peg$parseFAILED_LOGIN_ATTEMPTS_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 13) === peg$c781) {
-      s0 = peg$c781;
-      peg$currPos += 13;
+    if (input.substr(peg$currPos, 28) === peg$c780) {
+      s0 = peg$c780;
+      peg$currPos += 28;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e781); }
@@ -52187,12 +52257,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseLAG_SYMBOL() {
+  function peg$parseFOLLOWING_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 10) === peg$c782) {
-      s0 = peg$c782;
-      peg$currPos += 10;
+    if (input.substr(peg$currPos, 16) === peg$c781) {
+      s0 = peg$c781;
+      peg$currPos += 16;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e782); }
@@ -52201,12 +52271,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseLONG_SYMBOL() {
+  function peg$parseGROUPING_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 11) === peg$c783) {
-      s0 = peg$c783;
-      peg$currPos += 11;
+    if (input.substr(peg$currPos, 15) === peg$c782) {
+      s0 = peg$c782;
+      peg$currPos += 15;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e783); }
@@ -52215,12 +52285,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseMASTER_COMPRESSION_ALGORITHM_SYMBOL() {
+  function peg$parseGROUPS_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 35) === peg$c784) {
-      s0 = peg$c784;
-      peg$currPos += 35;
+    if (input.substr(peg$currPos, 13) === peg$c783) {
+      s0 = peg$c783;
+      peg$currPos += 13;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e784); }
@@ -52229,12 +52299,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseNOT2_SYMBOL() {
+  function peg$parseLAG_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 11) === peg$c785) {
-      s0 = peg$c785;
-      peg$currPos += 11;
+    if (input.substr(peg$currPos, 10) === peg$c784) {
+      s0 = peg$c784;
+      peg$currPos += 10;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e785); }
@@ -52243,12 +52313,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseNO_SYMBOL() {
+  function peg$parseLONG_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 9) === peg$c786) {
-      s0 = peg$c786;
-      peg$currPos += 9;
+    if (input.substr(peg$currPos, 11) === peg$c785) {
+      s0 = peg$c785;
+      peg$currPos += 11;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e786); }
@@ -52257,12 +52327,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseREFERENCE_SYMBOL() {
+  function peg$parseMASTER_COMPRESSION_ALGORITHM_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 16) === peg$c787) {
-      s0 = peg$c787;
-      peg$currPos += 16;
+    if (input.substr(peg$currPos, 35) === peg$c786) {
+      s0 = peg$c786;
+      peg$currPos += 35;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e787); }
@@ -52271,12 +52341,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseRETURN_SYMBOL() {
+  function peg$parseNOT2_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 13) === peg$c788) {
-      s0 = peg$c788;
-      peg$currPos += 13;
+    if (input.substr(peg$currPos, 11) === peg$c787) {
+      s0 = peg$c787;
+      peg$currPos += 11;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e788); }
@@ -52285,12 +52355,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseSPECIFIC_SYMBOL() {
+  function peg$parseNO_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 15) === peg$c789) {
-      s0 = peg$c789;
-      peg$currPos += 15;
+    if (input.substr(peg$currPos, 9) === peg$c788) {
+      s0 = peg$c788;
+      peg$currPos += 9;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e789); }
@@ -52299,12 +52369,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseAUTHORS_SYMBOL() {
+  function peg$parseREFERENCE_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 14) === peg$c790) {
-      s0 = peg$c790;
-      peg$currPos += 14;
+    if (input.substr(peg$currPos, 16) === peg$c789) {
+      s0 = peg$c789;
+      peg$currPos += 16;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e790); }
@@ -52313,12 +52383,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseADDDATE_SYMBOL() {
+  function peg$parseRETURN_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 14) === peg$c791) {
-      s0 = peg$c791;
-      peg$currPos += 14;
+    if (input.substr(peg$currPos, 13) === peg$c790) {
+      s0 = peg$c790;
+      peg$currPos += 13;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e791); }
@@ -52327,12 +52397,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseCONCAT_PIPES_SYMBOL() {
+  function peg$parseSPECIFIC_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 19) === peg$c792) {
-      s0 = peg$c792;
-      peg$currPos += 19;
+    if (input.substr(peg$currPos, 15) === peg$c791) {
+      s0 = peg$c791;
+      peg$currPos += 15;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e792); }
@@ -52341,12 +52411,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseACTIVE_SYMBOL() {
+  function peg$parseAUTHORS_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 13) === peg$c793) {
-      s0 = peg$c793;
-      peg$currPos += 13;
+    if (input.substr(peg$currPos, 14) === peg$c792) {
+      s0 = peg$c792;
+      peg$currPos += 14;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e793); }
@@ -52355,12 +52425,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseADMIN_SYMBOL() {
+  function peg$parseADDDATE_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 12) === peg$c794) {
-      s0 = peg$c794;
-      peg$currPos += 12;
+    if (input.substr(peg$currPos, 14) === peg$c793) {
+      s0 = peg$c793;
+      peg$currPos += 14;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e794); }
@@ -52369,12 +52439,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseEXCLUDE_SYMBOL() {
+  function peg$parseCONCAT_PIPES_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 14) === peg$c795) {
-      s0 = peg$c795;
-      peg$currPos += 14;
+    if (input.substr(peg$currPos, 19) === peg$c794) {
+      s0 = peg$c794;
+      peg$currPos += 19;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e795); }
@@ -52383,12 +52453,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseINACTIVE_SYMBOL() {
+  function peg$parseACTIVE_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 15) === peg$c796) {
-      s0 = peg$c796;
-      peg$currPos += 15;
+    if (input.substr(peg$currPos, 13) === peg$c795) {
+      s0 = peg$c795;
+      peg$currPos += 13;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e796); }
@@ -52397,12 +52467,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseLOCKED_SYMBOL() {
+  function peg$parseADMIN_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 13) === peg$c797) {
-      s0 = peg$c797;
-      peg$currPos += 13;
+    if (input.substr(peg$currPos, 12) === peg$c796) {
+      s0 = peg$c796;
+      peg$currPos += 12;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e797); }
@@ -52411,11 +52481,11 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseROUTINE_SYMBOL() {
+  function peg$parseEXCLUDE_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 14) === peg$c798) {
-      s0 = peg$c798;
+    if (input.substr(peg$currPos, 14) === peg$c797) {
+      s0 = peg$c797;
       peg$currPos += 14;
     } else {
       s0 = peg$FAILED;
@@ -52425,12 +52495,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseUNTIL_SYMBOL() {
+  function peg$parseINACTIVE_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 12) === peg$c799) {
-      s0 = peg$c799;
-      peg$currPos += 12;
+    if (input.substr(peg$currPos, 15) === peg$c798) {
+      s0 = peg$c798;
+      peg$currPos += 15;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e799); }
@@ -52439,12 +52509,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseARRAY_SYMBOL() {
+  function peg$parseLOCKED_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 12) === peg$c800) {
-      s0 = peg$c800;
-      peg$currPos += 12;
+    if (input.substr(peg$currPos, 13) === peg$c799) {
+      s0 = peg$c799;
+      peg$currPos += 13;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e800); }
@@ -52453,12 +52523,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parsePASSWORD_LOCK_TIME_SYMBOL() {
+  function peg$parseROUTINE_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 25) === peg$c801) {
-      s0 = peg$c801;
-      peg$currPos += 25;
+    if (input.substr(peg$currPos, 14) === peg$c800) {
+      s0 = peg$c800;
+      peg$currPos += 14;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e801); }
@@ -52467,12 +52537,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseNCHAR_TEXT() {
+  function peg$parseUNTIL_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 10) === peg$c802) {
-      s0 = peg$c802;
-      peg$currPos += 10;
+    if (input.substr(peg$currPos, 12) === peg$c801) {
+      s0 = peg$c801;
+      peg$currPos += 12;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e802); }
@@ -52481,12 +52551,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseLONG_NUMBER() {
+  function peg$parseARRAY_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 11) === peg$c803) {
-      s0 = peg$c803;
-      peg$currPos += 11;
+    if (input.substr(peg$currPos, 12) === peg$c802) {
+      s0 = peg$c802;
+      peg$currPos += 12;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e803); }
@@ -52495,12 +52565,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseULONGLONG_NUMBER() {
+  function peg$parsePASSWORD_LOCK_TIME_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 16) === peg$c804) {
-      s0 = peg$c804;
-      peg$currPos += 16;
+    if (input.substr(peg$currPos, 25) === peg$c803) {
+      s0 = peg$c803;
+      peg$currPos += 25;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e804); }
@@ -52509,12 +52579,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseCUME_DIST_SYMBO() {
+  function peg$parseNCHAR_TEXT() {
     var s0;
 
-    if (input.substr(peg$currPos, 15) === peg$c805) {
-      s0 = peg$c805;
-      peg$currPos += 15;
+    if (input.substr(peg$currPos, 10) === peg$c804) {
+      s0 = peg$c804;
+      peg$currPos += 10;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e805); }
@@ -52523,12 +52593,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseCUME_DIST_SYMBOL() {
+  function peg$parseLONG_NUMBER() {
     var s0;
 
-    if (input.substr(peg$currPos, 16) === peg$c806) {
-      s0 = peg$c806;
-      peg$currPos += 16;
+    if (input.substr(peg$currPos, 11) === peg$c805) {
+      s0 = peg$c805;
+      peg$currPos += 11;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e806); }
@@ -52537,12 +52607,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseFOUND_ROWS_SYMBOL() {
+  function peg$parseULONGLONG_NUMBER() {
     var s0;
 
-    if (input.substr(peg$currPos, 17) === peg$c807) {
-      s0 = peg$c807;
-      peg$currPos += 17;
+    if (input.substr(peg$currPos, 16) === peg$c806) {
+      s0 = peg$c806;
+      peg$currPos += 16;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e807); }
@@ -52551,12 +52621,12 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseCONCAT_SYMBOL() {
+  function peg$parseCUME_DIST_SYMBO() {
     var s0;
 
-    if (input.substr(peg$currPos, 13) === peg$c808) {
-      s0 = peg$c808;
-      peg$currPos += 13;
+    if (input.substr(peg$currPos, 15) === peg$c807) {
+      s0 = peg$c807;
+      peg$currPos += 15;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e808); }
@@ -52565,15 +52635,57 @@ function peg$parse(input, options) {
     return s0;
   }
 
-  function peg$parseEOF() {
+  function peg$parseCUME_DIST_SYMBOL() {
     var s0;
 
-    if (input.substr(peg$currPos, 3) === peg$c809) {
-      s0 = peg$c809;
-      peg$currPos += 3;
+    if (input.substr(peg$currPos, 16) === peg$c808) {
+      s0 = peg$c808;
+      peg$currPos += 16;
     } else {
       s0 = peg$FAILED;
       if (peg$silentFails === 0) { peg$fail(peg$e809); }
+    }
+
+    return s0;
+  }
+
+  function peg$parseFOUND_ROWS_SYMBOL() {
+    var s0;
+
+    if (input.substr(peg$currPos, 17) === peg$c809) {
+      s0 = peg$c809;
+      peg$currPos += 17;
+    } else {
+      s0 = peg$FAILED;
+      if (peg$silentFails === 0) { peg$fail(peg$e810); }
+    }
+
+    return s0;
+  }
+
+  function peg$parseCONCAT_SYMBOL() {
+    var s0;
+
+    if (input.substr(peg$currPos, 13) === peg$c810) {
+      s0 = peg$c810;
+      peg$currPos += 13;
+    } else {
+      s0 = peg$FAILED;
+      if (peg$silentFails === 0) { peg$fail(peg$e811); }
+    }
+
+    return s0;
+  }
+
+  function peg$parseEOF() {
+    var s0;
+
+    if (input.substr(peg$currPos, 3) === peg$c811) {
+      s0 = peg$c811;
+      peg$currPos += 3;
+    } else {
+      s0 = peg$FAILED;
+      if (peg$silentFails === 0) { peg$fail(peg$e812); }
     }
 
     return s0;

@@ -3383,7 +3383,7 @@ literal
   / temporalLiteral
   / nullLiteral
   / boolLiteral
-  / UNDERSCORE_CHARSET? (HEX_NUMBER / BIN_NUMBER)
+  / UNDERSCORE_CHARSET? (HEX_NUMBER / BIN_NUMBER) 
 
 signedLiteral
   = literal
@@ -3402,14 +3402,14 @@ textStringLiteral
 textString
   = textStringLiteral
   / HEX_NUMBER
-  / BIN_NUMBER
+  / BIN_NUMBER 
 
 textStringHash
   = textStringLiteral
   / &{serverVersion >= 80017} HEX_NUMBER
 
 textLiteral
-  = (UNDERSCORE_CHARSET? textStringLiteral / NCHAR_TEXT) textStringLiteral*
+  = (UNDERSCORE_CHARSET? textStringLiteral / NCHAR_TEXT) textStringLiteral* 
 
 // A special variant of a text string that must not contain a linebreak (TEXT_STRING_sys_nonewline in sql_yacc.yy).
 // Check validity in semantic phase.
@@ -5250,7 +5250,10 @@ BACK_TICK_QUOTED_ID = "BACK_TICK_QUOTED_ID"
 DOUBLE_QUOTED_TEXT = "DOUBLE_QUOTED_TEXT"
 SINGLE_QUOTED_TEXT = "SINGLE_QUOTED_TEXT"
 HEX_NUMBER = "HEX_NUMBER"
-BIN_NUMBER = "BIN_NUMBER"
+BIN_NUMBER = num: BIN_NUMBER_ALT { return { type: "BIN_NUMBER", value: num }; }
+BIN_NUMBER_ALT
+  = '0b' [01]+
+  / "b'" [01]+ "'" 
 DECIMAL_NUMBER = "DECIMAL_NUMBER"
 INT_NUMBER = "INT_NUMBER"
 FLOAT_NUMBER = "FLOAT_NUMBER"

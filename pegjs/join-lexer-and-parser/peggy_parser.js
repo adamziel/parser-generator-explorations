@@ -12611,7 +12611,9 @@ peg$parseWHITESPACE();
     var s0, s1, s2, s3, s4, s5;
 
     s0 = peg$currPos;
+    console.log('s1','>>>'+input.substring(peg$currPos));
     s1 = peg$parseselectItem();
+    console.log('s1','>>>'+input.substring(peg$currPos));
     if (s1 === peg$FAILED) {
       s1 = peg$parseMULT_OPERATOR();
     }
@@ -42019,6 +42021,7 @@ peg$parseWHITESPACE();
     } else {
       s1 = peg$FAILED;
     }
+    console.log('bifor','>>>'+input.substring(peg$currPos));
     if (s1 !== peg$FAILED) {
       s2 = input.charAt(peg$currPos);
       if (peg$r33.test(s2)) {
@@ -42056,6 +42059,7 @@ peg$parseWHITESPACE();
       peg$currPos = s0;
       s0 = peg$FAILED;
     }
+    console.log('afer','>>>'+input.substring(peg$currPos));
     if (s0 === peg$FAILED) {
       s0 = peg$currPos;
       s1 = [];
@@ -42106,6 +42110,7 @@ peg$parseWHITESPACE();
       }
     }
 
+    console.log('end','>>>'+input.substring(peg$currPos));
     return s0;
   }
 

@@ -9,7 +9,7 @@ const parser = peggy.generate(grammar, {
     trace: true
 });
 
-const input = "SELECT `a` FROM my_table;";
+const input = "SELECT`a`FROM,FROM`my_table`;";
 
 const tracer = {
     trace: function (event) {

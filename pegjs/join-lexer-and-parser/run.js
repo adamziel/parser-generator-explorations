@@ -10,9 +10,9 @@
 
 try {
     const peggy = require('./peggy_parser.js');
-    console.log(
+    // console.log(
         JSON.stringify(peggy.parse('SELECT 12 FROM my_table'), null, 2)
-    );
+    // );
 } catch (e) {
     console.error(e.message);
 }
