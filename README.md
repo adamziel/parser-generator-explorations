@@ -14,7 +14,7 @@ What we have so far:
 * [A failed Pegen exploration](https://github.com/TheLartians/PEGParser) – Pegen failed to parse the MySQL grammar due to a recursion error.
 * [A C PEG exploration in progress](https://github.com/adamziel/parser-generator-explorations/blob/trunk/peg/) 
 * [A failed PHP PEG exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/php-peg/) – the parser doesn't produce AST and doesn't seem to correctly process the math expressions included as examples.
-* [A python Lark exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/python-lark/) – the parser doesn't produce AST and doesn't seem to correctly process the math expressions included as examples.
+* [A python Lark exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/python-lark/)
 
 Next steps:
 
