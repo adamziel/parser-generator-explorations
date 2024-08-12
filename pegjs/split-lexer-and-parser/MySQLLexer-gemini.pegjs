@@ -1,0 +1,2625 @@
+{
+  const identifier = require('./identifier');
+}
+
+
+EQUAL_OPERATOR
+  = '='
+
+ASSIGN_OPERATOR
+  = ':='
+
+NULL_SAFE_EQUAL_OPERATOR
+  = '<=>'
+
+GREATER_OR_EQUAL_OPERATOR
+  = '>='
+
+GREATER_THAN_OPERATOR
+  = '>'
+
+LESS_OR_EQUAL_OPERATOR
+  = '<='
+
+LESS_THAN_OPERATOR
+  = '<'
+
+NOT_EQUAL_OPERATOR
+  = '!='
+
+NOT_EQUAL2_OPERATOR
+  = '<>' { return 'NOT_EQUAL_OPERATOR'; }
+
+PLUS_OPERATOR
+  = '+'
+
+MINUS_OPERATOR
+  = '-'
+
+MULT_OPERATOR
+  = '*'
+
+DIV_OPERATOR
+  = '/'
+
+MOD_OPERATOR
+  = '%'
+
+LOGICAL_NOT_OPERATOR
+  = '!'
+
+BITWISE_NOT_OPERATOR
+  = '~'
+
+SHIFT_LEFT_OPERATOR
+  = '<<'
+
+SHIFT_RIGHT_OPERATOR
+  = '>>'
+
+LOGICAL_AND_OPERATOR
+  = '&&'
+
+BITWISE_AND_OPERATOR
+  = '&'
+
+BITWISE_XOR_OPERATOR
+  = '^'
+
+LOGICAL_OR_OPERATOR
+  = '||' { return options.isSqlModeActive('PipesAsConcat') ? 'CONCAT_PIPES_SYMBOL' : 'LOGICAL_OR_OPERATOR'; }
+
+BITWISE_OR_OPERATOR
+  = '|'
+
+DOT_SYMBOL
+  = '.'
+
+COMMA_SYMBOL
+  = ','
+
+SEMICOLON_SYMBOL
+  = ';'
+
+COLON_SYMBOL
+  = ':'
+
+OPEN_PAR_SYMBOL
+  = '('
+
+CLOSE_PAR_SYMBOL
+  = ')'
+
+OPEN_CURLY_SYMBOL
+  = '{'
+
+CLOSE_CURLY_SYMBOL
+  = '}'
+
+UNDERLINE_SYMBOL
+  = '_'
+
+JSON_SEPARATOR_SYMBOL
+  = '->' { return options.serverVersion >= 50708 ? 'JSON_SEPARATOR_SYMBOL' : null; } // MYSQL
+
+JSON_UNQUOTED_SEPARATOR_SYMBOL
+  = '->>' { return options.serverVersion >= 50713 ? 'JSON_UNQUOTED_SEPARATOR_SYMBOL' : null; } // MYSQL
+
+AT_SIGN_SYMBOL
+  = '@'
+
+AT_TEXT_SUFFIX
+  = '@' SIMPLE_IDENTIFIER
+
+AT_AT_SIGN_SYMBOL
+  = '@@'
+
+NULL2_SYMBOL
+  = '\\N'
+
+PARAM_MARKER
+  = '?'
+
+A
+  = 'a' / 'A'
+
+B
+  = 'b' / 'B'
+
+C
+  = 'c' / 'C'
+
+D
+  = 'd' / 'D'
+
+E
+  = 'e' / 'E'
+
+F
+  = 'f' / 'F'
+
+G
+  = 'g' / 'G'
+
+H
+  = 'h' / 'H'
+
+I
+  = 'i' / 'I'
+
+J
+  = 'j' / 'J'
+
+K
+  = 'k' / 'K'
+
+L
+  = 'l' / 'L'
+
+M
+  = 'm' / 'M'
+
+N
+  = 'n' / 'N'
+
+O
+  = 'o' / 'O'
+
+P
+  = 'p' / 'P'
+
+Q
+  = 'q' / 'Q'
+
+R
+  = 'r' / 'R'
+
+S
+  = 's' / 'S'
+
+T
+   = 't' / 'T'
+
+U
+  = 'u' / 'U'
+
+V
+  = 'v' / 'V'
+
+W
+  = 'w' / 'W'
+
+X
+  = 'x' / 'X'
+
+Y
+  = 'y' / 'Y'
+
+Z
+  = 'z' / 'Z'
+
+DIGIT
+  = [0-9]
+
+DIGITS
+  = DIGIT+
+
+HEXDIGIT
+  = [0-9a-fA-F]
+
+HEX_NUMBER
+  = '0x' HEXDIGIT+
+  / "x'" HEXDIGIT+ "'"
+
+BIN_NUMBER
+  = '0b' [01]+
+  / "b'" [01]+ "'"
+
+INT_NUMBER
+  = DIGITS { return identifier.determineNumericType(text()); }
+
+DECIMAL_NUMBER
+  = DIGITS? '.' DIGITS
+
+FLOAT_NUMBER
+  = (DIGITS? '.')? DIGITS [eE] (MINUS_OPERATOR / PLUS_OPERATOR)? DIGITS
+
+DOT_IDENTIFIER
+  = '.' LETTER_WHEN_UNQUOTED_NO_DIGIT LETTER_WHEN_UNQUOTED* {
+      options.emitDot();
+      return 'IDENTIFIER';
+    }
+
+UNDERSCORE_CHARSET
+  = '_' [a-z0-9]+ { return options.checkCharset(text()); }
+
+IDENTIFIER
+  = DIGITS+ [eE] (LETTER_WHEN_UNQUOTED_NO_DIGIT LETTER_WHEN_UNQUOTED*)?
+  / DIGITS+ LETTER_WITHOUT_FLOAT_PART LETTER_WHEN_UNQUOTED*
+  / LETTER_WHEN_UNQUOTED_NO_DIGIT LETTER_WHEN_UNQUOTED*
+
+NCHAR_TEXT
+  = [nN] SINGLE_QUOTED_TEXT
+
+BACK_TICK
+  = '`'
+
+SINGLE_QUOTE
+  = "'"
+
+DOUBLE_QUOTE
+  = '"'
+
+BACK_TICK_QUOTED_ID
+    = BACK_TICK (BACK_TICK_ESCAPE / BACK_TICK_CONTENT)* BACK_TICK
+
+BACK_TICK_ESCAPE
+    = '\\' .
+
+BACK_TICK_CONTENT
+    = !BACK_TICK .
+
+
+DOUBLE_QUOTED_TEXT
+  = (DOUBLE_QUOTE DOUBLE_QUOTED_CONTENT DOUBLE_QUOTE)+
+
+DOUBLE_QUOTED_CONTENT
+  = (DOUBLE_QUOTE_ESCAPE / DOUBLE_QUOTE_CHAR)*
+
+DOUBLE_QUOTE_ESCAPE
+  = '\\' .
+
+DOUBLE_QUOTE_CHAR
+  = !DOUBLE_QUOTE .
+
+SINGLE_QUOTED_TEXT
+  = (SINGLE_QUOTE SINGLE_QUOTED_CONTENT SINGLE_QUOTE)+
+
+SINGLE_QUOTED_CONTENT
+  = (SINGLE_QUOTE_ESCAPE / SINGLE_QUOTE_CHAR)*
+
+SINGLE_QUOTE_ESCAPE
+  = '\\' .
+
+SINGLE_QUOTE_CHAR
+  = !SINGLE_QUOTE .
+
+
+VERSION_COMMENT_START
+  = '/*!' DIGITS (
+      &{ return options.checkVersion(text()); }
+      / VERSION_COMMENT_CONTENT '*/'
+    ) { return ''; }
+
+VERSION_COMMENT_CONTENT
+  = (!'*/' .)*
+
+
+MYSQL_COMMENT_START
+  = '/*!' { options.inVersionComment = true; return ''; }
+
+VERSION_COMMENT_END
+  = '*/' &{ return options.inVersionComment; } { options.inVersionComment = false; return ''; }
+
+BLOCK_COMMENT
+  = ('/**/' / '/*' BLOCK_COMMENT_CONTENT '*/') { return ''; }
+
+BLOCK_COMMENT_CONTENT
+  = (!'*/' .)*
+
+POUND_COMMENT
+  = '#' [^\n\r]* { return ''; }
+
+DASHDASH_COMMENT
+  = DOUBLE_DASH ([ \t] [^\n\r]* / LINEBREAK / "") { return ''; }
+
+DOUBLE_DASH
+  = '--'
+
+LINEBREAK
+  = [\n\r]
+
+SIMPLE_IDENTIFIER
+  = (DIGIT / [a-zA-Z_$] / '.')+
+
+ML_COMMENT_HEAD
+  = '/*'
+
+ML_COMMENT_END
+  = '*/'
+
+LETTER_WHEN_UNQUOTED
+  = DIGIT / LETTER_WHEN_UNQUOTED_NO_DIGIT
+
+LETTER_WHEN_UNQUOTED_NO_DIGIT
+  = [a-zA-Z_$\u0080-\uffff]
+
+LETTER_WITHOUT_FLOAT_PART
+  = [a-df-zA-DF-Z_$\u0080-\uffff]
+
+ACCESSIBLE_SYMBOL
+  = 'ACCESSIBLE'
+
+ACCOUNT_SYMBOL
+  = 'ACCOUNT' &{ return options.serverVersion >= 50707; }
+
+ACTION_SYMBOL
+  = 'ACTION'
+
+ADD_SYMBOL
+  = 'ADD'
+
+ADDDATE_SYMBOL
+  = 'ADDDATE' { return identifier.determineFunction('ADDDATE_SYMBOL'); } // MYSQL-FUNC
+
+AFTER_SYMBOL
+  = 'AFTER'
+
+AGAINST_SYMBOL
+  = 'AGAINST'
+
+AGGREGATE_SYMBOL
+  = 'AGGREGATE'
+
+ALGORITHM_SYMBOL
+  = 'ALGORITHM'
+
+ALL_SYMBOL
+  = 'ALL'
+
+ALTER_SYMBOL
+  = 'ALTER'
+
+ALWAYS_SYMBOL
+  = 'ALWAYS' &{ return options.serverVersion >= 50707; }
+
+ANALYSE_SYMBOL
+  = 'ANALYSE' &{ return options.serverVersion < 80000; }
+
+ANALYZE_SYMBOL
+  = 'ANALYZE'
+
+AND_SYMBOL
+  = 'AND'
+
+ANY_SYMBOL
+  = 'ANY'
+
+AS_SYMBOL
+  = 'AS'
+
+ASC_SYMBOL
+  = 'ASC'
+
+ASCII_SYMBOL
+  = 'ASCII' { return identifier.determineFunction('ASCII_SYMBOL'); } // MYSQL-FUNC
+
+ASENSITIVE_SYMBOL
+  = 'ASENSITIVE' // FUTURE-USE
+
+AT_SYMBOL
+  = 'AT'
+
+AUTHORS_SYMBOL
+   = 'AUTHORS' &{ return options.serverVersion < 50700; }
+
+AUTOEXTEND_SIZE_SYMBOL
+  = 'AUTOEXTEND_SIZE'
+
+AUTO_INCREMENT_SYMBOL
+  = 'AUTO_INCREMENT'
+
+AVG_ROW_LENGTH_SYMBOL
+  = 'AVG_ROW_LENGTH'
+
+AVG_SYMBOL
+  = 'AVG' { return identifier.determineFunction('AVG_SYMBOL'); } // SQL-2003-N
+
+BACKUP_SYMBOL
+  = 'BACKUP'
+
+BEFORE_SYMBOL
+  = 'BEFORE'
+
+BEGIN_SYMBOL
+  = 'BEGIN'
+
+BETWEEN_SYMBOL
+  = 'BETWEEN'
+
+BIGINT_SYMBOL
+  = 'BIGINT'
+
+BINARY_SYMBOL
+  = 'BINARY'
+
+BINLOG_SYMBOL
+  = 'BINLOG'
+
+BIN_NUM_SYMBOL
+  = 'BIN_NUM'
+
+BIT_AND_SYMBOL
+  = 'BIT_AND' { return identifier.determineFunction('BIT_AND_SYMBOL'); } // MYSQL-FUNC
+
+BIT_OR_SYMBOL
+  = 'BIT_OR' { return identifier.determineFunction('BIT_OR_SYMBOL'); } // MYSQL-FUNC
+
+BIT_SYMBOL
+  = 'BIT' // MYSQL-FUNC
+
+BIT_XOR_SYMBOL
+  = 'BIT_XOR' { return identifier.determineFunction('BIT_XOR_SYMBOL'); } // MYSQL-FUNC
+
+BLOB_SYMBOL
+  = 'BLOB'
+
+BLOCK_SYMBOL
+  = 'BLOCK'
+
+BOOLEAN_SYMBOL
+  = 'BOOLEAN'
+
+BOOL_SYMBOL
+  = 'BOOL'
+
+BOTH_SYMBOL
+  = 'BOTH'
+
+BTREE_SYMBOL
+  = 'BTREE'
+
+BY_SYMBOL
+  = 'BY'
+
+BYTE_SYMBOL
+  = 'BYTE'
+
+CACHE_SYMBOL
+  = 'CACHE'
+
+CALL_SYMBOL
+  = 'CALL'
+
+CASCADE_SYMBOL
+  = 'CASCADE'
+
+CASCADED_SYMBOL
+  = 'CASCADED'
+
+CASE_SYMBOL
+  = 'CASE'
+
+CAST_SYMBOL
+  = 'CAST' { return identifier.determineFunction('CAST_SYMBOL'); } // SQL-2003-R
+
+CATALOG_NAME_SYMBOL
+  = 'CATALOG_NAME'
+
+CHAIN_SYMBOL
+  = 'CHAIN'
+
+CHANGE_SYMBOL
+  = 'CHANGE'
+
+CHANGED_SYMBOL
+  = 'CHANGED'
+
+CHANNEL_SYMBOL
+  = 'CHANNEL' &{ return options.serverVersion >= 50706; }
+
+CHARSET_SYMBOL
+  = 'CHARSET'
+
+CHARACTER_SYMBOL
+  = 'CHARACTER' { return 'CHAR_SYMBOL'; } // Synonym
+
+CHAR_SYMBOL
+  = 'CHAR'
+
+CHECKSUM_SYMBOL
+  = 'CHECKSUM'
+
+CHECK_SYMBOL
+  = 'CHECK'
+
+CIPHER_SYMBOL
+  = 'CIPHER'
+
+CLASS_ORIGIN_SYMBOL
+  = 'CLASS_ORIGIN'
+
+CLIENT_SYMBOL
+  = 'CLIENT'
+
+CLOSE_SYMBOL
+  = 'CLOSE'
+
+COALESCE_SYMBOL
+  = 'COALESCE'
+
+CODE_SYMBOL
+  = 'CODE'
+
+COLLATE_SYMBOL
+  = 'COLLATE'
+
+COLLATION_SYMBOL
+  = 'COLLATION'
+
+COLUMNS_SYMBOL
+  = 'COLUMNS'
+
+COLUMN_SYMBOL
+  = 'COLUMN'
+
+COLUMN_NAME_SYMBOL
+  = 'COLUMN_NAME'
+
+COLUMN_FORMAT_SYMBOL
+  = 'COLUMN_FORMAT'
+
+COMMENT_SYMBOL
+  = 'COMMENT'
+
+COMMITTED_SYMBOL
+  = 'COMMITTED'
+
+COMMIT_SYMBOL
+  = 'COMMIT'
+
+COMPACT_SYMBOL
+  = 'COMPACT'
+
+COMPLETION_SYMBOL
+  = 'COMPLETION'
+
+COMPRESSED_SYMBOL
+  = 'COMPRESSED'
+
+COMPRESSION_SYMBOL
+  = 'COMPRESSION' &{ return options.serverVersion >= 50707; }
+
+CONCURRENT_SYMBOL
+  = 'CONCURRENT'
+
+CONDITION_SYMBOL
+  = 'CONDITION'
+
+CONNECTION_SYMBOL
+  = 'CONNECTION'
+
+CONSISTENT_SYMBOL
+  = 'CONSISTENT'
+
+CONSTRAINT_SYMBOL
+  = 'CONSTRAINT'
+
+CONSTRAINT_CATALOG_SYMBOL
+  = 'CONSTRAINT_CATALOG'
+
+CONSTRAINT_NAME_SYMBOL
+  = 'CONSTRAINT_NAME'
+
+CONSTRAINT_SCHEMA_SYMBOL
+  = 'CONSTRAINT_SCHEMA'
+
+CONTAINS_SYMBOL
+  = 'CONTAINS'
+
+CONTEXT_SYMBOL
+  = 'CONTEXT'
+
+CONTINUE_SYMBOL
+  = 'CONTINUE'
+
+CONTRIBUTORS_SYMBOL
+  = 'CONTRIBUTORS' &{ return options.serverVersion < 50700; }
+
+CONVERT_SYMBOL
+  = 'CONVERT'
+
+COUNT_SYMBOL
+  = 'COUNT' { return identifier.determineFunction('COUNT_SYMBOL'); } // SQL-2003-N
+
+CPU_SYMBOL
+  = 'CPU'
+
+CREATE_SYMBOL
+  = 'CREATE'
+
+CROSS_SYMBOL
+  = 'CROSS'
+
+CUBE_SYMBOL
+  = 'CUBE'
+
+CURDATE_SYMBOL
+  = 'CURDATE' { return identifier.determineFunction('CURDATE_SYMBOL'); } // MYSQL-FUNC
+
+CURRENT_SYMBOL
+  = 'CURRENT' &{ return options.serverVersion >= 50604; }
+
+CURRENT_DATE_SYMBOL
+  = 'CURRENT_DATE' { return identifier.determineFunction('CURDATE_SYMBOL'); } // Synonym, MYSQL-FUNC
+
+CURRENT_TIME_SYMBOL
+  = 'CURRENT_TIME' { return identifier.determineFunction('CURTIME_SYMBOL'); } // Synonym, MYSQL-FUNC
+
+CURRENT_TIMESTAMP_SYMBOL
+  = 'CURRENT_TIMESTAMP' { return 'NOW_SYMBOL'; } // Synonym
+
+CURRENT_USER_SYMBOL
+  = 'CURRENT_USER'
+
+CURSOR_SYMBOL
+  = 'CURSOR'
+
+CURSOR_NAME_SYMBOL
+  = 'CURSOR_NAME'
+
+CURTIME_SYMBOL
+  = 'CURTIME' { return identifier.determineFunction('CURTIME_SYMBOL'); } // MYSQL-FUNC
+
+DATABASE_SYMBOL
+  = 'DATABASE'
+
+DATABASES_SYMBOL
+  = 'DATABASES'
+
+DATAFILE_SYMBOL
+  = 'DATAFILE'
+
+DATA_SYMBOL
+  = 'DATA'
+
+DATETIME_SYMBOL
+  = 'DATETIME' // MYSQL
+
+DATE_ADD_SYMBOL
+  = 'DATE_ADD' { return identifier.determineFunction('DATE_ADD_SYMBOL'); }
+
+DATE_SUB_SYMBOL
+  = 'DATE_SUB' { return identifier.determineFunction('DATE_SUB_SYMBOL'); }
+
+DATE_SYMBOL
+  = 'DATE'
+
+DAYOFMONTH_SYMBOL
+  = 'DAYOFMONTH' { return 'DAY_SYMBOL'; } // Synonym
+
+DAY_HOUR_SYMBOL
+  = 'DAY_HOUR'
+
+DAY_MICROSECOND_SYMBOL
+  = 'DAY_MICROSECOND'
+
+DAY_MINUTE_SYMBOL
+  = 'DAY_MINUTE'
+
+DAY_SECOND_SYMBOL
+  = 'DAY_SECOND'
+
+DAY_SYMBOL
+  = 'DAY'
+
+DEALLOCATE_SYMBOL
+  = 'DEALLOCATE'
+
+DEC_SYMBOL
+  = 'DEC' { return 'DECIMAL_SYMBOL'; } // Synonym
+
+DECIMAL_NUM_SYMBOL
+  = 'DECIMAL_NUM'
+
+DECIMAL_SYMBOL
+  = 'DECIMAL'
+
+DECLARE_SYMBOL
+  = 'DECLARE'
+
+DEFAULT_SYMBOL
+  = 'DEFAULT'
+
+DEFAULT_AUTH_SYMBOL
+  = 'DEFAULT_AUTH' &{ return options.serverVersion >= 50604; } // Internal
+
+DEFINER_SYMBOL
+  = 'DEFINER'
+
+DELAYED_SYMBOL
+  = 'DELAYED'
+
+DELAY_KEY_WRITE_SYMBOL
+  = 'DELAY_KEY_WRITE'
+
+DELETE_SYMBOL
+  = 'DELETE'
+
+DESC_SYMBOL
+  = 'DESC'
+
+DESCRIBE_SYMBOL
+  = 'DESCRIBE'
+
+DES_KEY_FILE_SYMBOL
+  = 'DES_KEY_FILE' &{ return options.serverVersion < 80000; }
+
+DETERMINISTIC_SYMBOL
+  = 'DETERMINISTIC'
+
+DIAGNOSTICS_SYMBOL
+  = 'DIAGNOSTICS'
+
+DIRECTORY_SYMBOL
+  = 'DIRECTORY'
+
+DISABLE_SYMBOL
+  = 'DISABLE'
+
+DISCARD_SYMBOL
+  = 'DISCARD'
+
+DISK_SYMBOL
+  = 'DISK'
+
+DISTINCT_SYMBOL
+  = 'DISTINCT'
+
+DISTINCTROW_SYMBOL
+  = 'DISTINCTROW' { return 'DISTINCT_SYMBOL'; } // Synonym
+
+DIV_SYMBOL
+  = 'DIV'
+
+DOUBLE_SYMBOL
+  = 'DOUBLE'
+
+DO_SYMBOL
+  = 'DO'
+
+DROP_SYMBOL
+  = 'DROP'
+
+DUAL_SYMBOL
+  = 'DUAL'
+
+DUMPFILE_SYMBOL
+  = 'DUMPFILE'
+
+DUPLICATE_SYMBOL
+  = 'DUPLICATE'
+
+DYNAMIC_SYMBOL
+  = 'DYNAMIC'
+
+EACH_SYMBOL
+  = 'EACH'
+
+ELSE_SYMBOL
+  = 'ELSE'
+
+ELSEIF_SYMBOL
+  = 'ELSEIF'
+
+ENABLE_SYMBOL
+  = 'ENABLE'
+
+ENCLOSED_SYMBOL
+  = 'ENCLOSED'
+
+ENCRYPTION_SYMBOL
+  = 'ENCRYPTION' &{ return options.serverVersion >= 50711; }
+
+END_SYMBOL
+  = 'END'
+
+ENDS_SYMBOL
+  = 'ENDS'
+
+END_OF_INPUT_SYMBOL
+  = 'END_OF_INPUT' // INTERNAL
+
+ENGINES_SYMBOL
+  = 'ENGINES'
+
+ENGINE_SYMBOL
+  = 'ENGINE'
+
+ENUM_SYMBOL
+  = 'ENUM' // MYSQL
+
+ERROR_SYMBOL
+  = 'ERROR'
+
+ERRORS_SYMBOL
+  = 'ERRORS'
+
+ESCAPED_SYMBOL
+  = 'ESCAPED'
+
+ESCAPE_SYMBOL
+  = 'ESCAPE'
+
+EVENTS_SYMBOL
+  = 'EVENTS'
+
+EVENT_SYMBOL
+  = 'EVENT'
+
+EVERY_SYMBOL
+  = 'EVERY'
+
+EXCHANGE_SYMBOL
+  = 'EXCHANGE'
+
+EXECUTE_SYMBOL
+  = 'EXECUTE'
+
+EXISTS_SYMBOL
+  = 'EXISTS'
+
+EXIT_SYMBOL
+  = 'EXIT'
+
+EXPANSION_SYMBOL
+  = 'EXPANSION'
+
+EXPIRE_SYMBOL
+  = 'EXPIRE' &{ return options.serverVersion >= 50606; }
+
+EXPLAIN_SYMBOL
+  = 'EXPLAIN'
+
+EXPORT_SYMBOL
+  = 'EXPORT' &{ return options.serverVersion >= 50606; }
+
+EXTENDED_SYMBOL
+  = 'EXTENDED'
+
+EXTENT_SIZE_SYMBOL
+  = 'EXTENT_SIZE'
+
+EXTRACT_SYMBOL
+  = 'EXTRACT' { return identifier.determineFunction('EXTRACT_SYMBOL'); } // SQL-2003-N
+
+FALSE_SYMBOL
+  = 'FALSE'
+
+FAST_SYMBOL
+  = 'FAST'
+
+FAULTS_SYMBOL
+  = 'FAULTS'
+
+FETCH_SYMBOL
+  = 'FETCH'
+
+FIELDS_SYMBOL
+  = 'FIELDS' { return 'COLUMNS_SYMBOL'; } // Synonym
+
+FILE_SYMBOL
+  = 'FILE'
+
+FILE_BLOCK_SIZE_SYMBOL
+  = 'FILE_BLOCK_SIZE' &{ return options.serverVersion >= 50707; }
+
+FILTER_SYMBOL
+  = 'FILTER' &{ return options.serverVersion >= 50700; }
+
+FIRST_SYMBOL
+  = 'FIRST'
+
+FIXED_SYMBOL
+  = 'FIXED'
+
+FLOAT4_SYMBOL
+  = 'FLOAT4' { return 'FLOAT_SYMBOL'; } // Synonym
+
+FLOAT8_SYMBOL
+  = 'FLOAT8' { return 'DOUBLE_SYMBOL'; } // Synonym
+
+FLOAT_SYMBOL
+  = 'FLOAT'
+
+FLUSH_SYMBOL
+  = 'FLUSH'
+
+FOLLOWS_SYMBOL
+  = 'FOLLOWS' &{ return options.serverVersion >= 50700; }
+
+FORCE_SYMBOL
+  = 'FORCE'
+
+FOREIGN_SYMBOL
+  = 'FOREIGN'
+
+FOR_SYMBOL
+  = 'FOR'
+
+FORMAT_SYMBOL
+  = 'FORMAT'
+
+FOUND_SYMBOL
+  = 'FOUND'
+
+FROM_SYMBOL
+  = 'FROM'
+
+FULL_SYMBOL
+  = 'FULL'
+
+FULLTEXT_SYMBOL
+  = 'FULLTEXT'
+
+FUNCTION_SYMBOL
+  = 'FUNCTION'
+
+GET_SYMBOL
+  = 'GET' &{ return options.serverVersion >= 50604; }
+
+GENERAL_SYMBOL
+  = 'GENERAL'
+
+GENERATED_SYMBOL
+  = 'GENERATED' &{ return options.serverVersion >= 50707; }
+
+GROUP_REPLICATION_SYMBOL
+  = 'GROUP_REPLICATION' &{ return options.serverVersion >= 50707; }
+
+GEOMETRYCOLLECTION_SYMBOL
+  = 'GEOMETRYCOLLECTION' // MYSQL
+
+GEOMETRY_SYMBOL
+  = 'GEOMETRY'
+
+GET_FORMAT_SYMBOL
+  = 'GET_FORMAT' // MYSQL-FUNC
+
+GLOBAL_SYMBOL
+  = 'GLOBAL'
+
+GRANT_SYMBOL
+  = 'GRANT'
+
+GRANTS_SYMBOL
+  = 'GRANTS'
+
+GROUP_SYMBOL
+  = 'GROUP'
+
+GROUP_CONCAT_SYMBOL
+  = 'GROUP_CONCAT' { return identifier.determineFunction('GROUP_CONCAT_SYMBOL'); }
+
+HANDLER_SYMBOL
+  = 'HANDLER'
+
+HASH_SYMBOL
+  = 'HASH'
+
+HAVING_SYMBOL
+  = 'HAVING'
+
+HELP_SYMBOL
+  = 'HELP'
+
+HIGH_PRIORITY_SYMBOL
+  = 'HIGH_PRIORITY'
+
+HOST_SYMBOL
+  = 'HOST'
+
+HOSTS_SYMBOL
+  = 'HOSTS'
+
+HOUR_MICROSECOND_SYMBOL
+  = 'HOUR_MICROSECOND'
+
+HOUR_MINUTE_SYMBOL
+  = 'HOUR_MINUTE'
+
+HOUR_SECOND_SYMBOL
+  = 'HOUR_SECOND'
+
+HOUR_SYMBOL
+  = 'HOUR'
+
+IDENTIFIED_SYMBOL
+  = 'IDENTIFIED'
+
+IF_SYMBOL
+  = 'IF'
+
+IGNORE_SYMBOL
+  = 'IGNORE'
+
+IGNORE_SERVER_IDS_SYMBOL
+  = 'IGNORE_SERVER_IDS'
+
+IMPORT_SYMBOL
+  = 'IMPORT'
+
+INDEXES_SYMBOL
+  = 'INDEXES'
+
+INDEX_SYMBOL
+  = 'INDEX'
+
+INFILE_SYMBOL
+  = 'INFILE'
+
+INITIAL_SIZE_SYMBOL
+  = 'INITIAL_SIZE'
+
+INNER_SYMBOL
+  = 'INNER'
+
+INOUT_SYMBOL
+  = 'INOUT'
+
+INSENSITIVE_SYMBOL
+  = 'INSENSITIVE'
+
+INSERT_SYMBOL
+  = 'INSERT'
+
+INSERT_METHOD_SYMBOL
+  = 'INSERT_METHOD'
+
+INSTANCE_SYMBOL
+  = 'INSTANCE' &{ return options.serverVersion >= 50713; }
+
+INSTALL_SYMBOL
+  = 'INSTALL'
+
+INTEGER_SYMBOL
+  = 'INTEGER' { return 'INT_SYMBOL'; } // Synonym
+
+INTERVAL_SYMBOL
+  = 'INTERVAL'
+
+INTO_SYMBOL
+  = 'INTO'
+
+INT_SYMBOL
+  = 'INT'
+
+INVOKER_SYMBOL
+  = 'INVOKER'
+
+IN_SYMBOL
+  = 'IN'
+
+IO_AFTER_GTIDS_SYMBOL
+  = 'IO_AFTER_GTIDS' // MYSQL, FUTURE-USE
+
+IO_BEFORE_GTIDS_SYMBOL
+  = 'IO_BEFORE_GTIDS' // MYSQL, FUTURE-USE
+
+IO_THREAD_SYMBOL
+  = 'IO_THREAD' { return 'RELAY_THREAD_SYMBOL'; } // Synonym
+
+IO_SYMBOL
+  = 'IO'
+
+IPC_SYMBOL
+  = 'IPC'
+
+IS_SYMBOL
+  = 'IS'
+
+ISOLATION_SYMBOL
+  = 'ISOLATION'
+
+ISSUER_SYMBOL
+  = 'ISSUER'
+
+ITERATE_SYMBOL
+  = 'ITERATE'
+
+JOIN_SYMBOL
+  = 'JOIN'
+
+JSON_SYMBOL
+  = 'JSON' &{ return options.serverVersion >= 50708; } // MYSQL
+
+KEYS_SYMBOL
+  = 'KEYS'
+
+KEY_BLOCK_SIZE_SYMBOL
+  = 'KEY_BLOCK_SIZE'
+
+KEY_SYMBOL
+  = 'KEY'
+
+KILL_SYMBOL
+  = 'KILL'
+
+LANGUAGE_SYMBOL
+  = 'LANGUAGE'
+
+LAST_SYMBOL
+  = 'LAST'
+
+LEADING_SYMBOL
+  = 'LEADING'
+
+LEAVES_SYMBOL
+  = 'LEAVES'
+
+LEAVE_SYMBOL
+  = 'LEAVE'
+
+LEFT_SYMBOL
+  = 'LEFT'
+
+LESS_SYMBOL
+  = 'LESS'
+
+LEVEL_SYMBOL
+  = 'LEVEL'
+
+LIKE_SYMBOL
+  = 'LIKE'
+
+LIMIT_SYMBOL
+  = 'LIMIT'
+
+LINEAR_SYMBOL
+  = 'LINEAR'
+
+LINES_SYMBOL
+  = 'LINES'
+
+LINESTRING_SYMBOL
+  = 'LINESTRING' // MYSQL
+
+LIST_SYMBOL
+  = 'LIST'
+
+LOAD_SYMBOL
+  = 'LOAD'
+
+LOCALTIME_SYMBOL
+  = 'LOCALTIME' { return 'NOW_SYMBOL'; } // Synonym
+
+LOCALTIMESTAMP_SYMBOL
+  = 'LOCALTIMESTAMP' { return 'NOW_SYMBOL'; } // Synonym
+
+LOCAL_SYMBOL
+  = 'LOCAL'
+
+LOCATOR_SYMBOL
+  = 'LOCATOR'
+
+LOCKS_SYMBOL
+  = 'LOCKS'
+
+LOCK_SYMBOL
+  = 'LOCK'
+
+LOGFILE_SYMBOL
+  = 'LOGFILE'
+
+LOGS_SYMBOL
+  = 'LOGS'
+
+LONGBLOB_SYMBOL
+  = 'LONGBLOB' // MYSQL
+
+LONGTEXT_SYMBOL
+  = 'LONGTEXT' // MYSQL
+
+LONG_NUM_SYMBOL
+  = 'LONG_NUM'
+
+LONG_SYMBOL
+  = 'LONG'
+
+LOOP_SYMBOL
+  = 'LOOP'
+
+LOW_PRIORITY_SYMBOL
+  = 'LOW_PRIORITY'
+
+MASTER_AUTO_POSITION_SYMBOL
+  = 'MASTER_AUTO_POSITION' &{ return options.serverVersion >= 50605; }
+
+MASTER_BIND_SYMBOL
+  = 'MASTER_BIND' &{ return options.serverVersion >= 50602; }
+
+MASTER_CONNECT_RETRY_SYMBOL
+  = 'MASTER_CONNECT_RETRY'
+
+MASTER_DELAY_SYMBOL
+  = 'MASTER_DELAY'
+
+MASTER_HOST_SYMBOL
+  = 'MASTER_HOST'
+
+MASTER_LOG_FILE_SYMBOL
+  = 'MASTER_LOG_FILE'
+
+MASTER_LOG_POS_SYMBOL
+  = 'MASTER_LOG_POS'
+
+MASTER_PASSWORD_SYMBOL
+  = 'MASTER_PASSWORD'
+
+MASTER_PORT_SYMBOL
+  = 'MASTER_PORT'
+
+MASTER_RETRY_COUNT_SYMBOL
+  = 'MASTER_RETRY_COUNT' &{ return options.serverVersion >= 50601; }
+
+MASTER_SERVER_ID_SYMBOL
+  = 'MASTER_SERVER_ID'
+
+MASTER_SSL_CAPATH_SYMBOL
+  = 'MASTER_SSL_CAPATH'
+
+MASTER_SSL_CA_SYMBOL
+  = 'MASTER_SSL_CA'
+
+MASTER_SSL_CERT_SYMBOL
+  = 'MASTER_SSL_CERT'
+
+MASTER_SSL_CIPHER_SYMBOL
+  = 'MASTER_SSL_CIPHER'
+
+MASTER_SSL_CRL_SYMBOL
+  = 'MASTER_SSL_CRL' &{ return options.serverVersion >= 50603; }
+
+MASTER_SSL_CRLPATH_SYMBOL
+  = 'MASTER_SSL_CRLPATH' &{ return options.serverVersion >= 50603; }
+
+MASTER_SSL_KEY_SYMBOL
+  = 'MASTER_SSL_KEY'
+
+MASTER_SSL_SYMBOL
+  = 'MASTER_SSL'
+
+MASTER_SSL_VERIFY_SERVER_CERT_SYMBOL
+  = 'MASTER_SSL_VERIFY_SERVER_CERT'?
+
+MASTER_SYMBOL
+  = 'MASTER'
+
+MASTER_TLS_VERSION_SYMBOL
+  = 'MASTER_TLS_VERSION' &{ return options.serverVersion >= 50713; }
+
+MASTER_USER_SYMBOL
+  = 'MASTER_USER'
+
+MASTER_HEARTBEAT_PERIOD_SYMBOL
+  = 'MASTER_HEARTBEAT_PERIOD'?
+
+MATCH_SYMBOL
+  = 'MATCH'
+
+MAX_CONNECTIONS_PER_HOUR_SYMBOL
+  = 'MAX_CONNECTIONS_PER_HOUR'
+
+MAX_QUERIES_PER_HOUR_SYMBOL
+  = 'MAX_QUERIES_PER_HOUR'
+
+MAX_ROWS_SYMBOL
+  = 'MAX_ROWS'
+
+MAX_SIZE_SYMBOL
+  = 'MAX_SIZE'
+
+MAX_STATEMENT_TIME_SYMBOL
+  = 'MAX_STATEMENT_TIME' &{ return 50704 < options.serverVersion && options.serverVersion < 50708; }
+
+MAX_SYMBOL
+  = 'MAX' { return identifier.determineFunction('MAX_SYMBOL'); } // SQL-2003-N
+
+MAX_UPDATES_PER_HOUR_SYMBOL
+  = 'MAX_UPDATES_PER_HOUR'
+
+MAX_USER_CONNECTIONS_SYMBOL
+  = 'MAX_USER_CONNECTIONS'
+
+MAXVALUE_SYMBOL
+  = 'MAXVALUE'
+
+MEDIUMBLOB_SYMBOL
+  = 'MEDIUMBLOB' // MYSQL
+
+MEDIUMINT_SYMBOL
+  = 'MEDIUMINT'
+
+MEDIUMTEXT_SYMBOL
+  = 'MEDIUMTEXT' // MYSQL
+
+MEDIUM_SYMBOL
+  = 'MEDIUM'
+
+MEMORY_SYMBOL
+  = 'MEMORY'
+
+MERGE_SYMBOL
+  = 'MERGE'
+
+MESSAGE_TEXT_SYMBOL
+  = 'MESSAGE_TEXT'
+
+MICROSECOND_SYMBOL
+  = 'MICROSECOND' // MYSQL-FUNC
+
+MID_SYMBOL
+  = 'MID' { return identifier.determineFunction('SUBSTRING_SYMBOL'); } // Synonym
+
+MIDDLEINT_SYMBOL
+  = 'MIDDLEINT' { return 'MEDIUMINT_SYMBOL'; } // Synonym (for Powerbuilder)
+
+MIGRATE_SYMBOL
+  = 'MIGRATE'
+
+MINUTE_MICROSECOND_SYMBOL
+  = 'MINUTE_MICROSECOND'
+
+MINUTE_SECOND_SYMBOL
+  = 'MINUTE_SECOND'
+
+MINUTE_SYMBOL
+  = 'MINUTE'
+
+MIN_ROWS_SYMBOL
+  = 'MIN_ROWS'
+
+MIN_SYMBOL
+  = 'MIN' { return identifier.determineFunction('MIN_SYMBOL'); } // SQL-2003-N
+
+MODE_SYMBOL
+  = 'MODE'
+
+MODIFIES_SYMBOL
+  = 'MODIFIES'
+
+MODIFY_SYMBOL
+  = 'MODIFY'
+
+MOD_SYMBOL
+  = 'MOD'
+
+MONTH_SYMBOL
+  = 'MONTH'
+
+MULTILINESTRING_SYMBOL
+  = 'MULTILINESTRING' // MYSQL
+
+MULTIPOINT_SYMBOL
+  = 'MULTIPOINT' // MYSQL
+
+MULTIPOLYGON_SYMBOL
+  = 'MULTIPOLYGON' // MYSQL
+
+MUTEX_SYMBOL
+  = 'MUTEX'
+
+MYSQL_ERRNO_SYMBOL
+  = 'MYSQL_ERRNO'
+
+NAMES_SYMBOL
+  = 'NAMES'
+
+NAME_SYMBOL
+  = 'NAME'
+
+NATIONAL_SYMBOL
+  = 'NATIONAL'
+
+NATURAL_SYMBOL
+  = 'NATURAL'
+
+NCHAR_STRING_SYMBOL
+  = 'NCHAR_STRING'
+
+NCHAR_SYMBOL
+  = 'NCHAR'
+
+NDB_SYMBOL
+  = 'NDB' { return 'NDBCLUSTER_SYMBOL'; } //Synonym
+
+NDBCLUSTER_SYMBOL
+  = 'NDBCLUSTER'
+
+NEG_SYMBOL
+  = 'NEG'
+
+NEVER_SYMBOL
+  = 'NEVER' &{ return options.serverVersion >= 50704; }
+
+NEW_SYMBOL
+  = 'NEW'
+
+NEXT_SYMBOL
+  = 'NEXT'
+
+NODEGROUP_SYMBOL
+  = 'NODEGROUP'
+
+NONE_SYMBOL
+  = 'NONE'
+
+NONBLOCKING_SYMBOL
+  = 'NONBLOCKING' &{ return 50700 < options.serverVersion && options.serverVersion < 50706; }
+
+NOT_SYMBOL
+  = 'NOT' {
+      return options.isSqlModeActive('HighNotPrecedence')
+        ? 'NOT2_SYMBOL'
+        : 'NOT_SYMBOL';
+    } // SQL-2003-R
+
+NOW_SYMBOL
+  = 'NOW' { return identifier.determineFunction('NOW_SYMBOL'); }
+
+NO_SYMBOL
+  = 'NO'
+
+NO_WAIT_SYMBOL
+  = 'NO_WAIT'
+
+NO_WRITE_TO_BINLOG_SYMBOL
+  = 'NO_WRITE_TO_BINLOG'
+
+NULL_SYMBOL
+  = 'NULL'
+
+NUMBER_SYMBOL
+  = 'NUMBER' &{ return options.serverVersion >= 50606; }
+
+NUMERIC_SYMBOL
+  = 'NUMERIC'
+
+NVARCHAR_SYMBOL
+  = 'NVARCHAR'
+
+OFFLINE_SYMBOL
+  = 'OFFLINE'
+
+OFFSET_SYMBOL
+  = 'OFFSET'
+
+OLD_PASSWORD_SYMBOL
+  = 'OLD_PASSWORD' &{ return options.serverVersion < 50706; }
+
+ON_SYMBOL
+  = 'ON'
+
+ONE_SYMBOL
+  = 'ONE'
+
+ONLINE_SYMBOL
+  = 'ONLINE'
+
+ONLY_SYMBOL
+  = 'ONLY' &{ return options.serverVersion >= 50605; }
+
+OPEN_SYMBOL
+  = 'OPEN'
+
+OPTIMIZE_SYMBOL
+  = 'OPTIMIZE'
+
+OPTIMIZER_COSTS_SYMBOL
+  = 'OPTIMIZER_COSTS' &{ return options.serverVersion >= 50706; }
+
+OPTIONS_SYMBOL
+  = 'OPTIONS'
+
+OPTION_SYMBOL
+  = 'OPTION'
+
+OPTIONALLY_SYMBOL
+  = 'OPTIONALLY'
+
+ORDER_SYMBOL
+  = 'ORDER'
+
+OR_SYMBOL
+  = 'OR'
+
+OUTER_SYMBOL
+  = 'OUTER'
+
+OUTFILE_SYMBOL
+  = 'OUTFILE'
+
+OUT_SYMBOL
+  = 'OUT'
+
+OWNER_SYMBOL
+  = 'OWNER'
+
+PACK_KEYS_SYMBOL
+  = 'PACK_KEYS'
+
+PAGE_SYMBOL
+  = 'PAGE'
+
+PARSER_SYMBOL
+  = 'PARSER'
+
+PARTIAL_SYMBOL
+  = 'PARTIAL'
+
+PARTITIONING_SYMBOL
+  = 'PARTITIONING'
+
+PARTITIONS_SYMBOL
+  = 'PARTITIONS'
+
+PARTITION_SYMBOL
+  = 'PARTITION'
+
+PASSWORD_SYMBOL
+  = 'PASSWORD'
+
+PHASE_SYMBOL
+  = 'PHASE'
+
+PLUGINS_SYMBOL
+  = 'PLUGINS'
+
+PLUGIN_DIR_SYMBOL
+  = 'PLUGIN_DIR' &{ return options.serverVersion >= 50604; } // Internal
+
+PLUGIN_SYMBOL
+  = 'PLUGIN'
+
+POINT_SYMBOL
+  = 'POINT'
+
+POLYGON_SYMBOL
+  = 'POLYGON' // MYSQL
+
+PORT_SYMBOL
+  = 'PORT'
+
+POSITION_SYMBOL
+  = 'POSITION' { return identifier.determineFunction('POSITION_SYMBOL'); } // SQL-2003-N
+
+PRECEDES_SYMBOL
+  = 'PRECEDES' &{ return options.serverVersion >= 50700; }
+
+PRECISION_SYMBOL
+  = 'PRECISION'
+
+PREPARE_SYMBOL
+  = 'PREPARE'
+
+PRESERVE_SYMBOL
+  = 'PRESERVE'
+
+PREV_SYMBOL
+  = 'PREV'
+
+PRIMARY_SYMBOL
+  = 'PRIMARY'
+
+PRIVILEGES_SYMBOL
+  = 'PRIVILEGES'
+
+PROCEDURE_SYMBOL
+  = 'PROCEDURE'
+
+PROCESS_SYMBOL
+  = 'PROCESS'
+
+PROCESSLIST_SYMBOL
+  = 'PROCESSLIST'
+
+PROFILE_SYMBOL
+  = 'PROFILE'
+
+PROFILES_SYMBOL
+  = 'PROFILES'
+
+PROXY_SYMBOL
+  = 'PROXY'
+
+PURGE_SYMBOL
+  = 'PURGE'
+
+QUARTER_SYMBOL
+  = 'QUARTER'
+
+QUERY_SYMBOL
+  = 'QUERY'
+
+QUICK_SYMBOL
+  = 'QUICK'
+
+RANGE_SYMBOL
+  = 'RANGE'
+
+READS_SYMBOL
+  = 'READS'
+
+READ_ONLY_SYMBOL
+  = 'READ_ONLY'
+
+READ_SYMBOL
+  = 'READ'
+
+READ_WRITE_SYMBOL
+  = 'READ_WRITE'
+
+REAL_SYMBOL
+  = 'REAL'
+
+REBUILD_SYMBOL
+  = 'REBUILD'
+
+RECOVER_SYMBOL
+  = 'RECOVER'
+
+REDOFILE_SYMBOL
+  = 'REDOFILE' &{ return options.serverVersion < 80000; }
+
+REDO_BUFFER_SIZE_SYMBOL
+  = 'REDO_BUFFER_SIZE'
+
+REDUNDANT_SYMBOL
+  = 'REDUNDANT'
+
+REFERENCES_SYMBOL
+  = 'REFERENCES'
+
+REGEXP_SYMBOL
+  = 'REGEXP'
+
+RELAY_SYMBOL
+  = 'RELAY'
+
+RELAYLOG_SYMBOL
+  = 'RELAYLOG'
+
+RELAY_LOG_FILE_SYMBOL
+  = 'RELAY_LOG_FILE'
+
+RELAY_LOG_POS_SYMBOL
+  = 'RELAY_LOG_POS'
+
+RELAY_THREAD_SYMBOL
+  = 'RELAY_THREAD'
+
+RELEASE_SYMBOL
+  = 'RELEASE'
+
+RELOAD_SYMBOL
+  = 'RELOAD'
+
+REMOVE_SYMBOL
+  = 'REMOVE'
+
+RENAME_SYMBOL
+  = 'RENAME'
+
+REORGANIZE_SYMBOL
+  = 'REORGANIZE'
+
+REPAIR_SYMBOL
+  = 'REPAIR'
+
+REPEATABLE_SYMBOL
+  = 'REPEATABLE'
+
+REPEAT_SYMBOL
+  = 'REPEAT' { return identifier.determineFunction('REPEAT_SYMBOL'); } // MYSQL-FUNC
+
+REPLACE_SYMBOL
+  = 'REPLACE' { return identifier.determineFunction('REPLACE_SYMBOL'); } // MYSQL-FUNC
+
+REPLICATION_SYMBOL
+  = 'REPLICATION'
+
+REPLICATE_DO_DB_SYMBOL
+  = 'REPLICATE_DO_DB' &{ return options.serverVersion >= 50700; }
+
+REPLICATE_IGNORE_DB_SYMBOL
+  = 'REPLICATE_IGNORE_DB' &{ return options.serverVersion >= 50700; }
+
+REPLICATE_DO_TABLE_SYMBOL
+  = 'REPLICATE_DO_TABLE' &{ return options.serverVersion >= 50700; }
+
+REPLICATE_IGNORE_TABLE_SYMBOL
+  = 'REPLICATE_IGNORE_TABLE' &{ return options.serverVersion >= 50700; }
+
+REPLICATE_WILD_DO_TABLE_SYMBOL
+  = 'REPLICATE_WILD_DO_TABLE' &{ return options.serverVersion >= 50700; }
+
+REPLICATE_WILD_IGNORE_TABLE_SYMBOL
+  = 'REPLICATE_WILD_IGNORE_TABLE' &{ return options.serverVersion >= 50700; }
+
+REPLICATE_REWRITE_DB_SYMBOL
+  = 'REPLICATE_REWRITE_DB' &{ return options.serverVersion >= 50700; }
+
+REQUIRE_SYMBOL
+  = 'REQUIRE'
+
+RESET_SYMBOL
+  = 'RESET'
+
+RESIGNAL_SYMBOL
+  = 'RESIGNAL'
+
+RESTORE_SYMBOL
+  = 'RESTORE'
+
+RESTRICT_SYMBOL
+  = 'RESTRICT'
+
+RESUME_SYMBOL
+  = 'RESUME'
+
+RETURNED_SQLSTATE_SYMBOL
+  = 'RETURNED_SQLSTATE'
+
+RETURNS_SYMBOL
+  = 'RETURNS'
+
+RETURN_SYMBOL
+  = 'RETURN'?
+
+REVERSE_SYMBOL
+  = 'REVERSE'
+
+REVOKE_SYMBOL
+  = 'REVOKE'
+
+RIGHT_SYMBOL
+  = 'RIGHT'
+
+RLIKE_SYMBOL
+  = 'RLIKE' { return 'REGEXP_SYMBOL'; } // Synonym (like in mSQL2)
+
+ROLLBACK_SYMBOL
+  = 'ROLLBACK'
+
+ROLLUP_SYMBOL
+  = 'ROLLUP'
+
+ROTATE_SYMBOL
+  = 'ROTATE' &{ return options.serverVersion >= 50713; }
+
+ROUTINE_SYMBOL
+  = 'ROUTINE'
+
+ROWS_SYMBOL
+  = 'ROWS'
+
+ROW_COUNT_SYMBOL
+  = 'ROW_COUNT'
+
+ROW_FORMAT_SYMBOL
+  = 'ROW_FORMAT'
+
+ROW_SYMBOL
+  = 'ROW'
+
+RTREE_SYMBOL
+  = 'RTREE'
+
+SAVEPOINT_SYMBOL
+  = 'SAVEPOINT'
+
+SCHEDULE_SYMBOL
+  = 'SCHEDULE'
+
+SCHEMA_SYMBOL
+  = 'SCHEMA' { return 'DATABASE_SYMBOL'; } // Synonym
+
+SCHEMA_NAME_SYMBOL
+  = 'SCHEMA_NAME'
+
+SCHEMAS_SYMBOL
+  = 'SCHEMAS' { return 'DATABASES_SYMBOL'; } // Synonym
+
+SECOND_MICROSECOND_SYMBOL
+  = 'SECOND_MICROSECOND'
+
+SECOND_SYMBOL
+  = 'SECOND'
+
+SECURITY_SYMBOL
+  = 'SECURITY'
+
+SELECT_SYMBOL
+  = 'SELECT'
+
+SENSITIVE_SYMBOL
+  = 'SENSITIVE' // FUTURE-USE
+
+SEPARATOR_SYMBOL
+  = 'SEPARATOR'
+
+SERIALIZABLE_SYMBOL
+  = 'SERIALIZABLE'
+
+SERIAL_SYMBOL
+  = 'SERIAL'
+
+SESSION_SYMBOL
+  = 'SESSION'
+
+SERVER_SYMBOL
+  = 'SERVER'
+
+SERVER_OPTIONS_SYMBOL
+  = 'SERVER_OPTIONS'
+
+SESSION_USER_SYMBOL
+  = 'SESSION_USER' { return identifier.determineFunction('USER_SYMBOL'); } // Synonym
+
+SET_SYMBOL
+  = 'SET'
+
+SET_VAR_SYMBOL
+  = 'SET_VAR'
+
+SHARE_SYMBOL
+  = 'SHARE'
+
+SHOW_SYMBOL
+  = 'SHOW'
+
+SHUTDOWN_SYMBOL
+  = 'SHUTDOWN'
+
+SIGNAL_SYMBOL
+  = 'SIGNAL'
+
+SIGNED_SYMBOL
+  = 'SIGNED'
+
+SIMPLE_SYMBOL
+  = 'SIMPLE'
+
+SLAVE_SYMBOL
+  = 'SLAVE'
+
+SLOW_SYMBOL
+  = 'SLOW'
+
+SMALLINT_SYMBOL
+  = 'SMALLINT'
+
+SNAPSHOT_SYMBOL
+  = 'SNAPSHOT'
+
+SOME_SYMBOL
+  = 'SOME' { return 'ANY_SYMBOL'; } // Synonym
+
+SOCKET_SYMBOL
+  = 'SOCKET'
+
+SONAME_SYMBOL
+  = 'SONAME'
+
+SOUNDS_SYMBOL
+  = 'SOUNDS'
+
+SOURCE_SYMBOL
+  = 'SOURCE'
+
+SPATIAL_SYMBOL
+  = 'SPATIAL'
+
+SPECIFIC_SYMBOL
+  = 'SPECIFIC'
+
+SQLEXCEPTION_SYMBOL
+  = 'SQLEXCEPTION'
+
+SQLSTATE_SYMBOL
+  = 'SQLSTATE'
+
+SQLWARNING_SYMBOL
+  = 'SQLWARNING'
+
+SQL_AFTER_GTIDS_SYMBOL
+  = 'SQL_AFTER_GTIDS' // MYSQL
+
+SQL_AFTER_MTS_GAPS_SYMBOL
+  = 'SQL_AFTER_MTS_GAPS' &{ return options.serverVersion >= 50606; } // MYSQL
+
+SQL_BEFORE_GTIDS_SYMBOL
+  = 'SQL_BEFORE_GTIDS' // MYSQL
+
+SQL_BIG_RESULT_SYMBOL
+  = 'SQL_BIG_RESULT'
+
+SQL_BUFFER_RESULT_SYMBOL
+  = 'SQL_BUFFER_RESULT'
+
+SQL_CACHE_SYMBOL
+  = 'SQL_CACHE' &{ return options.serverVersion < 80000; }
+
+SQL_CALC_FOUND_ROWS_SYMBOL
+  = 'SQL_CALC_FOUND_ROWS'
+
+SQL_NO_CACHE_SYMBOL
+  = 'SQL_NO_CACHE'
+
+SQL_SMALL_RESULT_SYMBOL
+  = 'SQL_SMALL_RESULT'
+
+SQL_SYMBOL
+  = 'SQL'
+
+SQL_THREAD_SYMBOL
+  = 'SQL_THREAD'
+
+SSL_SYMBOL
+  = 'SSL'
+
+STACKED_SYMBOL
+  = 'STACKED' &{ return options.serverVersion >= 50700; }
+
+STARTING_SYMBOL
+  = 'STARTING'
+
+STARTS_SYMBOL
+  = 'STARTS'
+
+START_SYMBOL
+  = 'START'
+
+STATS_AUTO_RECALC_SYMBOL
+  = 'STATS_AUTO_RECALC'
+
+STATS_PERSISTENT_SYMBOL
+  = 'STATS_PERSISTENT'
+
+STATS_SAMPLE_PAGES_SYMBOL
+  = 'STATS_SAMPLE_PAGES'
+
+STATUS_SYMBOL
+  = 'STATUS'
+
+STDDEV_SAMP_SYMBOL
+  = 'STDDEV_SAMP' { return identifier.determineFunction('STDDEV_SAMP_SYMBOL'); } // SQL-2003-N
+
+STDDEV_SYMBOL
+  = 'STDDEV' { return identifier.determineFunction('STD_SYMBOL'); } // Synonym
+
+STDDEV_POP_SYMBOL
+  = 'STDDEV_POP' { return identifier.determineFunction('STD_SYMBOL'); } // Synonym
+
+STD_SYMBOL
+  = 'STD' { return identifier.determineFunction('STD_SYMBOL'); }
+
+STOP_SYMBOL
+  = 'STOP'
+
+STORAGE_SYMBOL
+  = 'STORAGE'
+
+STORED_SYMBOL
+  = 'STORED' &{ return options.serverVersion >= 50707; }
+
+STRAIGHT_JOIN_SYMBOL
+  = 'STRAIGHT_JOIN'
+
+STRING_SYMBOL
+  = 'STRING'
+
+SUBCLASS_ORIGIN_SYMBOL
+  = 'SUBCLASS_ORIGIN'
+
+SUBDATE_SYMBOL
+  = 'SUBDATE' { return identifier.determineFunction('SUBDATE_SYMBOL'); }
+
+SUBJECT_SYMBOL
+  = 'SUBJECT'
+
+SUBPARTITIONS_SYMBOL
+  = 'SUBPARTITIONS'
+
+SUBPARTITION_SYMBOL
+  = 'SUBPARTITION'
+
+SUBSTR_SYMBOL
+  =  'SUBSTR' { return identifier.determineFunction('SUBSTRING_SYMBOL'); } // Synonym
+
+SUBSTRING_SYMBOL
+  = 'SUBSTRING' { return identifier.determineFunction('SUBSTRING_SYMBOL'); } // SQL-2003-N
+
+SUM_SYMBOL
+  = 'SUM' { return identifier.determineFunction('SUM_SYMBOL'); } // SQL-2003-N
+
+SUPER_SYMBOL
+  = 'SUPER'
+
+SUSPEND_SYMBOL
+  = 'SUSPEND'
+
+SWAPS_SYMBOL
+  = 'SWAPS'
+
+SWITCHES_SYMBOL
+  = 'SWITCHES'
+
+SYSDATE_SYMBOL
+  = 'SYSDATE' { return identifier.determineFunction('SYSDATE_SYMBOL'); }
+
+SYSTEM_USER_SYMBOL
+  = 'SYSTEM_USER' { return identifier.determineFunction('USER_SYMBOL'); }
+
+TABLES_SYMBOL
+  = 'TABLES'
+
+TABLESPACE_SYMBOL
+  = 'TABLESPACE'
+
+TABLE_REF_PRIORITY_SYMBOL
+  = 'TABLE_REF_PRIORITY' &{ return options.serverVersion < 80000; }
+
+TABLE_SYMBOL
+  = 'TABLE'
+
+TABLE_CHECKSUM_SYMBOL
+  = 'TABLE_CHECKSUM'
+
+TABLE_NAME_SYMBOL
+  = 'TABLE_NAME'
+
+TEMPORARY_SYMBOL
+  = 'TEMPORARY'
+
+TEMPTABLE_SYMBOL
+  = 'TEMPTABLE'
+
+TERMINATED_SYMBOL
+  = 'TERMINATED'
+
+TEXT_SYMBOL
+  = 'TEXT'
+
+THAN_SYMBOL
+  = 'THAN'
+
+THEN_SYMBOL
+  = 'THEN'
+
+TIMESTAMP_SYMBOL
+  = 'TIMESTAMP'
+
+TIMESTAMP_ADD_SYMBOL
+  = 'TIMESTAMP_ADD'
+
+TIMESTAMP_DIFF_SYMBOL
+  = 'TIMESTAMP_DIFF'
+
+TIME_SYMBOL
+  = 'TIME'
+
+TINYBLOB_SYMBOL
+  = 'TINYBLOB' // MYSQL
+
+TINYINT_SYMBOL
+  = 'TINYINT'
+
+TINYTEXT_SYMBOL
+  = 'TINYTEXT' // MYSQL
+
+TO_SYMBOL
+  = 'TO'
+
+TRAILING_SYMBOL
+  = 'TRAILING'
+
+TRANSACTION_SYMBOL
+  = 'TRANSACTION'
+
+TRIGGERS_SYMBOL
+  = 'TRIGGERS'
+
+TRIGGER_SYMBOL
+  = 'TRIGGER'
+
+TRIM_SYMBOL
+  = 'TRIM' { return identifier.determineFunction('TRIM_SYMBOL'); } // SQL-2003-N
+
+TRUE_SYMBOL
+  = 'TRUE'
+
+TRUNCATE_SYMBOL
+  = 'TRUNCATE'
+
+TYPES_SYMBOL
+  = 'TYPES'
+
+TYPE_SYMBOL
+  = 'TYPE'
+
+UDF_RETURNS_SYMBOL
+  = 'UDF_RETURNS'
+
+UNCOMMITTED_SYMBOL
+  = 'UNCOMMITTED'
+
+UNDEFINED_SYMBOL
+  = 'UNDEFINED'
+
+UNDOFILE_SYMBOL
+  = 'UNDOFILE'
+
+UNDO_BUFFER_SIZE_SYMBOL
+  = 'UNDO_BUFFER_SIZE'
+
+UNDO_SYMBOL
+  = 'UNDO' // FUTURE-USE
+
+UNICODE_SYMBOL
+  = 'UNICODE'
+
+UNINSTALL_SYMBOL
+  = 'UNINSTALL'
+
+UNION_SYMBOL
+  = 'UNION'
+
+UNIQUE_SYMBOL
+  = 'UNIQUE'
+
+UNKNOWN_SYMBOL
+  = 'UNKNOWN'
+
+UNLOCK_SYMBOL
+  = 'UNLOCK'
+
+UNSIGNED_SYMBOL
+  = 'UNSIGNED' // MYSQL
+
+UNTIL_SYMBOL
+  = 'UNTIL'
+
+UPDATE_SYMBOL
+  = 'UPDATE'
+
+UPGRADE_SYMBOL
+  = 'UPGRADE'
+
+USAGE_SYMBOL
+  = 'USAGE'
+
+USER_RESOURCES_SYMBOL
+  = 'USER_RESOURCES'
+
+USER_SYMBOL
+  = 'USER'
+
+USE_FRM_SYMBOL
+  = 'USE_FRM'
+
+USE_SYMBOL
+  = 'USE'
+
+USING_SYMBOL
+  = 'USING'
+
+UTC_DATE_SYMBOL
+  = 'UTC_DATE'
+
+UTC_TIMESTAMP_SYMBOL
+  = 'UTC_TIMESTAMP'
+
+UTC_TIME_SYMBOL
+  = 'UTC_TIME'
+
+VALIDATION_SYMBOL
+  = 'VALIDATION' &{ return options.serverVersion >= 50706; }
+
+VALUES_SYMBOL
+  = 'VALUES'
+
+VALUE_SYMBOL
+  = 'VALUE'
+
+VARBINARY_SYMBOL
+  = 'VARBINARY'
+
+VARCHAR_SYMBOL
+  = 'VARCHAR'
+
+VARCHARACTER_SYMBOL
+  = 'VARCHARACTER' { return 'VARCHAR_SYMBOL'; } // Synonym
+
+VARIABLES_SYMBOL
+  = 'VARIABLES'
+
+VARIANCE_SYMBOL
+  = 'VARIANCE' { return identifier.determineFunction('VARIANCE_SYMBOL'); }
+
+VARYING_SYMBOL
+  = 'VARYING'
+
+VAR_POP_SYMBOL
+  = 'VAR_POP' { return identifier.determineFunction('VARIANCE_SYMBOL'); } // Synonym
+
+VAR_SAMP_SYMBOL
+  = 'VAR_SAMP' { return identifier.determineFunction('VAR_SAMP_SYMBOL'); }
+
+VIEW_SYMBOL
+  = 'VIEW'
+
+VIRTUAL_SYMBOL
+  = 'VIRTUAL' &{ return options.serverVersion >= 50707; }
+
+WAIT_SYMBOL
+  = 'WAIT'
+
+WARNINGS_SYMBOL
+  = 'WARNINGS'
+
+WEEK_SYMBOL
+  = 'WEEK'
+
+WEIGHT_STRING_SYMBOL
+  = 'WEIGHT_STRING'
+
+WHEN_SYMBOL
+  = 'WHEN'
+
+WHERE_SYMBOL
+  = 'WHERE'
+
+WHILE_SYMBOL
+  = 'WHILE'
+
+WITH_SYMBOL
+  = 'WITH'
+
+WITHOUT_SYMBOL
+  = 'WITHOUT'
+
+WORK_SYMBOL
+  = 'WORK'
+
+WRAPPER_SYMBOL
+  = 'WRAPPER'
+
+WRITE_SYMBOL
+  = 'WRITE'
+
+X509_SYMBOL
+  = 'X509'
+
+XA_SYMBOL
+  = 'XA'
+
+XID_SYMBOL
+  = 'XID' &{ return options.serverVersion >= 50704; }
+
+XML_SYMBOL
+  = 'XML'
+
+XOR_SYMBOL
+  = 'XOR'
+
+YEAR_MONTH_SYMBOL
+  = 'YEAR_MONTH'
+
+YEAR_SYMBOL
+  = 'YEAR'
+
+ZEROFILL_SYMBOL
+  = 'ZEROFILL' // MYSQL
+
+PERSIST_SYMBOL
+  = 'PERSIST' &{ return options.serverVersion >= 80000; }
+
+ROLE_SYMBOL
+  = 'ROLE' &{ return options.serverVersion >= 80000; } // SQL-1999-R
+
+ADMIN_SYMBOL
+  = 'ADMIN' &{ return options.serverVersion >= 80000; } // SQL-1999-R
+
+INVISIBLE_SYMBOL
+  = 'INVISIBLE' &{ return options.serverVersion >= 80000; }
+
+VISIBLE_SYMBOL
+  = 'VISIBLE' &{ return options.serverVersion >= 80000; }
+
+EXCEPT_SYMBOL
+  = 'EXCEPT' &{ return options.serverVersion >= 80000; } // SQL-1999-R
+
+COMPONENT_SYMBOL
+  = 'COMPONENT' &{ return options.serverVersion >= 80000; } // MYSQL
+
+RECURSIVE_SYMBOL
+  = 'RECURSIVE' &{ return options.serverVersion >= 80000; } // SQL-1999-R
+
+JSON_OBJECTAGG_SYMBOL
+  = 'JSON_OBJECTAGG' &{ return options.serverVersion >= 80000; } // SQL-2015-R
+
+JSON_ARRAYAGG_SYMBOL
+  = 'JSON_ARRAYAGG' &{ return options.serverVersion >= 80000; } // SQL-2015-R
+
+OF_SYMBOL
+  = 'OF' &{ return options.serverVersion >= 80000; } // SQL-1999-R
+
+SKIP_SYMBOL
+  = 'SKIP' &{ return options.serverVersion >= 80000; } // MYSQL
+
+LOCKED_SYMBOL
+  = 'LOCKED' &{ return options.serverVersion >= 80000; } // MYSQL
+
+NOWAIT_SYMBOL
+  = 'NOWAIT' &{ return options.serverVersion >= 80000; } // MYSQL
+
+GROUPING_SYMBOL
+  = 'GROUPING' &{ return options.serverVersion >= 80000; } // SQL-2011-R
+
+PERSIST_ONLY_SYMBOL
+  = 'PERSIST_ONLY' &{ return options.serverVersion >= 80000; } // MYSQL
+
+HISTOGRAM_SYMBOL
+  = 'HISTOGRAM' &{ return options.serverVersion >= 80000; } // MYSQL
+
+BUCKETS_SYMBOL
+  = 'BUCKETS' &{ return options.serverVersion >= 80000; } // MYSQL
+
+REMOTE_SYMBOL
+  = 'REMOTE' &{ return options.serverVersion >= 80003 && options.serverVersion < 80014; } // MYSQL
+
+CLONE_SYMBOL
+  = 'CLONE' &{ return options.serverVersion >= 80000; } // MYSQL
+
+CUME_DIST_SYMBOL
+  = 'CUME_DIST' &{ return options.serverVersion >= 80000; } // SQL-2003-R
+
+DENSE_RANK_SYMBOL
+  = 'DENSE_RANK' &{ return options.serverVersion >= 80000; } // SQL-2003-R
+
+EXCLUDE_SYMBOL
+  = 'EXCLUDE' &{ return options.serverVersion >= 80000; } // SQL-2003-N
+
+FIRST_VALUE_SYMBOL
+  = 'FIRST_VALUE' &{ return options.serverVersion >= 80000; } // SQL-2011-R
+
+FOLLOWING_SYMBOL
+  = 'FOLLOWING' &{ return options.serverVersion >= 80000; } // SQL-2003-N
+
+GROUPS_SYMBOL
+  = 'GROUPS' &{ return options.serverVersion >= 80000; } // SQL-2011-R
+
+LAG_SYMBOL
+  = 'LAG' &{ return options.serverVersion >= 80000; } // SQL-2011-R
+
+LAST_VALUE_SYMBOL
+  = 'LAST_VALUE' &{ return options.serverVersion >= 80000; } // SQL-2011-R
+
+LEAD_SYMBOL
+  = 'LEAD' &{ return options.serverVersion >= 80000; } // SQL-2011-R
+
+NTH_VALUE_SYMBOL
+  = 'NTH_VALUE' &{ return options.serverVersion >= 80000; } // SQL-2011-R
+
+NTILE_SYMBOL
+  = 'NTILE' &{ return options.serverVersion >= 80000; } // SQL-2011-R
+
+NULLS_SYMBOL
+  = 'NULLS' &{ return options.serverVersion >= 80000; } // SQL-2003-N
+
+OTHERS_SYMBOL
+  = 'OTHERS' &{ return options.serverVersion >= 80000; } // SQL-2003-N
+
+OVER_SYMBOL
+  = 'OVER' &{ return options.serverVersion >= 80000; } // SQL-2003-R
+
+PERCENT_RANK_SYMBOL
+  = 'PERCENT_RANK' &{ return options.serverVersion >= 80000; } // SQL-2003-R
+
+PRECEDING_SYMBOL
+  = 'PRECEDING' &{ return options.serverVersion >= 80000; } // SQL-2003-N
+
+RANK_SYMBOL
+  = 'RANK' &{ return options.serverVersion >= 80000; } // SQL-2003-R
+
+RESPECT_SYMBOL
+  = 'RESPECT' &{ return options.serverVersion >= 80000; } // SQL_2011-N
+
+ROW_NUMBER_SYMBOL
+  = 'ROW_NUMBER' &{ return options.serverVersion >= 80000; } // SQL-2003-R
+
+TIES_SYMBOL
+  = 'TIES' &{ return options.serverVersion >= 80000; } // SQL-2003-N
+
+UNBOUNDED_SYMBOL
+  = 'UNBOUNDED' &{ return options.serverVersion >= 80000; } // SQL-2003-N
+
+WINDOW_SYMBOL
+  = 'WINDOW' &{ return options.serverVersion >= 80000; } // SQL-2003-R
+
+EMPTY_SYMBOL
+  = 'EMPTY' &{ return options.serverVersion >= 80000; } // SQL-2016-R
+
+JSON_TABLE_SYMBOL
+  = 'JSON_TABLE' &{ return options.serverVersion >= 80000; } // SQL-2016-R
+
+NESTED_SYMBOL
+  = 'NESTED' &{ return options.serverVersion >= 80000; } // SQL-2016-N
+
+ORDINALITY_SYMBOL
+  = 'ORDINALITY' &{ return options.serverVersion >= 80000; } // SQL-2003-N
+
+PATH_SYMBOL
+  = 'PATH' &{ return options.serverVersion >= 80000; } // SQL-2003-N
+
+HISTORY_SYMBOL
+  = 'HISTORY' &{ return options.serverVersion >= 80000; } // MYSQL
+
+REUSE_SYMBOL
+  = 'REUSE' &{ return options.serverVersion >= 80000; } // MYSQL
+
+SRID_SYMBOL
+  = 'SRID' &{ return options.serverVersion >= 80000; } // MYSQL
+
+THREAD_PRIORITY_SYMBOL
+  = 'THREAD_PRIORITY' &{ return options.serverVersion >= 80000; } // MYSQL
+
+RESOURCE_SYMBOL
+  = 'RESOURCE' &{ return options.serverVersion >= 80000; } // MYSQL
+
+SYSTEM_SYMBOL
+  = 'SYSTEM' &{ return options.serverVersion >= 80000; } // SQL-2003-R
+
+VCPU_SYMBOL
+  = 'VCPU' &{ return options.serverVersion >= 80000; } // MYSQL
+
+MASTER_PUBLIC_KEY_PATH_SYMBOL
+  = 'MASTER_PUBLIC_KEY_PATH' &{ return options.serverVersion >= 80000; } // MYSQL
+
+GET_MASTER_PUBLIC_KEY_SYMBOL
+  = 'GET_MASTER_PUBLIC_KEY_SYM' &{ return options.serverVersion >= 80000; } // MYSQL
+
+RESTART_SYMBOL
+  = 'RESTART' &{ return options.serverVersion >= 80011; } // SQL-2003-N
+
+DEFINITION_SYMBOL
+  = 'DEFINITION' &{ return options.serverVersion >= 80011; } // MYSQL
+
+DESCRIPTION_SYMBOL
+  = 'DESCRIPTION' &{ return options.serverVersion >= 80011; } // MYSQL
+
+ORGANIZATION_SYMBOL
+  = 'ORGANIZATION' &{ return options.serverVersion >= 80011; } // MYSQL
+
+REFERENCE_SYMBOL
+  = 'REFERENCE' &{ return options.serverVersion >= 80011; } // MYSQL
+
+OPTIONAL_SYMBOL
+  = 'OPTIONAL' &{ return options.serverVersion >= 80013; } // MYSQL
+
+SECONDARY_SYMBOL
+  = 'SECONDARY' &{ return options.serverVersion >= 80013; } // MYSQL
+
+SECONDARY_ENGINE_SYMBOL
+  = 'SECONDARY_ENGINE' &{ return options.serverVersion >= 80013; } // MYSQL
+
+SECONDARY_LOAD_SYMBOL
+  = 'SECONDARY_LOAD' &{ return options.serverVersion >= 80013; } // MYSQL
+
+SECONDARY_UNLOAD_SYMBOL
+  = 'SECONDARY_UNLOAD' &{ return options.serverVersion >= 80013; } // MYSQL
+
+ACTIVE_SYMBOL
+  = 'ACTIVE' &{ return options.serverVersion >= 80014; } // MYSQL
+
+INACTIVE_SYMBOL
+  = 'INACTIVE' &{ return options.serverVersion >= 80014; } // MYSQL
+
+LATERAL_SYMBOL
+  = 'LATERAL' &{ return options.serverVersion >= 80014; } // SQL-2003-R
+
+RETAIN_SYMBOL
+  = 'RETAIN' &{ return options.serverVersion >= 80014; } // MYSQL
+
+OLD_SYMBOL
+  = 'OLD' &{ return options.serverVersion >= 80014; } // SQL-2003-R
+
+NETWORK_NAMESPACE_SYMBOL
+  = 'NETWORK_NAMESPACE' &{ return options.serverVersion >= 80017; } // MYSQL
+
+ENFORCED_SYMBOL
+  = 'ENFORCED' &{ return options.serverVersion >= 80017; } // SQL-2003-N
+
+ARRAY_SYMBOL
+  = 'ARRAY' &{ return options.serverVersion >= 80017; } // SQL-2003-R
+
+OJ_SYMBOL
+  = 'OJ' &{ return options.serverVersion >= 80017; } // ODBC
+
+MEMBER_SYMBOL
+  = 'MEMBER' &{ return options.serverVersion >= 80017; } // SQL-2003-R
+
+RANDOM_SYMBOL
+  = 'RANDOM' &{ return options.serverVersion >= 80018; } // MYSQL
+
+MASTER_COMPRESSION_ALGORITHM_SYMBOL
+  = 'MASTER_COMPRESSION_ALGORITHM' &{ return options.serverVersion >= 80018; } // MYSQL
+
+MASTER_ZSTD_COMPRESSION_LEVEL_SYMBOL
+  = 'MASTER_ZSTD_COMPRESSION_LEVEL' &{ return options.serverVersion >= 80018; } // MYSQL
+
+PRIVILEGE_CHECKS_USER_SYMBOL
+  = 'PRIVILEGE_CHECKS_USER' &{ return options.serverVersion >= 80018; } // MYSQL
+
+MASTER_TLS_CIPHERSUITES_SYMBOL
+  = 'MASTER_TLS_CIPHERSUITES' &{ return options.serverVersion >= 80018; } // MYSQL
+
+REQUIRE_ROW_FORMAT_SYMBOL
+  = 'REQUIRE_ROW_FORMAT' &{ return options.serverVersion >= 80019; } // MYSQL
+
+PASSWORD_LOCK_TIME_SYMBOL
+  = 'PASSWORD_LOCK_TIME' &{ return options.serverVersion >= 80019; } // MYSQL
+
+FAILED_LOGIN_ATTEMPTS_SYMBOL
+  = 'FAILED_LOGIN_ATTEMPTS' &{ return options.serverVersion >= 80019; } // MYSQL
+
+REQUIRE_TABLE_PRIMARY_KEY_CHECK_SYMBOL
+  = 'REQUIRE_TABLE_PRIMARY_KEY_CHECK' &{ return options.serverVersion >= 80019; } // MYSQL
+
+STREAM_SYMBOL
+  = 'STREAM' &{ return options.serverVersion >= 80019; } // MYSQL
+
+OFF_SYMBOL
+  = 'OFF' &{ return options.serverVersion >= 80019; } // SQL-1999-R
+
+INT1_SYMBOL
+  = 'INT1' { return 'TINYINT_SYMBOL'; }   // Synonym
+
+INT2_SYMBOL
+  = 'INT2' { return 'SMALLINT_SYMBOL'; }  // Synonym
+
+INT3_SYMBOL
+  = 'INT3' { return 'MEDIUMINT_SYMBOL'; } // Synonym
+
+INT4_SYMBOL
+  = 'INT4' { return 'INT_SYMBOL'; }       // Synonym
+
+INT8_SYMBOL
+  = 'INT8' { return 'BIGINT_SYMBOL'; }    // Synonym
+
+SQL_TSI_SECOND_SYMBOL
+  = 'SQL_TSI_SECOND' { return 'SECOND_SYMBOL'; }  // Synonym
+
+SQL_TSI_MINUTE_SYMBOL
+  = 'SQL_TSI_MINUTE' { return 'MINUTE_SYMBOL'; }  // Synonym
+
+SQL_TSI_HOUR_SYMBOL
+  = 'SQL_TSI_HOUR' { return 'HOUR_SYMBOL'; }    // Synonym
+
+SQL_TSI_DAY_SYMBOL
+  = 'SQL_TSI_DAY' { return 'DAY_SYMBOL'; }     // Synonym
+
+SQL_TSI_WEEK_SYMBOL
+  = 'SQL_TSI_WEEK' { return 'WEEK_SYMBOL'; }    // Synonym
+
+SQL_TSI_MONTH_SYMBOL
+  = 'SQL_TSI_MONTH' { return 'MONTH_SYMBOL'; }   // Synonym
+
+SQL_TSI_QUARTER_SYMBOL
+  = 'SQL_TSI_QUARTER' { return 'QUARTER_SYMBOL'; } // Synonym
+
+SQL_TSI_YEAR_SYMBOL
+  = 'SQL_TSI_YEAR' { return 'YEAR_SYMBOL'; }    // Synonym
+
+WHITESPACE
+  = [ \t\f\r\n] { return ''; }
+
+INVALID_INPUT
+  = [\u0001-\u0008]   // Control codes.
+  / '\u000B'        // Line tabulation.
+  / '\u000C'        // Form feed.
+  / [\u000E-\u001F] // More control codes.
+  / '['
+  / ']'
+

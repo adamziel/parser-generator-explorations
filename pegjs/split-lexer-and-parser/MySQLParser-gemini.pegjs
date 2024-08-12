@@ -1,11 +1,14 @@
 {
-  const MySQLBaseLexer = require("./MySQLBaseLexer").MySQLBaseLexer;
-  const MySQLToken = require("./MySQLToken").MySQLToken;
-  const MySQLLexer = require("./MySQLLexer").MySQLLexer;
-  const ASTNode = require("./ASTNode").ASTNode;
-
-  const lexer = new MySQLLexer();
-  const serverVersion = lexer.getServerVersion();
+  const serverInfo = {
+    ANSI_QUOTES: 1,
+    isSqlModeActive() {
+      return false;
+    },
+    getServerVersion() {
+      return 80000;
+    }
+  };
+  const serverVersion = serverInfo.getServerVersion();
 }
 
 Start
@@ -350,8 +353,7 @@ createFunction
 
 createUdf
   = AGGREGATE_SYMBOL? FUNCTION_SYMBOL udfName RETURNS_SYMBOL
-    type
-    = ( STRING_SYMBOL
+    ( STRING_SYMBOL
       / INT_SYMBOL
       / REAL_SYMBOL
       / DECIMAL_SYMBOL
@@ -1249,6 +1251,15 @@ xid
 
 //----------------------------------------------------------------------------------------------------------------------
 
+resetOption
+  = MASTER_SYMBOL masterResetOptions?
+  / QUERY_SYMBOL CACHE_SYMBOL
+  / SLAVE_SYMBOL ALL_SYMBOL? channel?
+
+masterResetOptions
+  = TO_SYMBOL (real_ulong_number / real_ulonglong_number)
+
+
 replicationStatement
   = PURGE_SYMBOL (BINARY_SYMBOL / MASTER_SYMBOL) LOGS_SYMBOL
     ( TO_SYMBOL textLiteral
@@ -1374,7 +1385,7 @@ slaveConnectionOptions
     (PASSWORD_SYMBOL EQUAL_OPERATOR textString)?
     (DEFAULT_AUTH_SYMBOL EQUAL_OPERATOR textString)?
     (PLUGIN_DIR_SYMBOL EQUAL_OPERATOR textString)?
-  / /* empty */
+  
 
 slaveThreadOptions
   = slaveThreadOption (COMMA_SYMBOL slaveThreadOption)*
@@ -1457,17 +1468,17 @@ userFunction
 
 createUser
   = CREATE_SYMBOL USER_SYMBOL
-    (&{serverVersion >= 50706} ifNotExists / /* empty */)
+    (&{serverVersion >= 50706} ifNotExists )
     createUserList defaultRoleClause createUserTail
 
 createUserTail
   = &{serverVersion >= 50706}
     requireClause? connectOptions? accountLockPasswordExpireOptions*
-  / /* empty */
+  
 
 defaultRoleClause
   = &{serverVersion >= 80000} (DEFAULT_SYMBOL ROLE_SYMBOL roleList)?
-  / /* empty */
+  
 
 requireClause
   = REQUIRE_SYMBOL (requireList / (SSL_SYMBOL / X509_SYMBOL / NONE_SYMBOL))
@@ -1587,9 +1598,8 @@ roleOrPrivilege
   / SHOW_SYMBOL DATABASES_SYMBOL
   / CREATE_SYMBOL
     ( TEMPORARY_SYMBOL
-      object = TABLES_SYMBOL
-    / object
-      = ( ROUTINE_SYMBOL
+      TABLES_SYMBOL
+    / ( ROUTINE_SYMBOL
         / TABLESPACE_SYMBOL
         / USER_SYMBOL
         / VIEW_SYMBOL
@@ -1597,7 +1607,7 @@ roleOrPrivilege
     )?
   / LOCK_SYMBOL TABLES_SYMBOL
   / REPLICATION_SYMBOL
-    object = (CLIENT_SYMBOL / SLAVE_SYMBOL)
+    (CLIENT_SYMBOL / SLAVE_SYMBOL)
   / SHOW_SYMBOL VIEW_SYMBOL
   / ALTER_SYMBOL ROUTINE_SYMBOL?
   / &{serverVersion > 80000} (CREATE_SYMBOL / DROP_SYMBOL) ROLE_SYMBOL
@@ -1612,9 +1622,9 @@ requireList
   = requireListElement (AND_SYMBOL? requireListElement)*
 
 requireListElement
-  = element = CIPHER_SYMBOL textString
-  / element = ISSUER_SYMBOL textString
-  / element = SUBJECT_SYMBOL textString
+  = CIPHER_SYMBOL textString
+  / ISSUER_SYMBOL textString
+  / SUBJECT_SYMBOL textString
 
 grantOption
   = GRANT_SYMBOL OPTION_SYMBOL
@@ -1666,10 +1676,10 @@ repairType
 
 installUninstallStatment
   = // COMPONENT_SYMBOL is conditionally set in the lexer.
-    action = INSTALL_SYMBOL PLUGIN_SYMBOL identifier SONAME_SYMBOL textStringLiteral
-  / action = INSTALL_SYMBOL COMPONENT_SYMBOL textStringLiteralList
-  / action = UNINSTALL_SYMBOL PLUGIN_SYMBOL pluginRef
-  / action = UNINSTALL_SYMBOL COMPONENT_SYMBOL
+    INSTALL_SYMBOL PLUGIN_SYMBOL identifier SONAME_SYMBOL textStringLiteral
+  / INSTALL_SYMBOL COMPONENT_SYMBOL textStringLiteralList
+  / UNINSTALL_SYMBOL PLUGIN_SYMBOL pluginRef
+  / UNINSTALL_SYMBOL COMPONENT_SYMBOL
     componentRef (COMMA_SYMBOL componentRef)*
 
 //----------------------------------------------------------------------------------------------------------------------
@@ -1743,83 +1753,80 @@ setExprOrDefault
 
 showStatement
   = SHOW_SYMBOL
-    ( &{serverVersion < 50700} value = AUTHORS_SYMBOL
-    / value = DATABASES_SYMBOL likeOrWhere?
-    / showCommandType? value = TABLES_SYMBOL inDb? likeOrWhere?
-    / FULL_SYMBOL? value = TRIGGERS_SYMBOL inDb? likeOrWhere?
-    / value = EVENTS_SYMBOL inDb? likeOrWhere?
-    / value = TABLE_SYMBOL STATUS_SYMBOL inDb? likeOrWhere?
-    / value = OPEN_SYMBOL TABLES_SYMBOL inDb? likeOrWhere?
-    / value = PLUGINS_SYMBOL
-    / value = ENGINE_SYMBOL (engineRef / ALL_SYMBOL)
+    ( &{serverVersion < 50700}  AUTHORS_SYMBOL
+    /  DATABASES_SYMBOL likeOrWhere?
+    / showCommandType?  TABLES_SYMBOL inDb? likeOrWhere?
+    / FULL_SYMBOL?  TRIGGERS_SYMBOL inDb? likeOrWhere?
+    /  EVENTS_SYMBOL inDb? likeOrWhere?
+    /  TABLE_SYMBOL STATUS_SYMBOL inDb? likeOrWhere?
+    /  OPEN_SYMBOL TABLES_SYMBOL inDb? likeOrWhere?
+    /  PLUGINS_SYMBOL
+    /  ENGINE_SYMBOL (engineRef / ALL_SYMBOL)
       ( STATUS_SYMBOL
       / MUTEX_SYMBOL
       / LOGS_SYMBOL
       )
-    / showCommandType? value = COLUMNS_SYMBOL (FROM_SYMBOL / IN_SYMBOL)
+    / showCommandType?  COLUMNS_SYMBOL (FROM_SYMBOL / IN_SYMBOL)
       tableRef inDb? likeOrWhere?
-    / (BINARY_SYMBOL / MASTER_SYMBOL) value = LOGS_SYMBOL
-    / value = SLAVE_SYMBOL (HOSTS_SYMBOL / STATUS_SYMBOL nonBlocking channel?)
-    / value = (BINLOG_SYMBOL / RELAYLOG_SYMBOL) EVENTS_SYMBOL
+    / (BINARY_SYMBOL / MASTER_SYMBOL)  LOGS_SYMBOL
+    /  SLAVE_SYMBOL (HOSTS_SYMBOL / STATUS_SYMBOL nonBlocking channel?)
+    /  (BINLOG_SYMBOL / RELAYLOG_SYMBOL) EVENTS_SYMBOL
       (IN_SYMBOL textString)?
       (FROM_SYMBOL ulonglong_number)? limitClause? channel?
     / (&{serverVersion >= 80000} EXTENDED_SYMBOL)?
-      value
-      = ( INDEX_SYMBOL
+      ( INDEX_SYMBOL
         / INDEXES_SYMBOL
         / KEYS_SYMBOL
         )
       fromOrIn tableRef inDb? whereClause?
-    / STORAGE_SYMBOL? value = ENGINES_SYMBOL
+    / STORAGE_SYMBOL?  ENGINES_SYMBOL
     / COUNT_SYMBOL OPEN_PAR_SYMBOL MULT_OPERATOR CLOSE_PAR_SYMBOL
-      value
-      = ( WARNINGS_SYMBOL
+      ( WARNINGS_SYMBOL
         / ERRORS_SYMBOL
         )
-    / value = WARNINGS_SYMBOL limitClause?
-    / value = ERRORS_SYMBOL limitClause?
-    / value = PROFILES_SYMBOL
-    / value = PROFILE_SYMBOL (profileType (COMMA_SYMBOL profileType)*)?
+    /  WARNINGS_SYMBOL limitClause?
+    /  ERRORS_SYMBOL limitClause?
+    /  PROFILES_SYMBOL
+    /  PROFILE_SYMBOL (profileType (COMMA_SYMBOL profileType)*)?
       (FOR_SYMBOL QUERY_SYMBOL INT_NUMBER)? limitClause?
-    / optionType? value = (STATUS_SYMBOL / VARIABLES_SYMBOL) likeOrWhere?
-    / FULL_SYMBOL? value = PROCESSLIST_SYMBOL
+    / optionType?  (STATUS_SYMBOL / VARIABLES_SYMBOL) likeOrWhere?
+    / FULL_SYMBOL?  PROCESSLIST_SYMBOL
     / charset likeOrWhere?
-    / value = COLLATION_SYMBOL likeOrWhere?
-    / &{serverVersion < 50700} value = CONTRIBUTORS_SYMBOL
-    / value = PRIVILEGES_SYMBOL
-    / value = GRANTS_SYMBOL (FOR_SYMBOL user)?
-    / value = GRANTS_SYMBOL FOR_SYMBOL user USING_SYMBOL userList
-    / value = MASTER_SYMBOL STATUS_SYMBOL
-    / value = CREATE_SYMBOL
-      ( object = DATABASE_SYMBOL ifNotExists? schemaRef
-      / object = EVENT_SYMBOL eventRef
-      / object = FUNCTION_SYMBOL functionRef
-      / object = PROCEDURE_SYMBOL procedureRef
-      / object = TABLE_SYMBOL tableRef
-      / object = TRIGGER_SYMBOL triggerRef
-      / object = VIEW_SYMBOL viewRef
-      / &{serverVersion >= 50704} object = USER_SYMBOL user
+    /  COLLATION_SYMBOL likeOrWhere?
+    / &{serverVersion < 50700}  CONTRIBUTORS_SYMBOL
+    /  PRIVILEGES_SYMBOL
+    /  GRANTS_SYMBOL (FOR_SYMBOL user)?
+    /  GRANTS_SYMBOL FOR_SYMBOL user USING_SYMBOL userList
+    /  MASTER_SYMBOL STATUS_SYMBOL
+    /  CREATE_SYMBOL
+      ( DATABASE_SYMBOL ifNotExists? schemaRef
+      / EVENT_SYMBOL eventRef
+      / FUNCTION_SYMBOL functionRef
+      / PROCEDURE_SYMBOL procedureRef
+      / TABLE_SYMBOL tableRef
+      / TRIGGER_SYMBOL triggerRef
+      / VIEW_SYMBOL viewRef
+      / &{serverVersion >= 50704} USER_SYMBOL user
       )
-    / value = PROCEDURE_SYMBOL STATUS_SYMBOL likeOrWhere?
-    / value = FUNCTION_SYMBOL STATUS_SYMBOL likeOrWhere?
-    / value = PROCEDURE_SYMBOL CODE_SYMBOL procedureRef
-    / value = FUNCTION_SYMBOL CODE_SYMBOL functionRef
-    / &{serverVersion >= 80000} value = CREATE_SYMBOL USER_SYMBOL user
+    /  PROCEDURE_SYMBOL STATUS_SYMBOL likeOrWhere?
+    /  FUNCTION_SYMBOL STATUS_SYMBOL likeOrWhere?
+    /  PROCEDURE_SYMBOL CODE_SYMBOL procedureRef
+    /  FUNCTION_SYMBOL CODE_SYMBOL functionRef
+    / &{serverVersion >= 80000}  CREATE_SYMBOL USER_SYMBOL user
     / &{serverVersion >= 80000}
-      value = CREATE_SYMBOL
-      ( object = ROLE_SYMBOL roleRef
-      / object = SPATIAL_SYMBOL REFERENCE_SYMBOL SYSTEM_SYMBOL real_ulonglong_number
+       CREATE_SYMBOL
+      ( ROLE_SYMBOL roleRef
+      / SPATIAL_SYMBOL REFERENCE_SYMBOL SYSTEM_SYMBOL real_ulonglong_number
       )
     / &{serverVersion >= 80014}
-      value = CREATE_SYMBOL TABLESPACE_SYMBOL tablespaceRef
-    / value
-      = ( CONSTRAINTS_SYMBOL
+       CREATE_SYMBOL TABLESPACE_SYMBOL tablespaceRef
+    / ( CONSTRAINTS_SYMBOL
         / INDEXES_SYMBOL
         / KEYS_SYMBOL
         )
       FROM_SYMBOL tableRef
-    / value = COMPONENT_SYMBOL textStringLiteral STATUS_SYMBOL
-    / value = (REPLICA_SYMBOL / SOURCE_SYMBOL) (STATUS_SYMBOL / HOSTS_SYMBOL) channel?
+    /  COMPONENT_SYMBOL textStringLiteral STATUS_SYMBOL
+    /  (REPLICA_SYMBOL / SOURCE_SYMBOL) (STATUS_SYMBOL / HOSTS_SYMBOL) channel?
     )
 
 showCommandType
@@ -1828,7 +1835,7 @@ showCommandType
 
 nonBlocking
   = &{serverVersion >= 50700 && serverVersion < 50706} NONBLOCKING_SYMBOL?
-  / /* empty */
+  
 
 fromOrIn
   = FROM_SYMBOL
@@ -1890,8 +1897,7 @@ keyUsageList
   = keyUsageElement (COMMA_SYMBOL keyUsageElement)*
 
 flushOption
-  = option
-    = ( DES_KEY_FILE_SYMBOL // No longer used from 8.0 onwards. Taken out by lexer.
+  = ( DES_KEY_FILE_SYMBOL // No longer used from 8.0 onwards. Taken out by lexer.
       / HOSTS_SYMBOL
       / PRIVILEGES_SYMBOL
       / STATUS_SYMBOL
@@ -2017,19 +2023,56 @@ restartServer
 //----------------- Expression support ---------------------------------------------------------------------------------
 
 expr
-  = boolPri (IS_SYMBOL notRule? (TRUE_SYMBOL / FALSE_SYMBOL / UNKNOWN_SYMBOL))? # exprIs
-  / NOT_SYMBOL expr                                                                  # exprNot
-  / expr op = (AND_SYMBOL / LOGICAL_AND_OPERATOR) expr                               # exprAnd
-  / expr XOR_SYMBOL expr                                                             # exprXor
-  / expr op = (OR_SYMBOL / LOGICAL_OR_OPERATOR) expr                                 # exprOr
+  = head:exprPrimary tail:exprTail* {
+      return tail.reduce((result, element) => {
+        return {
+          type: element.type,
+          left: result,
+          operator: element.operator,
+          right: element.right
+        };
+      }, head);
+    }
 
+exprPrimary
+  = boolPri (IS_SYMBOL notRule? (TRUE_SYMBOL / FALSE_SYMBOL / UNKNOWN_SYMBOL))?
+  / NOT_SYMBOL exprPrimary
+
+exprTail
+  = (AND_SYMBOL / LOGICAL_AND_OPERATOR) right:expr { return { type: 'AND', operator: text(), right }; }
+  / XOR_SYMBOL right:expr { return { type: 'XOR', operator: 'XOR', right }; }
+  / (OR_SYMBOL / LOGICAL_OR_OPERATOR) right:expr { return { type: 'OR', operator: text(), right }; }
+                    
+
+/*
 boolPri
-  = predicate                                           # primaryExprPredicate
-  / boolPri IS_SYMBOL notRule? NULL_SYMBOL            # primaryExprIsNull
-  / boolPri compOp predicate                          # primaryExprCompare
-  / boolPri compOp (ALL_SYMBOL / ANY_SYMBOL) subquery # primaryExprAllAny
+  = predicate                                           
+  / boolPri IS_SYMBOL notRule? NULL_SYMBOL            
+  / boolPri compOp predicate                          
+  / boolPri compOp (ALL_SYMBOL / ANY_SYMBOL) subquery 
   / &{serverVersion >= 80017} boolPri MEMBER_SYMBOL OF_SYMBOL? simpleExprWithParentheses
   / boolPri SOUNDS_SYMBOL LIKE_SYMBOL bitExpr
+*/
+
+boolPri
+  = head:predicate tail:boolPriTail* {
+      return tail.reduce((result, element) => {
+        return {
+          type: element.type,
+          left: result,
+          operator: element.operator,
+          right: element.right
+        };
+      }, head);
+    }
+
+boolPriTail
+  = IS_SYMBOL not:notRule? NULL_SYMBOL { return { type: 'IS_NULL', operator: 'IS', not, right: 'NULL' }; }
+  / compOp right:predicate { return { type: 'COMP_OP', operator: text(), right }; }
+  / compOp (ALL_SYMBOL / ANY_SYMBOL) subquery { return { type: 'COMP_OP_SUBQUERY', operator: text(), subquery }; }
+  / &{serverVersion >= 80017} MEMBER_SYMBOL OF_SYMBOL? right:simpleExprWithParentheses { return { type: 'MEMBER_OF', operator: 'MEMBER OF', right }; }
+  / SOUNDS_SYMBOL LIKE_SYMBOL right:bitExpr { return { type: 'SOUNDS_LIKE', operator: 'SOUNDS LIKE', right }; }
+
 
 compOp
   = EQUAL_OPERATOR
@@ -2048,55 +2091,94 @@ predicate
     )?
 
 predicateOperations
-  = IN_SYMBOL (subquery / OPEN_PAR_SYMBOL exprList CLOSE_PAR_SYMBOL) # predicateExprIn
-  / BETWEEN_SYMBOL bitExpr AND_SYMBOL predicate                    # predicateExprBetween
-  / LIKE_SYMBOL simpleExpr (ESCAPE_SYMBOL simpleExpr)?             # predicateExprLike
-  / REGEXP_SYMBOL bitExpr                                          # predicateExprRegex
+  = IN_SYMBOL (subquery / OPEN_PAR_SYMBOL exprList CLOSE_PAR_SYMBOL) 
+  / BETWEEN_SYMBOL bitExpr AND_SYMBOL predicate                    
+  / LIKE_SYMBOL simpleExpr (ESCAPE_SYMBOL simpleExpr)?             
+  / REGEXP_SYMBOL bitExpr                                          
 
+/*
 bitExpr
   = simpleExpr
-  / bitExpr op = BITWISE_XOR_OPERATOR bitExpr
+  / bitExpr BITWISE_XOR_OPERATOR bitExpr
   / bitExpr
-    op
-    = ( MULT_OPERATOR
+    ( MULT_OPERATOR
       / DIV_OPERATOR
       / MOD_OPERATOR
       / DIV_SYMBOL
       / MOD_SYMBOL
       )
     bitExpr
-  / bitExpr op = (PLUS_OPERATOR / MINUS_OPERATOR) bitExpr
-  / bitExpr op = (PLUS_OPERATOR / MINUS_OPERATOR) INTERVAL_SYMBOL expr interval
-  / bitExpr op = (SHIFT_LEFT_OPERATOR / SHIFT_RIGHT_OPERATOR) bitExpr
-  / bitExpr op = BITWISE_AND_OPERATOR bitExpr
-  / bitExpr op = BITWISE_OR_OPERATOR bitExpr
+  / bitExpr (PLUS_OPERATOR / MINUS_OPERATOR) bitExpr
+  / bitExpr (PLUS_OPERATOR / MINUS_OPERATOR) INTERVAL_SYMBOL expr interval
+  / bitExpr (SHIFT_LEFT_OPERATOR / SHIFT_RIGHT_OPERATOR) bitExpr
+  / bitExpr BITWISE_AND_OPERATOR bitExpr
+  / bitExpr BITWISE_OR_OPERATOR bitExpr
+*/
+
+bitExpr
+  = head:simpleExpr tail:bitExprTail* {
+      return tail.reduce((result, element) => {
+        return {
+          type: element.type,
+          left: result,
+          operator: element.operator,
+          right: element.right
+        };
+      }, head);
+    }
+
+bitExprTail
+  = BITWISE_XOR_OPERATOR right:simpleExpr { return { type: 'BITWISE_XOR', operator: '^', right }; }
+  / (MULT_OPERATOR / DIV_OPERATOR / MOD_OPERATOR / DIV_SYMBOL / MOD_SYMBOL) right:simpleExpr { return { type: 'MULT_DIV_MOD', operator: text(), right }; }
+  / (PLUS_OPERATOR / MINUS_OPERATOR) right:simpleExpr { return { type: 'PLUS_MINUS', operator: text(), right }; }
+  / (PLUS_OPERATOR / MINUS_OPERATOR) INTERVAL_SYMBOL expr:expr interval:interval { return { type: 'PLUS_MINUS_INTERVAL', operator: text(), expr, interval }; }
+  / (SHIFT_LEFT_OPERATOR / SHIFT_RIGHT_OPERATOR) right:simpleExpr { return { type: 'SHIFT', operator: text(), right }; }
+  / BITWISE_AND_OPERATOR right:simpleExpr { return { type: 'BITWISE_AND', operator: '&', right }; }
+  / BITWISE_OR_OPERATOR right:simpleExpr { return { type: 'BITWISE_OR', operator: '|', right }; }
+
 
 simpleExpr
-  = variable (equal expr)?                                                                               # simpleExprVariable
-  / columnRef jsonOperator?                                                                            # simpleExprColumnRef
-  / runtimeFunctionCall                                                                                # simpleExprRuntimeFunction
-  / functionCall                                                                                       # simpleExprFunction
-  / simpleExpr COLLATE_SYMBOL textOrIdentifier                                                         # simpleExprCollate
-  / literal                                                                                            # simpleExprLiteral
-  / PARAM_MARKER                                                                                       # simpleExprParamMarker
-  / sumExpr                                                                                            # simpleExprSum
-  / &{serverVersion >= 80000} groupingOperation                                                        # simpleExprGroupingOperation
-  / &{serverVersion >= 80000} windowFunctionCall                                                       # simpleExprWindowingFunction
-  / simpleExpr CONCAT_PIPES_SYMBOL simpleExpr                                                          # simpleExprConcat
-  / op = (PLUS_OPERATOR / MINUS_OPERATOR / BITWISE_NOT_OPERATOR) simpleExpr                            # simpleExprUnary
-  / not2Rule simpleExpr                                                                                # simpleExprNot
-  / ROW_SYMBOL? OPEN_PAR_SYMBOL exprList CLOSE_PAR_SYMBOL                                              # simpleExprList
-  / EXISTS_SYMBOL? subquery                                                                            # simpleExprSubQuery
-  / OPEN_CURLY_SYMBOL identifier expr CLOSE_CURLY_SYMBOL                                               # simpleExprOdbc
-  / MATCH_SYMBOL identListArg AGAINST_SYMBOL OPEN_PAR_SYMBOL bitExpr fulltextOptions? CLOSE_PAR_SYMBOL # simpleExprMatch
-  / BINARY_SYMBOL simpleExpr                                                                           # simpleExprBinary
-  / CAST_SYMBOL OPEN_PAR_SYMBOL expr AS_SYMBOL castType arrayCast? CLOSE_PAR_SYMBOL                    # simpleExprCast
-  / CASE_SYMBOL expr? (whenExpression thenExpression)+ elseExpression? END_SYMBOL                      # simpleExprCase
-  / CONVERT_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL castType CLOSE_PAR_SYMBOL                         # simpleExprConvert
-  / CONVERT_SYMBOL OPEN_PAR_SYMBOL expr USING_SYMBOL charsetName CLOSE_PAR_SYMBOL                      # simpleExprConvertUsing
-  / DEFAULT_SYMBOL OPEN_PAR_SYMBOL simpleIdentifier CLOSE_PAR_SYMBOL                                   # simpleExprDefault
-  / VALUES_SYMBOL OPEN_PAR_SYMBOL simpleIdentifier CLOSE_PAR_SYMBOL                                    # simpleExprValues
-  / INTERVAL_SYMBOL expr interval PLUS_OPERATOR expr                                                   # simpleExprInterval
+  = head:simpleExprPrimary tail:simpleExprTail* {
+      return tail.reduce((result, element) => {
+        return {
+          type: element.type,
+          left: result,
+          operator: element.operator,
+          right: element.right
+        };
+      }, head);
+    }
+
+simpleExprPrimary
+  = variable (equal expr)?
+  / columnRef jsonOperator?
+  / runtimeFunctionCall
+  / functionCall
+  / literal
+  / PARAM_MARKER
+  / sumExpr
+  / &{serverVersion >= 80000} groupingOperation
+  / &{serverVersion >= 80000} windowFunctionCall
+  / (PLUS_OPERATOR / MINUS_OPERATOR / BITWISE_NOT_OPERATOR) simpleExprPrimary
+  / not2Rule simpleExprPrimary
+  / ROW_SYMBOL? OPEN_PAR_SYMBOL exprList CLOSE_PAR_SYMBOL
+  / EXISTS_SYMBOL? subquery
+  / OPEN_CURLY_SYMBOL identifier expr CLOSE_CURLY_SYMBOL
+  / MATCH_SYMBOL identListArg AGAINST_SYMBOL OPEN_PAR_SYMBOL bitExpr fulltextOptions? CLOSE_PAR_SYMBOL
+  / BINARY_SYMBOL simpleExprPrimary
+  / CAST_SYMBOL OPEN_PAR_SYMBOL expr AS_SYMBOL castType arrayCast? CLOSE_PAR_SYMBOL
+  / CASE_SYMBOL expr? (whenExpression thenExpression)+ elseExpression? END_SYMBOL
+  / CONVERT_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL castType CLOSE_PAR_SYMBOL
+  / CONVERT_SYMBOL OPEN_PAR_SYMBOL expr USING_SYMBOL charsetName CLOSE_PAR_SYMBOL
+  / DEFAULT_SYMBOL OPEN_PAR_SYMBOL simpleIdentifier CLOSE_PAR_SYMBOL
+  / VALUES_SYMBOL OPEN_PAR_SYMBOL simpleIdentifier CLOSE_PAR_SYMBOL
+  / INTERVAL_SYMBOL expr interval PLUS_OPERATOR expr
+
+simpleExprTail
+  = COLLATE_SYMBOL right:textOrIdentifier { return { type: 'COLLATE', operator: 'COLLATE', right }; }
+  / CONCAT_PIPES_SYMBOL right:simpleExpr { return { type: 'CONCAT', operator: '||', right }; }
+  / INTERVAL_SYMBOL expr interval PLUS_OPERATOR right:expr { return { type: 'INTERVAL_PLUS', operator: '+', expr, interval, right }; }
+
 
 arrayCast
   = &{serverVersion >= 80017} ARRAY_SYMBOL
@@ -2106,17 +2188,17 @@ jsonOperator
   / &{serverVersion >= 50713} JSON_UNQUOTED_SEPARATOR_SYMBOL textStringLiteral
 
 sumExpr
-  = name = AVG_SYMBOL
+  =  AVG_SYMBOL
     OPEN_PAR_SYMBOL DISTINCT_SYMBOL? inSumExpr CLOSE_PAR_SYMBOL
     (&{serverVersion >= 80000} windowingClause)?
-  / name = (BIT_AND_SYMBOL / BIT_OR_SYMBOL / BIT_XOR_SYMBOL)
+  /  (BIT_AND_SYMBOL / BIT_OR_SYMBOL / BIT_XOR_SYMBOL)
     OPEN_PAR_SYMBOL inSumExpr CLOSE_PAR_SYMBOL
     (&{serverVersion >= 80000} windowingClause)?
   / &{serverVersion >= 80000} jsonFunction
-  / name = COUNT_SYMBOL
+  /  COUNT_SYMBOL
     OPEN_PAR_SYMBOL ALL_SYMBOL? MULT_OPERATOR CLOSE_PAR_SYMBOL
     (&{serverVersion >= 80000} windowingClause)?
-  / name = COUNT_SYMBOL
+  /  COUNT_SYMBOL
     OPEN_PAR_SYMBOL
     ( ALL_SYMBOL? MULT_OPERATOR
     / inSumExpr
@@ -2124,28 +2206,28 @@ sumExpr
     )
     CLOSE_PAR_SYMBOL
     (&{serverVersion >= 80000} windowingClause)?
-  / name = MIN_SYMBOL
+  /  MIN_SYMBOL
     OPEN_PAR_SYMBOL DISTINCT_SYMBOL? inSumExpr CLOSE_PAR_SYMBOL
     (&{serverVersion >= 80000} windowingClause)?
-  / name = MAX_SYMBOL
+  /  MAX_SYMBOL
     OPEN_PAR_SYMBOL DISTINCT_SYMBOL? inSumExpr CLOSE_PAR_SYMBOL
     (&{serverVersion >= 80000} windowingClause)?
-  / name = STD_SYMBOL
+  /  STD_SYMBOL
     OPEN_PAR_SYMBOL inSumExpr CLOSE_PAR_SYMBOL
     (&{serverVersion >= 80000} windowingClause)?
-  / name = VARIANCE_SYMBOL
+  /  VARIANCE_SYMBOL
     OPEN_PAR_SYMBOL inSumExpr CLOSE_PAR_SYMBOL
     (&{serverVersion >= 80000} windowingClause)?
-  / name = STDDEV_SAMP_SYMBOL
+  /  STDDEV_SAMP_SYMBOL
     OPEN_PAR_SYMBOL inSumExpr CLOSE_PAR_SYMBOL
     (&{serverVersion >= 80000} windowingClause)?
-  / name = VAR_SAMP_SYMBOL
+  /  VAR_SAMP_SYMBOL
     OPEN_PAR_SYMBOL inSumExpr CLOSE_PAR_SYMBOL
     (&{serverVersion >= 80000} windowingClause)?
-  / name = SUM_SYMBOL
+  /  SUM_SYMBOL
     OPEN_PAR_SYMBOL DISTINCT_SYMBOL? inSumExpr CLOSE_PAR_SYMBOL
     (&{serverVersion >= 80000} windowingClause)?
-  / name = GROUP_CONCAT_SYMBOL
+  /  GROUP_CONCAT_SYMBOL
     OPEN_PAR_SYMBOL DISTINCT_SYMBOL? exprList orderClause?
     (SEPARATOR_SYMBOL textString)? CLOSE_PAR_SYMBOL
     (&{serverVersion >= 80000} windowingClause)?
@@ -2205,79 +2287,79 @@ fulltextOptions
 
 runtimeFunctionCall
   = // Function names that are keywords.
-    name = CHAR_SYMBOL OPEN_PAR_SYMBOL
+     CHAR_SYMBOL OPEN_PAR_SYMBOL
     exprList (USING_SYMBOL charsetName)?
     CLOSE_PAR_SYMBOL
-  / name = CURRENT_USER_SYMBOL parentheses?
-  / name = DATE_SYMBOL exprWithParentheses
-  / name = DAY_SYMBOL exprWithParentheses
-  / name = HOUR_SYMBOL exprWithParentheses
-  / name = INSERT_SYMBOL
+  /  CURRENT_USER_SYMBOL parentheses?
+  /  DATE_SYMBOL exprWithParentheses
+  /  DAY_SYMBOL exprWithParentheses
+  /  HOUR_SYMBOL exprWithParentheses
+  /  INSERT_SYMBOL
     OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr COMMA_SYMBOL expr COMMA_SYMBOL expr
     CLOSE_PAR_SYMBOL
-  / name = INTERVAL_SYMBOL OPEN_PAR_SYMBOL expr (COMMA_SYMBOL expr)+ CLOSE_PAR_SYMBOL
-  / name = LEFT_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
-  / name = MINUTE_SYMBOL exprWithParentheses
-  / name = MONTH_SYMBOL exprWithParentheses
-  / name = RIGHT_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
-  / name = SECOND_SYMBOL exprWithParentheses
-  / name = TIME_SYMBOL exprWithParentheses
-  / name = TIMESTAMP_SYMBOL OPEN_PAR_SYMBOL expr (COMMA_SYMBOL expr)? CLOSE_PAR_SYMBOL
+  /  INTERVAL_SYMBOL OPEN_PAR_SYMBOL expr (COMMA_SYMBOL expr)+ CLOSE_PAR_SYMBOL
+  /  LEFT_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
+  /  MINUTE_SYMBOL exprWithParentheses
+  /  MONTH_SYMBOL exprWithParentheses
+  /  RIGHT_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
+  /  SECOND_SYMBOL exprWithParentheses
+  /  TIME_SYMBOL exprWithParentheses
+  /  TIMESTAMP_SYMBOL OPEN_PAR_SYMBOL expr (COMMA_SYMBOL expr)? CLOSE_PAR_SYMBOL
   / trimFunction
-  / name = USER_SYMBOL parentheses
-  / name = VALUES_SYMBOL exprWithParentheses
-  / name = YEAR_SYMBOL exprWithParentheses
+  /  USER_SYMBOL parentheses
+  /  VALUES_SYMBOL exprWithParentheses
+  /  YEAR_SYMBOL exprWithParentheses
   // Function names that are not keywords.
-  / name = (ADDDATE_SYMBOL / SUBDATE_SYMBOL)
+  /  (ADDDATE_SYMBOL / SUBDATE_SYMBOL)
     OPEN_PAR_SYMBOL expr COMMA_SYMBOL
     ( expr
     / INTERVAL_SYMBOL expr interval
     )
     CLOSE_PAR_SYMBOL
-  / name = CURDATE_SYMBOL parentheses?
-  / name = CURTIME_SYMBOL timeFunctionParameters?
-  / name = (DATE_ADD_SYMBOL / DATE_SUB_SYMBOL)
+  /  CURDATE_SYMBOL parentheses?
+  /  CURTIME_SYMBOL timeFunctionParameters?
+  /  (DATE_ADD_SYMBOL / DATE_SUB_SYMBOL)
     OPEN_PAR_SYMBOL expr COMMA_SYMBOL INTERVAL_SYMBOL expr interval
     CLOSE_PAR_SYMBOL
-  / name = EXTRACT_SYMBOL OPEN_PAR_SYMBOL interval FROM_SYMBOL expr CLOSE_PAR_SYMBOL
-  / name = GET_FORMAT_SYMBOL OPEN_PAR_SYMBOL dateTimeTtype COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
-  / name = NOW_SYMBOL timeFunctionParameters?
-  / name = POSITION_SYMBOL OPEN_PAR_SYMBOL bitExpr IN_SYMBOL expr CLOSE_PAR_SYMBOL
+  /  EXTRACT_SYMBOL OPEN_PAR_SYMBOL interval FROM_SYMBOL expr CLOSE_PAR_SYMBOL
+  /  GET_FORMAT_SYMBOL OPEN_PAR_SYMBOL dateTimeTtype COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
+  /  NOW_SYMBOL timeFunctionParameters?
+  /  POSITION_SYMBOL OPEN_PAR_SYMBOL bitExpr IN_SYMBOL expr CLOSE_PAR_SYMBOL
   / substringFunction
-  / name = SYSDATE_SYMBOL timeFunctionParameters?
-  / name = (TIMESTAMP_ADD_SYMBOL / TIMESTAMP_DIFF_SYMBOL)
+  /  SYSDATE_SYMBOL timeFunctionParameters?
+  /  (TIMESTAMP_ADD_SYMBOL / TIMESTAMP_DIFF_SYMBOL)
     OPEN_PAR_SYMBOL intervalTimeStamp COMMA_SYMBOL expr COMMA_SYMBOL expr
     CLOSE_PAR_SYMBOL
-  / name = UTC_DATE_SYMBOL parentheses?
-  / name = UTC_TIME_SYMBOL timeFunctionParameters?
-  / name = UTC_TIMESTAMP_SYMBOL timeFunctionParameters?
+  /  UTC_DATE_SYMBOL parentheses?
+  /  UTC_TIME_SYMBOL timeFunctionParameters?
+  /  UTC_TIMESTAMP_SYMBOL timeFunctionParameters?
   // Function calls with other conflicts.
-  / name = ASCII_SYMBOL exprWithParentheses
-  / name = CHARSET_SYMBOL exprWithParentheses
-  / name = COALESCE_SYMBOL exprListWithParentheses
-  / name = COLLATION_SYMBOL exprWithParentheses
-  / name = DATABASE_SYMBOL parentheses
-  / name = IF_SYMBOL
+  /  ASCII_SYMBOL exprWithParentheses
+  /  CHARSET_SYMBOL exprWithParentheses
+  /  COALESCE_SYMBOL exprListWithParentheses
+  /  COLLATION_SYMBOL exprWithParentheses
+  /  DATABASE_SYMBOL parentheses
+  /  IF_SYMBOL
     OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr COMMA_SYMBOL expr
     CLOSE_PAR_SYMBOL
-  / name = FORMAT_SYMBOL
+  /  FORMAT_SYMBOL
     OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr (COMMA_SYMBOL expr)?
     CLOSE_PAR_SYMBOL
-  / name = MICROSECOND_SYMBOL exprWithParentheses
-  / name = MOD_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
-  / &{serverVersion < 50607} name = OLD_PASSWORD_SYMBOL OPEN_PAR_SYMBOL textLiteral CLOSE_PAR_SYMBOL
-  / &{serverVersion < 80011} name = PASSWORD_SYMBOL exprWithParentheses
-  / name = QUARTER_SYMBOL exprWithParentheses
-  / name = REPEAT_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
-  / name = REPLACE_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
-  / name = REVERSE_SYMBOL exprWithParentheses
-  / name = ROW_COUNT_SYMBOL parentheses
-  / name = SCHEMA_SYMBOL parentheses
-  / name = SESSION_USER_SYMBOL parentheses
-  / name = SYSTEM_USER_SYMBOL parentheses
-  / name = TRUNCATE_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
-  / name = WEEK_SYMBOL OPEN_PAR_SYMBOL expr (COMMA_SYMBOL expr)? CLOSE_PAR_SYMBOL
-  / name = WEIGHT_STRING_SYMBOL
+  /  MICROSECOND_SYMBOL exprWithParentheses
+  /  MOD_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
+  / &{serverVersion < 50607}  OLD_PASSWORD_SYMBOL OPEN_PAR_SYMBOL textLiteral CLOSE_PAR_SYMBOL
+  / &{serverVersion < 80011}  PASSWORD_SYMBOL exprWithParentheses
+  /  QUARTER_SYMBOL exprWithParentheses
+  /  REPEAT_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
+  /  REPLACE_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
+  /  REVERSE_SYMBOL exprWithParentheses
+  /  ROW_COUNT_SYMBOL parentheses
+  /  SCHEMA_SYMBOL parentheses
+  /  SESSION_USER_SYMBOL parentheses
+  /  SYSTEM_USER_SYMBOL parentheses
+  /  TRUNCATE_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
+  /  WEEK_SYMBOL OPEN_PAR_SYMBOL expr (COMMA_SYMBOL expr)? CLOSE_PAR_SYMBOL
+  /  WEIGHT_STRING_SYMBOL
     OPEN_PAR_SYMBOL expr
     ( (AS_SYMBOL CHAR_SYMBOL wsNumCodepoints)?
       (&{serverVersion < 80000} weightStringLevels)?
@@ -2286,18 +2368,18 @@ runtimeFunctionCall
     )
     CLOSE_PAR_SYMBOL
   / geometryFunction
-  / name = FOUND_ROWS_SYMBOL parentheses
+  /  FOUND_ROWS_SYMBOL parentheses
 
 geometryFunction
   = &{serverVersion < 50706}
-    name = CONTAINS_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
-  / name = GEOMETRYCOLLECTION_SYMBOL OPEN_PAR_SYMBOL exprList? CLOSE_PAR_SYMBOL
-  / name = LINESTRING_SYMBOL exprListWithParentheses
-  / name = MULTILINESTRING_SYMBOL exprListWithParentheses
-  / name = MULTIPOINT_SYMBOL exprListWithParentheses
-  / name = MULTIPOLYGON_SYMBOL exprListWithParentheses
-  / name = POINT_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
-  / name = POLYGON_SYMBOL exprListWithParentheses
+     CONTAINS_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
+  /  GEOMETRYCOLLECTION_SYMBOL OPEN_PAR_SYMBOL exprList? CLOSE_PAR_SYMBOL
+  /  LINESTRING_SYMBOL exprListWithParentheses
+  /  MULTILINESTRING_SYMBOL exprListWithParentheses
+  /  MULTIPOINT_SYMBOL exprListWithParentheses
+  /  MULTIPOLYGON_SYMBOL exprListWithParentheses
+  /  POINT_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL expr CLOSE_PAR_SYMBOL
+  /  POLYGON_SYMBOL exprListWithParentheses
 
 timeFunctionParameters
   = OPEN_PAR_SYMBOL fractionalPrecision? CLOSE_PAR_SYMBOL
@@ -2604,8 +2686,7 @@ constraintEnforcement
   = NOT_SYMBOL? ENFORCED_SYMBOL
 
 tableConstraintDef
-  = type
-    = ( KEY_SYMBOL
+  = ( KEY_SYMBOL
       / INDEX_SYMBOL
       )
     indexNameAndType? keyListVariants indexOption*
@@ -2637,21 +2718,21 @@ fieldDefinition
 columnAttribute
   = NOT_SYMBOL? nullLiteral
   / &{serverVersion >= 80014} NOT_SYMBOL SECONDARY_SYMBOL
-  / value = DEFAULT_SYMBOL
+  /  DEFAULT_SYMBOL
     ( signedLiteral
     / NOW_SYMBOL timeFunctionParameters?
     / &{serverVersion >= 80013} exprWithParentheses
     )
-  / value = ON_SYMBOL UPDATE_SYMBOL NOW_SYMBOL timeFunctionParameters?
-  / value = AUTO_INCREMENT_SYMBOL
-  / value = SERIAL_SYMBOL DEFAULT_SYMBOL VALUE_SYMBOL
-  / PRIMARY_SYMBOL? value = KEY_SYMBOL
-  / value = UNIQUE_SYMBOL KEY_SYMBOL?
-  / value = COMMENT_SYMBOL textLiteral
+  /  ON_SYMBOL UPDATE_SYMBOL NOW_SYMBOL timeFunctionParameters?
+  /  AUTO_INCREMENT_SYMBOL
+  /  SERIAL_SYMBOL DEFAULT_SYMBOL VALUE_SYMBOL
+  / PRIMARY_SYMBOL?  KEY_SYMBOL
+  /  UNIQUE_SYMBOL KEY_SYMBOL?
+  /  COMMENT_SYMBOL textLiteral
   / collate
-  / value = COLUMN_FORMAT_SYMBOL columnFormat
-  / value = STORAGE_SYMBOL storageMedia
-  / &{serverVersion >= 80000} value = SRID_SYMBOL real_ulonglong_number
+  /  COLUMN_FORMAT_SYMBOL columnFormat
+  /  STORAGE_SYMBOL storageMedia
+  / &{serverVersion >= 80000}  SRID_SYMBOL real_ulonglong_number
   / &{serverVersion >= 80017} constraintName? checkConstraint
   / &{serverVersion >= 80017} constraintEnforcement
 
@@ -2674,11 +2755,12 @@ gcolAttribute
 references
   = REFERENCES_SYMBOL tableRef
     identifierListWithParentheses?
-    (MATCH_SYMBOL match = (FULL_SYMBOL / PARTIAL_SYMBOL / SIMPLE_SYMBOL))?
-    ( ON_SYMBOL UPDATE_SYMBOL deleteOption
-      (ON_SYMBOL DELETE_SYMBOL deleteOption)?
-    / ON_SYMBOL DELETE_SYMBOL deleteOption
-      (ON_SYMBOL UPDATE_SYMBOL deleteOption)?
+    (MATCH_SYMBOL (FULL_SYMBOL / PARTIAL_SYMBOL / SIMPLE_SYMBOL))?
+    (
+     ((ON_SYMBOL UPDATE_SYMBOL deleteOption)?
+      (ON_SYMBOL DELETE_SYMBOL deleteOption)?) / 
+     ((ON_SYMBOL DELETE_SYMBOL deleteOption)?
+      (ON_SYMBOL UPDATE_SYMBOL deleteOption)?) 
     )?
 
 deleteOption
@@ -2704,7 +2786,7 @@ keyListVariants
   / &{serverVersion < 80013} keyList
 
 indexType
-  = algorithm = (BTREE_SYMBOL / RTREE_SYMBOL / HASH_SYMBOL)
+  = (BTREE_SYMBOL / RTREE_SYMBOL / HASH_SYMBOL)
 
 indexOption
   = commonIndexOption
@@ -2734,8 +2816,7 @@ dataTypeDefinition // For external use only. Don't reference this in the normal 
   = dataType EOF
 
 dataType // type in sql_yacc.yy
-  = type
-    = ( INT_SYMBOL
+  = ( INT_SYMBOL
       / TINYINT_SYMBOL
       / SMALLINT_SYMBOL
       / MEDIUMINT_SYMBOL
@@ -2744,8 +2825,7 @@ dataType // type in sql_yacc.yy
     fieldLength? fieldOptions?
   / (REAL_SYMBOL / DOUBLE_SYMBOL PRECISION_SYMBOL?)
     precision? fieldOptions?
-  / type
-    = ( FLOAT_SYMBOL
+  / ( FLOAT_SYMBOL
       / DECIMAL_SYMBOL
       / NUMERIC_SYMBOL
       / FIXED_SYMBOL
@@ -2784,8 +2864,7 @@ dataType // type in sql_yacc.yy
   / SET_SYMBOL stringList charsetWithOptBinary?
   / SERIAL_SYMBOL
   / &{serverVersion >= 50708} JSON_SYMBOL
-  / type
-    = ( GEOMETRY_SYMBOL
+  / ( GEOMETRY_SYMBOL
       / GEOMETRYCOLLECTION_SYMBOL
       / POINT_SYMBOL
       / MULTIPOINT_SYMBOL
@@ -2858,8 +2937,7 @@ createTableOption // In the order as they appear in the server grammar.
   / &{serverVersion >= 50711} ENCRYPTION_SYMBOL EQUAL_OPERATOR? textString
   / AUTO_INCREMENT_SYMBOL EQUAL_OPERATOR? ulonglong_number
   / PACK_KEYS_SYMBOL EQUAL_OPERATOR? ternaryOption
-  / option
-    = ( STATS_AUTO_RECALC_SYMBOL
+  / ( STATS_AUTO_RECALC_SYMBOL
       / STATS_PERSISTENT_SYMBOL
       / STATS_SAMPLE_PAGES_SYMBOL
       )
@@ -2912,12 +2990,12 @@ partitionClause
 
 partitionTypeDef
   = LINEAR_SYMBOL? KEY_SYMBOL partitionKeyAlgorithm?
-    OPEN_PAR_SYMBOL identifierList? CLOSE_PAR_SYMBOL # partitionDefKey
-  / LINEAR_SYMBOL? HASH_SYMBOL OPEN_PAR_SYMBOL bitExpr CLOSE_PAR_SYMBOL                             # partitionDefHash
+    OPEN_PAR_SYMBOL identifierList? CLOSE_PAR_SYMBOL 
+  / LINEAR_SYMBOL? HASH_SYMBOL OPEN_PAR_SYMBOL bitExpr CLOSE_PAR_SYMBOL                             
   / (RANGE_SYMBOL / LIST_SYMBOL)
     ( OPEN_PAR_SYMBOL bitExpr CLOSE_PAR_SYMBOL
     / COLUMNS_SYMBOL OPEN_PAR_SYMBOL identifierList? CLOSE_PAR_SYMBOL
-    ) # partitionDefRangeList
+    ) 
 
 subPartitions
   = SUBPARTITION_SYMBOL BY_SYMBOL LINEAR_SYMBOL?
@@ -3246,7 +3324,7 @@ windowName
 // Identifiers excluding keywords (except if they are quoted). IDENT_sys in sql_yacc.yy.
 pureIdentifier
   = (IDENTIFIER / BACK_TICK_QUOTED_ID)
-  / &{lexer.isSqlModeActive(MySQLBaseLexer.ANSI_QUOTES)} DOUBLE_QUOTED_TEXT
+  / &{serverInfo.isSqlModeActive(serverInfo.ANSI_QUOTES)} DOUBLE_QUOTED_TEXT
 
 // Identifiers including a certain set of keywords, which are allowed also if not quoted.
 // ident in sql_yacc.yy
@@ -3318,8 +3396,8 @@ stringList
 // TEXT_STRING_sys + TEXT_STRING_literal + TEXT_STRING_filesystem + TEXT_STRING + TEXT_STRING_password +
 // TEXT_STRING_validated in sql_yacc.yy.
 textStringLiteral
-  = value = SINGLE_QUOTED_TEXT
-  / {!lexer.isSqlModeActive(MySQLBaseLexer.ANSI_QUOTES)} value = DOUBLE_QUOTED_TEXT
+  =  SINGLE_QUOTED_TEXT
+/*  / {!lexer.isSqlModeActive(MySQLBaseLexer.ANSI_QUOTES)}  DOUBLE_QUOTED_TEXT */
 
 textString
   = textStringLiteral
@@ -4411,3 +4489,816 @@ roleOrLabelKeyword = (ACTION_SYMBOL
   / VALIDATION_SYMBOL 
   / WITHOUT_SYMBOL) 
   / ADMIN_SYMBOL
+
+
+
+EQUAL_OPERATOR = "EQUAL_OPERATOR"
+ASSIGN_OPERATOR = "ASSIGN_OPERATOR"
+NULL_SAFE_EQUAL_OPERATOR = "NULL_SAFE_EQUAL_OPERATOR"
+GREATER_OR_EQUAL_OPERATOR = "GREATER_OR_EQUAL_OPERATOR"
+GREATER_THAN_OPERATOR = "GREATER_THAN_OPERATOR"
+LESS_OR_EQUAL_OPERATOR = "LESS_OR_EQUAL_OPERATOR"
+LESS_THAN_OPERATOR = "LESS_THAN_OPERATOR"
+NOT_EQUAL_OPERATOR = "NOT_EQUAL_OPERATOR"
+PLUS_OPERATOR = "PLUS_OPERATOR"
+MINUS_OPERATOR = "MINUS_OPERATOR"
+MULT_OPERATOR = "MULT_OPERATOR"
+DIV_OPERATOR = "DIV_OPERATOR"
+MOD_OPERATOR = "MOD_OPERATOR"
+LOGICAL_NOT_OPERATOR = "LOGICAL_NOT_OPERATOR"
+BITWISE_NOT_OPERATOR = "BITWISE_NOT_OPERATOR"
+SHIFT_LEFT_OPERATOR = "SHIFT_LEFT_OPERATOR"
+SHIFT_RIGHT_OPERATOR = "SHIFT_RIGHT_OPERATOR"
+LOGICAL_AND_OPERATOR = "LOGICAL_AND_OPERATOR"
+BITWISE_AND_OPERATOR = "BITWISE_AND_OPERATOR"
+BITWISE_XOR_OPERATOR = "BITWISE_XOR_OPERATOR"
+LOGICAL_OR_OPERATOR = "LOGICAL_OR_OPERATOR"
+BITWISE_OR_OPERATOR = "BITWISE_OR_OPERATOR"
+DOT_SYMBOL = "DOT_SYMBOL"
+COMMA_SYMBOL = "COMMA_SYMBOL"
+SEMICOLON_SYMBOL = "SEMICOLON_SYMBOL"
+COLON_SYMBOL = "COLON_SYMBOL"
+OPEN_PAR_SYMBOL = "OPEN_PAR_SYMBOL"
+CLOSE_PAR_SYMBOL = "CLOSE_PAR_SYMBOL"
+OPEN_CURLY_SYMBOL = "OPEN_CURLY_SYMBOL"
+CLOSE_CURLY_SYMBOL = "CLOSE_CURLY_SYMBOL"
+UNDERLINE_SYMBOL = "UNDERLINE_SYMBOL"
+JSON_SEPARATOR_SYMBOL = "JSON_SEPARATOR_SYMBOL"
+JSON_UNQUOTED_SEPARATOR_SYMBOL = "JSON_UNQUOTED_SEPARATOR_SYMBOL"
+AT_SIGN_SYMBOL = "AT_SIGN_SYMBOL"
+AT_TEXT_SUFFIX = "AT_TEXT_SUFFIX"
+AT_AT_SIGN_SYMBOL = "AT_AT_SIGN_SYMBOL"
+NULL2_SYMBOL = "NULL2_SYMBOL"
+PARAM_MARKER = "PARAM_MARKER"
+INT_SYMBOL = "INT_SYMBOL"
+TINYINT_SYMBOL = "TINYINT_SYMBOL"
+SMALLINT_SYMBOL = "SMALLINT_SYMBOL"
+MEDIUMINT_SYMBOL = "MEDIUMINT_SYMBOL"
+BIGINT_SYMBOL = "BIGINT_SYMBOL"
+REAL_SYMBOL = "REAL_SYMBOL"
+DOUBLE_SYMBOL = "DOUBLE_SYMBOL"
+FLOAT_SYMBOL = "FLOAT_SYMBOL"
+DECIMAL_SYMBOL = "DECIMAL_SYMBOL"
+NUMERIC_SYMBOL = "NUMERIC_SYMBOL"
+DATE_SYMBOL = "DATE_SYMBOL"
+TIME_SYMBOL = "TIME_SYMBOL"
+TIMESTAMP_SYMBOL = "TIMESTAMP_SYMBOL"
+DATETIME_SYMBOL = "DATETIME_SYMBOL"
+YEAR_SYMBOL = "YEAR_SYMBOL"
+CHAR_SYMBOL = "CHAR_SYMBOL"
+VARCHAR_SYMBOL = "VARCHAR_SYMBOL"
+BINARY_SYMBOL = "BINARY_SYMBOL"
+VARBINARY_SYMBOL = "VARBINARY_SYMBOL"
+TINYBLOB_SYMBOL = "TINYBLOB_SYMBOL"
+BLOB_SYMBOL = "BLOB_SYMBOL"
+MEDIUMBLOB_SYMBOL = "MEDIUMBLOB_SYMBOL"
+LONGBLOB_SYMBOL = "LONGBLOB_SYMBOL"
+TINYTEXT_SYMBOL = "TINYTEXT_SYMBOL"
+TEXT_SYMBOL = "TEXT_SYMBOL"
+MEDIUMTEXT_SYMBOL = "MEDIUMTEXT_SYMBOL"
+LONGTEXT_SYMBOL = "LONGTEXT_SYMBOL"
+ENUM_SYMBOL = "ENUM_SYMBOL"
+SET_SYMBOL = "SET_SYMBOL"
+JSON_SYMBOL = "JSON_SYMBOL"
+GEOMETRY_SYMBOL = "GEOMETRY_SYMBOL"
+POINT_SYMBOL = "POINT_SYMBOL"
+LINESTRING_SYMBOL = "LINESTRING_SYMBOL"
+POLYGON_SYMBOL = "POLYGON_SYMBOL"
+GEOMETRYCOLLECTION_SYMBOL = "GEOMETRYCOLLECTION_SYMBOL"
+MULTIPOINT_SYMBOL = "MULTIPOINT_SYMBOL"
+MULTILINESTRING_SYMBOL = "MULTILINESTRING_SYMBOL"
+MULTIPOLYGON_SYMBOL = "MULTIPOLYGON_SYMBOL"
+ACCESSIBLE_SYMBOL = "ACCESSIBLE_SYMBOL"
+ACCOUNT_SYMBOL = "ACCOUNT_SYMBOL"
+ACTION_SYMBOL = "ACTION_SYMBOL"
+ADD_SYMBOL = "ADD_SYMBOL"
+AFTER_SYMBOL = "AFTER_SYMBOL"
+AGAINST_SYMBOL = "AGAINST_SYMBOL"
+AGGREGATE_SYMBOL = "AGGREGATE_SYMBOL"
+ALGORITHM_SYMBOL = "ALGORITHM_SYMBOL"
+ALL_SYMBOL = "ALL_SYMBOL"
+ALTER_SYMBOL = "ALTER_SYMBOL"
+ALWAYS_SYMBOL = "ALWAYS_SYMBOL"
+ANALYSE_SYMBOL = "ANALYSE_SYMBOL"
+ANALYZE_SYMBOL = "ANALYZE_SYMBOL"
+AND_SYMBOL = "AND_SYMBOL"
+ANY_SYMBOL = "ANY_SYMBOL"
+AS_SYMBOL = "AS_SYMBOL"
+ASC_SYMBOL = "ASC_SYMBOL"
+ASENSITIVE_SYMBOL = "ASENSITIVE_SYMBOL"
+AT_SYMBOL = "AT_SYMBOL"
+AUTOEXTEND_SIZE_SYMBOL = "AUTOEXTEND_SIZE_SYMBOL"
+AUTO_INCREMENT_SYMBOL = "AUTO_INCREMENT_SYMBOL"
+AVG_ROW_LENGTH_SYMBOL = "AVG_ROW_LENGTH_SYMBOL"
+AVG_SYMBOL = "AVG_SYMBOL"
+BACKUP_SYMBOL = "BACKUP_SYMBOL"
+BEFORE_SYMBOL = "BEFORE_SYMBOL"
+BEGIN_SYMBOL = "BEGIN_SYMBOL"
+BETWEEN_SYMBOL = "BETWEEN_SYMBOL"
+BINLOG_SYMBOL = "BINLOG_SYMBOL"
+BIT_AND_SYMBOL = "BIT_AND_SYMBOL"
+BIT_OR_SYMBOL = "BIT_OR_SYMBOL"
+BIT_XOR_SYMBOL = "BIT_XOR_SYMBOL"
+BLOCK_SYMBOL = "BLOCK_SYMBOL"
+BOOL_SYMBOL = "BOOL_SYMBOL"
+BOOLEAN_SYMBOL = "BOOLEAN_SYMBOL"
+BOTH_SYMBOL = "BOTH_SYMBOL"
+BTREE_SYMBOL = "BTREE_SYMBOL"
+BY_SYMBOL = "BY_SYMBOL"
+BYTE_SYMBOL = "BYTE_SYMBOL"
+CACHE_SYMBOL = "CACHE_SYMBOL"
+CALL_SYMBOL = "CALL_SYMBOL"
+CASCADE_SYMBOL = "CASCADE_SYMBOL"
+CASCADED_SYMBOL = "CASCADED_SYMBOL"
+CASE_SYMBOL = "CASE_SYMBOL"
+CAST_SYMBOL = "CAST_SYMBOL"
+CATALOG_NAME_SYMBOL = "CATALOG_NAME_SYMBOL"
+CHAIN_SYMBOL = "CHAIN_SYMBOL"
+CHANGE_SYMBOL = "CHANGE_SYMBOL"
+CHANGED_SYMBOL = "CHANGED_SYMBOL"
+CHANNEL_SYMBOL = "CHANNEL_SYMBOL"
+CHARSET_SYMBOL = "CHARSET_SYMBOL"
+CHARACTER_SYMBOL = "CHARACTER_SYMBOL"
+CHECK_SYMBOL = "CHECK_SYMBOL"
+CHECKSUM_SYMBOL = "CHECKSUM_SYMBOL"
+CIPHER_SYMBOL = "CIPHER_SYMBOL"
+CLASS_ORIGIN_SYMBOL = "CLASS_ORIGIN_SYMBOL"
+CLIENT_SYMBOL = "CLIENT_SYMBOL"
+CLOSE_SYMBOL = "CLOSE_SYMBOL"
+COALESCE_SYMBOL = "COALESCE_SYMBOL"
+CODE_SYMBOL = "CODE_SYMBOL"
+COLLATE_SYMBOL = "COLLATE_SYMBOL"
+COLLATION_SYMBOL = "COLLATION_SYMBOL"
+COLUMN_FORMAT_SYMBOL = "COLUMN_FORMAT_SYMBOL"
+COLUMN_NAME_SYMBOL = "COLUMN_NAME_SYMBOL"
+COLUMNS_SYMBOL = "COLUMNS_SYMBOL"
+COLUMN_SYMBOL = "COLUMN_SYMBOL"
+COMMENT_SYMBOL = "COMMENT_SYMBOL"
+COMMITTED_SYMBOL = "COMMITTED_SYMBOL"
+COMMIT_SYMBOL = "COMMIT_SYMBOL"
+COMPACT_SYMBOL = "COMPACT_SYMBOL"
+COMPLETION_SYMBOL = "COMPLETION_SYMBOL"
+COMPRESSED_SYMBOL = "COMPRESSED_SYMBOL"
+COMPRESSION_SYMBOL = "COMPRESSION_SYMBOL"
+CONCURRENT_SYMBOL = "CONCURRENT_SYMBOL"
+CONDITION_SYMBOL = "CONDITION_SYMBOL"
+CONNECTION_SYMBOL = "CONNECTION_SYMBOL"
+CONSISTENT_SYMBOL = "CONSISTENT_SYMBOL"
+CONSTRAINT_SYMBOL = "CONSTRAINT_SYMBOL"
+CONSTRAINTS_SYMBOL = "CONSTRAINTS_SYMBOL"
+OVER_SYMBOL = "OVER_SYMBOL"
+REPLICA_SYMBOL = "REPLICA_SYMBOL"
+CONSTRAINT_CATALOG_SYMBOL = "CONSTRAINT_CATALOG_SYMBOL"
+CONSTRAINT_NAME_SYMBOL = "CONSTRAINT_NAME_SYMBOL"
+CONSTRAINT_SCHEMA_SYMBOL = "CONSTRAINT_SCHEMA_SYMBOL"
+CONTAINS_SYMBOL = "CONTAINS_SYMBOL"
+CONTEXT_SYMBOL = "CONTEXT_SYMBOL"
+CONTINUE_SYMBOL = "CONTINUE_SYMBOL"
+CONTRIBUTORS_SYMBOL = "CONTRIBUTORS_SYMBOL"
+CONVERT_SYMBOL = "CONVERT_SYMBOL"
+COUNT_SYMBOL = "COUNT_SYMBOL"
+CPU_SYMBOL = "CPU_SYMBOL"
+CREATE_SYMBOL = "CREATE_SYMBOL"
+CROSS_SYMBOL = "CROSS_SYMBOL"
+CUBE_SYMBOL = "CUBE_SYMBOL"
+CURDATE_SYMBOL = "CURDATE_SYMBOL"
+CURRENT_DATE_SYMBOL = "CURRENT_DATE_SYMBOL"
+CURRENT_TIME_SYMBOL = "CURRENT_TIME_SYMBOL"
+CURRENT_TIMESTAMP_SYMBOL = "CURRENT_TIMESTAMP_SYMBOL"
+CURRENT_USER_SYMBOL = "CURRENT_USER_SYMBOL"
+CURRENT_SYMBOL = "CURRENT_SYMBOL"
+CURSOR_SYMBOL = "CURSOR_SYMBOL"
+CURSOR_NAME_SYMBOL = "CURSOR_NAME_SYMBOL"
+CURTIME_SYMBOL = "CURTIME_SYMBOL"
+DATABASE_SYMBOL = "DATABASE_SYMBOL"
+DATABASES_SYMBOL = "DATABASES_SYMBOL"
+DATAFILE_SYMBOL = "DATAFILE_SYMBOL"
+DATA_SYMBOL = "DATA_SYMBOL"
+DATE_ADD_SYMBOL = "DATE_ADD_SYMBOL"
+DATE_SUB_SYMBOL = "DATE_SUB_SYMBOL"
+DAY_HOUR_SYMBOL = "DAY_HOUR_SYMBOL"
+DAY_MICROSECOND_SYMBOL = "DAY_MICROSECOND_SYMBOL"
+DAY_MINUTE_SYMBOL = "DAY_MINUTE_SYMBOL"
+DAY_SECOND_SYMBOL = "DAY_SECOND_SYMBOL"
+DAY_SYMBOL = "DAY_SYMBOL"
+DAYOFMONTH_SYMBOL = "DAYOFMONTH_SYMBOL"
+DEALLOCATE_SYMBOL = "DEALLOCATE_SYMBOL"
+DEC_SYMBOL = "DEC_SYMBOL"
+DECLARE_SYMBOL = "DECLARE_SYMBOL"
+DEFAULT_SYMBOL = "DEFAULT_SYMBOL"
+DEFAULT_AUTH_SYMBOL = "DEFAULT_AUTH_SYMBOL"
+DEFINER_SYMBOL = "DEFINER_SYMBOL"
+DELAYED_SYMBOL = "DELAYED_SYMBOL"
+DELAY_KEY_WRITE_SYMBOL = "DELAY_KEY_WRITE_SYMBOL"
+DELETE_SYMBOL = "DELETE_SYMBOL"
+DESC_SYMBOL = "DESC_SYMBOL"
+DESCRIBE_SYMBOL = "DESCRIBE_SYMBOL"
+DES_KEY_FILE_SYMBOL = "DES_KEY_FILE_SYMBOL"
+DETERMINISTIC_SYMBOL = "DETERMINISTIC_SYMBOL"
+DIAGNOSTICS_SYMBOL = "DIAGNOSTICS_SYMBOL"
+DIRECTORY_SYMBOL = "DIRECTORY_SYMBOL"
+DISABLE_SYMBOL = "DISABLE_SYMBOL"
+DISCARD_SYMBOL = "DISCARD_SYMBOL"
+DISK_SYMBOL = "DISK_SYMBOL"
+DISTINCT_SYMBOL = "DISTINCT_SYMBOL"
+DISTINCTROW_SYMBOL = "DISTINCTROW_SYMBOL"
+DIV_SYMBOL = "DIV_SYMBOL"
+DO_SYMBOL = "DO_SYMBOL"
+DROP_SYMBOL = "DROP_SYMBOL"
+DUAL_SYMBOL = "DUAL_SYMBOL"
+DUMPFILE_SYMBOL = "DUMPFILE_SYMBOL"
+DUPLICATE_SYMBOL = "DUPLICATE_SYMBOL"
+DYNAMIC_SYMBOL = "DYNAMIC_SYMBOL"
+EACH_SYMBOL = "EACH_SYMBOL"
+ELSE_SYMBOL = "ELSE_SYMBOL"
+ELSEIF_SYMBOL = "ELSEIF_SYMBOL"
+EMPTY_SYMBOL = "EMPTY_SYMBOL"
+ENABLE_SYMBOL = "ENABLE_SYMBOL"
+ENCLOSED_SYMBOL = "ENCLOSED_SYMBOL"
+ENCRYPTION_SYMBOL = "ENCRYPTION_SYMBOL"
+END_SYMBOL = "END_SYMBOL"
+ENDS_SYMBOL = "ENDS_SYMBOL"
+ENFORCED_SYMBOL = "ENFORCED_SYMBOL"
+ENGINES_SYMBOL = "ENGINES_SYMBOL"
+ENGINE_SYMBOL = "ENGINE_SYMBOL"
+ERROR_SYMBOL = "ERROR_SYMBOL"
+ERRORS_SYMBOL = "ERRORS_SYMBOL"
+ESCAPED_SYMBOL = "ESCAPED_SYMBOL"
+ESCAPE_SYMBOL = "ESCAPE_SYMBOL"
+EVENT_SYMBOL = "EVENT_SYMBOL"
+EVENTS_SYMBOL = "EVENTS_SYMBOL"
+EVERY_SYMBOL = "EVERY_SYMBOL"
+EXCHANGE_SYMBOL = "EXCHANGE_SYMBOL"
+EXCEPT_SYMBOL = "EXCEPT_SYMBOL"
+EXECUTE_SYMBOL = "EXECUTE_SYMBOL"
+EXISTS_SYMBOL = "EXISTS_SYMBOL"
+EXIT_SYMBOL = "EXIT_SYMBOL"
+EXPANSION_SYMBOL = "EXPANSION_SYMBOL"
+EXPIRE_SYMBOL = "EXPIRE_SYMBOL"
+EXPLAIN_SYMBOL = "EXPLAIN_SYMBOL"
+EXPORT_SYMBOL = "EXPORT_SYMBOL"
+EXTENDED_SYMBOL = "EXTENDED_SYMBOL"
+EXTENT_SIZE_SYMBOL = "EXTENT_SIZE_SYMBOL"
+EXTRACT_SYMBOL = "EXTRACT_SYMBOL"
+FALSE_SYMBOL = "FALSE_SYMBOL"
+FAST_SYMBOL = "FAST_SYMBOL"
+FAULTS_SYMBOL = "FAULTS_SYMBOL"
+FETCH_SYMBOL = "FETCH_SYMBOL"
+FIELDS_SYMBOL = "FIELDS_SYMBOL"
+FILE_BLOCK_SIZE_SYMBOL = "FILE_BLOCK_SIZE_SYMBOL"
+FILE_SYMBOL = "FILE_SYMBOL"
+FILTER_SYMBOL = "FILTER_SYMBOL"
+FIRST_SYMBOL = "FIRST_SYMBOL"
+FIRST_VALUE_SYMBOL = "FIRST_VALUE_SYMBOL"
+FIXED_SYMBOL = "FIXED_SYMBOL"
+FLOAT4_SYMBOL = "FLOAT4_SYMBOL"
+FLOAT8_SYMBOL = "FLOAT8_SYMBOL"
+FLUSH_SYMBOL = "FLUSH_SYMBOL"
+FOLLOWS_SYMBOL = "FOLLOWS_SYMBOL"
+FORCE_SYMBOL = "FORCE_SYMBOL"
+FOREIGN_SYMBOL = "FOREIGN_SYMBOL"
+FOR_SYMBOL = "FOR_SYMBOL"
+FORMAT_SYMBOL = "FORMAT_SYMBOL"
+FOUND_SYMBOL = "FOUND_SYMBOL"
+FROM_SYMBOL = "FROM_SYMBOL"
+FULLTEXT_SYMBOL = "FULLTEXT_SYMBOL"
+FULL_SYMBOL = "FULL_SYMBOL"
+FUNCTION_SYMBOL = "FUNCTION_SYMBOL"
+GENERATED_SYMBOL = "GENERATED_SYMBOL"
+GENERAL_SYMBOL = "GENERAL_SYMBOL"
+GET_FORMAT_SYMBOL = "GET_FORMAT_SYMBOL"
+GET_MASTER_PUBLIC_KEY_SYMBOL = "GET_MASTER_PUBLIC_KEY_SYMBOL"
+GLOBAL_SYMBOL = "GLOBAL_SYMBOL"
+GRANT_SYMBOL = "GRANT_SYMBOL"
+GRANTS_SYMBOL = "GRANTS_SYMBOL"
+GROUP_CONCAT_SYMBOL = "GROUP_CONCAT_SYMBOL"
+GROUP_REPLICATION_SYMBOL = "GROUP_REPLICATION_SYMBOL"
+GROUP_SYMBOL = "GROUP_SYMBOL"
+HANDLER_SYMBOL = "HANDLER_SYMBOL"
+HASH_SYMBOL = "HASH_SYMBOL"
+HAVING_SYMBOL = "HAVING_SYMBOL"
+HELP_SYMBOL = "HELP_SYMBOL"
+HIGH_PRIORITY_SYMBOL = "HIGH_PRIORITY_SYMBOL"
+HISTOGRAM_SYMBOL = "HISTOGRAM_SYMBOL"
+HISTORY_SYMBOL = "HISTORY_SYMBOL"
+HOST_SYMBOL = "HOST_SYMBOL"
+HOSTS_SYMBOL = "HOSTS_SYMBOL"
+HOUR_MICROSECOND_SYMBOL = "HOUR_MICROSECOND_SYMBOL"
+HOUR_MINUTE_SYMBOL = "HOUR_MINUTE_SYMBOL"
+HOUR_SECOND_SYMBOL = "HOUR_SECOND_SYMBOL"
+HOUR_SYMBOL = "HOUR_SYMBOL"
+IDENTIFIED_SYMBOL = "IDENTIFIED_SYMBOL"
+IF_SYMBOL = "IF_SYMBOL"
+IGNORE_SYMBOL = "IGNORE_SYMBOL"
+IGNORE_SERVER_IDS_SYMBOL = "IGNORE_SERVER_IDS_SYMBOL"
+IMPORT_SYMBOL = "IMPORT_SYMBOL"
+IN_SYMBOL = "IN_SYMBOL"
+INDEXES_SYMBOL = "INDEXES_SYMBOL"
+INDEX_SYMBOL = "INDEX_SYMBOL"
+INFILE_SYMBOL = "INFILE_SYMBOL"
+INITIAL_SIZE_SYMBOL = "INITIAL_SIZE_SYMBOL"
+INNER_SYMBOL = "INNER_SYMBOL"
+INOUT_SYMBOL = "INOUT_SYMBOL"
+INSENSITIVE_SYMBOL = "INSENSITIVE_SYMBOL"
+INSERT_SYMBOL = "INSERT_SYMBOL"
+INSERT_METHOD_SYMBOL = "INSERT_METHOD_SYMBOL"
+INSTANCE_SYMBOL = "INSTANCE_SYMBOL"
+INSTALL_SYMBOL = "INSTALL_SYMBOL"
+INTEGER_SYMBOL = "INTEGER_SYMBOL"
+INTERVAL_SYMBOL = "INTERVAL_SYMBOL"
+INTO_SYMBOL = "INTO_SYMBOL"
+INVISIBLE_SYMBOL = "INVISIBLE_SYMBOL"
+INVOKER_SYMBOL = "INVOKER_SYMBOL"
+IO_SYMBOL = "IO_SYMBOL"
+IPC_SYMBOL = "IPC_SYMBOL"
+IS_SYMBOL = "IS_SYMBOL"
+ISOLATION_SYMBOL = "ISOLATION_SYMBOL"
+ISSUER_SYMBOL = "ISSUER_SYMBOL"
+ITERATE_SYMBOL = "ITERATE_SYMBOL"
+JOIN_SYMBOL = "JOIN_SYMBOL"
+JSON_TABLE_SYMBOL = "JSON_TABLE_SYMBOL"
+JSON_ARRAYAGG_SYMBOL = "JSON_ARRAYAGG_SYMBOL"
+JSON_OBJECTAGG_SYMBOL = "JSON_OBJECTAGG_SYMBOL"
+KEYS_SYMBOL = "KEYS_SYMBOL"
+KEY_BLOCK_SIZE_SYMBOL = "KEY_BLOCK_SIZE_SYMBOL"
+KEY_SYMBOL = "KEY_SYMBOL"
+KILL_SYMBOL = "KILL_SYMBOL"
+LANGUAGE_SYMBOL = "LANGUAGE_SYMBOL"
+LAST_SYMBOL = "LAST_SYMBOL"
+LAST_VALUE_SYMBOL = "LAST_VALUE_SYMBOL"
+LATERAL_SYMBOL = "LATERAL_SYMBOL"
+LEAD_SYMBOL = "LEAD_SYMBOL"
+LEADING_SYMBOL = "LEADING_SYMBOL"
+LEAVE_SYMBOL = "LEAVE_SYMBOL"
+LEAVES_SYMBOL = "LEAVES_SYMBOL"
+LEFT_SYMBOL = "LEFT_SYMBOL"
+LESS_SYMBOL = "LESS_SYMBOL"
+LEVEL_SYMBOL = "LEVEL_SYMBOL"
+LIKE_SYMBOL = "LIKE_SYMBOL"
+LIMIT_SYMBOL = "LIMIT_SYMBOL"
+LINEAR_SYMBOL = "LINEAR_SYMBOL"
+LINES_SYMBOL = "LINES_SYMBOL"
+LIST_SYMBOL = "LIST_SYMBOL"
+LOAD_SYMBOL = "LOAD_SYMBOL"
+LOCALTIME_SYMBOL = "LOCALTIME_SYMBOL"
+LOCALTIMESTAMP_SYMBOL = "LOCALTIMESTAMP_SYMBOL"
+LOCAL_SYMBOL = "LOCAL_SYMBOL"
+LOCATOR_SYMBOL = "LOCATOR_SYMBOL"
+LOCK_SYMBOL = "LOCK_SYMBOL"
+LOCKS_SYMBOL = "LOCKS_SYMBOL"
+LOGFILE_SYMBOL = "LOGFILE_SYMBOL"
+LOGS_SYMBOL = "LOGS_SYMBOL"
+LOOP_SYMBOL = "LOOP_SYMBOL"
+LOW_PRIORITY_SYMBOL = "LOW_PRIORITY_SYMBOL"
+MASTER_SYMBOL = "MASTER_SYMBOL"
+MASTER_AUTO_POSITION_SYMBOL = "MASTER_AUTO_POSITION_SYMBOL"
+MASTER_BIND_SYMBOL = "MASTER_BIND_SYMBOL"
+MASTER_CONNECT_RETRY_SYMBOL = "MASTER_CONNECT_RETRY_SYMBOL"
+MASTER_DELAY_SYMBOL = "MASTER_DELAY_SYMBOL"
+MASTER_HEARTBEAT_PERIOD_SYMBOL = "MASTER_HEARTBEAT_PERIOD_SYMBOL"
+MASTER_HOST_SYMBOL = "MASTER_HOST_SYMBOL"
+NETWORK_NAMESPACE_SYMBOL = "NETWORK_NAMESPACE_SYMBOL"
+MASTER_LOG_FILE_SYMBOL = "MASTER_LOG_FILE_SYMBOL"
+MASTER_LOG_POS_SYMBOL = "MASTER_LOG_POS_SYMBOL"
+MASTER_PASSWORD_SYMBOL = "MASTER_PASSWORD_SYMBOL"
+MASTER_PORT_SYMBOL = "MASTER_PORT_SYMBOL"
+MASTER_PUBLIC_KEY_PATH_SYMBOL = "MASTER_PUBLIC_KEY_PATH_SYMBOL"
+MASTER_RETRY_COUNT_SYMBOL = "MASTER_RETRY_COUNT_SYMBOL"
+MASTER_SERVER_ID_SYMBOL = "MASTER_SERVER_ID_SYMBOL"
+MASTER_SSL_CAPATH_SYMBOL = "MASTER_SSL_CAPATH_SYMBOL"
+MASTER_SSL_CA_SYMBOL = "MASTER_SSL_CA_SYMBOL"
+MASTER_SSL_CERT_SYMBOL = "MASTER_SSL_CERT_SYMBOL"
+MASTER_SSL_CIPHER_SYMBOL = "MASTER_SSL_CIPHER_SYMBOL"
+MASTER_SSL_CRL_SYMBOL = "MASTER_SSL_CRL_SYMBOL"
+MASTER_SSL_CRLPATH_SYMBOL = "MASTER_SSL_CRLPATH_SYMBOL"
+MASTER_SSL_KEY_SYMBOL = "MASTER_SSL_KEY_SYMBOL"
+MASTER_SSL_SYMBOL = "MASTER_SSL_SYMBOL"
+MASTER_SSL_VERIFY_SERVER_CERT_SYMBOL = "MASTER_SSL_VERIFY_SERVER_CERT_SYMBOL"
+MASTER_TLS_VERSION_SYMBOL = "MASTER_TLS_VERSION_SYMBOL"
+MASTER_TLS_CIPHERSUITES_SYMBOL = "MASTER_TLS_CIPHERSUITES_SYMBOL"
+MASTER_USER_SYMBOL = "MASTER_USER_SYMBOL"
+MASTER_ZSTD_COMPRESSION_LEVEL_SYMBOL = "MASTER_ZSTD_COMPRESSION_LEVEL_SYMBOL"
+MATCH_SYMBOL = "MATCH_SYMBOL"
+MAX_CONNECTIONS_PER_HOUR_SYMBOL = "MAX_CONNECTIONS_PER_HOUR_SYMBOL"
+MAX_QUERIES_PER_HOUR_SYMBOL = "MAX_QUERIES_PER_HOUR_SYMBOL"
+MAX_ROWS_SYMBOL = "MAX_ROWS_SYMBOL"
+MAX_SIZE_SYMBOL = "MAX_SIZE_SYMBOL"
+MAX_STATEMENT_TIME_SYMBOL = "MAX_STATEMENT_TIME_SYMBOL"
+MAX_UPDATES_PER_HOUR_SYMBOL = "MAX_UPDATES_PER_HOUR_SYMBOL"
+MAX_USER_CONNECTIONS_SYMBOL = "MAX_USER_CONNECTIONS_SYMBOL"
+MAXVALUE_SYMBOL = "MAXVALUE_SYMBOL"
+MAX_SYMBOL = "MAX_SYMBOL"
+MEDIUM_SYMBOL = "MEDIUM_SYMBOL"
+MEMBER_SYMBOL = "MEMBER_SYMBOL"
+MEMORY_SYMBOL = "MEMORY_SYMBOL"
+MERGE_SYMBOL = "MERGE_SYMBOL"
+MESSAGE_TEXT_SYMBOL = "MESSAGE_TEXT_SYMBOL"
+MICROSECOND_SYMBOL = "MICROSECOND_SYMBOL"
+MIDDLEINT_SYMBOL = "MIDDLEINT_SYMBOL"
+MIGRATE_SYMBOL = "MIGRATE_SYMBOL"
+MINUTE_MICROSECOND_SYMBOL = "MINUTE_MICROSECOND_SYMBOL"
+MINUTE_SECOND_SYMBOL = "MINUTE_SECOND_SYMBOL"
+MINUTE_SYMBOL = "MINUTE_SYMBOL"
+MIN_ROWS_SYMBOL = "MIN_ROWS_SYMBOL"
+MIN_SYMBOL = "MIN_SYMBOL"
+MODE_SYMBOL = "MODE_SYMBOL"
+MODIFIES_SYMBOL = "MODIFIES_SYMBOL"
+MODIFY_SYMBOL = "MODIFY_SYMBOL"
+MOD_SYMBOL = "MOD_SYMBOL"
+MONTH_SYMBOL = "MONTH_SYMBOL"
+MUTEX_SYMBOL = "MUTEX_SYMBOL"
+MYSQL_ERRNO_SYMBOL = "MYSQL_ERRNO_SYMBOL"
+NAME_SYMBOL = "NAME_SYMBOL"
+NAMES_SYMBOL = "NAMES_SYMBOL"
+NATIONAL_SYMBOL = "NATIONAL_SYMBOL"
+NATURAL_SYMBOL = "NATURAL_SYMBOL"
+NCHAR_SYMBOL = "NCHAR_SYMBOL"
+NDBCLUSTER_SYMBOL = "NDBCLUSTER_SYMBOL"
+NDB_SYMBOL = "NDB_SYMBOL"
+NEG_SYMBOL = "NEG_SYMBOL"
+NESTED_SYMBOL = "NESTED_SYMBOL"
+NEVER_SYMBOL = "NEVER_SYMBOL"
+NEW_SYMBOL = "NEW_SYMBOL"
+NEXT_SYMBOL = "NEXT_SYMBOL"
+NODEGROUP_SYMBOL = "NODEGROUP_SYMBOL"
+NONE_SYMBOL = "NONE_SYMBOL"
+NONBLOCKING_SYMBOL = "NONBLOCKING_SYMBOL"
+NOT_SYMBOL = "NOT_SYMBOL"
+NOWAIT_SYMBOL = "NOWAIT_SYMBOL"
+NO_WAIT_SYMBOL = "NO_WAIT_SYMBOL"
+NO_WRITE_TO_BINLOG_SYMBOL = "NO_WRITE_TO_BINLOG_SYMBOL"
+NULL_SYMBOL = "NULL_SYMBOL"
+NULLS_SYMBOL = "NULLS_SYMBOL"
+NUMBER_SYMBOL = "NUMBER_SYMBOL"
+NVARCHAR_SYMBOL = "NVARCHAR_SYMBOL"
+NTH_VALUE_SYMBOL = "NTH_VALUE_SYMBOL"
+NTILE_SYMBOL = "NTILE_SYMBOL"
+OF_SYMBOL = "OF_SYMBOL"
+OFF_SYMBOL = "OFF_SYMBOL"
+OFFLINE_SYMBOL = "OFFLINE_SYMBOL"
+OFFSET_SYMBOL = "OFFSET_SYMBOL"
+OJ_SYMBOL = "OJ_SYMBOL"
+OLD_PASSWORD_SYMBOL = "OLD_PASSWORD_SYMBOL"
+OLD_SYMBOL = "OLD_SYMBOL"
+ON_SYMBOL = "ON_SYMBOL"
+ONLINE_SYMBOL = "ONLINE_SYMBOL"
+ONE_SYMBOL = "ONE_SYMBOL"
+ONLY_SYMBOL = "ONLY_SYMBOL"
+OPEN_SYMBOL = "OPEN_SYMBOL"
+OPTIONAL_SYMBOL = "OPTIONAL_SYMBOL"
+OPTIONALLY_SYMBOL = "OPTIONALLY_SYMBOL"
+OPTIONS_SYMBOL = "OPTIONS_SYMBOL"
+OPTION_SYMBOL = "OPTION_SYMBOL"
+OPTIMIZE_SYMBOL = "OPTIMIZE_SYMBOL"
+OPTIMIZER_COSTS_SYMBOL = "OPTIMIZER_COSTS_SYMBOL"
+ORDER_SYMBOL = "ORDER_SYMBOL"
+ORDINALITY_SYMBOL = "ORDINALITY_SYMBOL"
+ORGANIZATION_SYMBOL = "ORGANIZATION_SYMBOL"
+OR_SYMBOL = "OR_SYMBOL"
+OTHERS_SYMBOL = "OTHERS_SYMBOL"
+OUTER_SYMBOL = "OUTER_SYMBOL"
+OUTFILE_SYMBOL = "OUTFILE_SYMBOL"
+OUT_SYMBOL = "OUT_SYMBOL"
+OWNER_SYMBOL = "OWNER_SYMBOL"
+PACK_KEYS_SYMBOL = "PACK_KEYS_SYMBOL"
+PAGE_SYMBOL = "PAGE_SYMBOL"
+PARSER_SYMBOL = "PARSER_SYMBOL"
+PARTIAL_SYMBOL = "PARTIAL_SYMBOL"
+PARTITIONING_SYMBOL = "PARTITIONING_SYMBOL"
+PARTITIONS_SYMBOL = "PARTITIONS_SYMBOL"
+PARTITION_SYMBOL = "PARTITION_SYMBOL"
+PASSWORD_SYMBOL = "PASSWORD_SYMBOL"
+PATH_SYMBOL = "PATH_SYMBOL"
+PERCENT_RANK_SYMBOL = "PERCENT_RANK_SYMBOL"
+PERSIST_SYMBOL = "PERSIST_SYMBOL"
+PERSIST_ONLY_SYMBOL = "PERSIST_ONLY_SYMBOL"
+PHASE_SYMBOL = "PHASE_SYMBOL"
+PLUGIN_SYMBOL = "PLUGIN_SYMBOL"
+PLUGINS_SYMBOL = "PLUGINS_SYMBOL"
+PLUGIN_DIR_SYMBOL = "PLUGIN_DIR_SYMBOL"
+PORT_SYMBOL = "PORT_SYMBOL"
+POSITION_SYMBOL = "POSITION_SYMBOL"
+PRECEDES_SYMBOL = "PRECEDES_SYMBOL"
+PRECEDING_SYMBOL = "PRECEDING_SYMBOL"
+PRECISION_SYMBOL = "PRECISION_SYMBOL"
+PREPARE_SYMBOL = "PREPARE_SYMBOL"
+PRESERVE_SYMBOL = "PRESERVE_SYMBOL"
+PREV_SYMBOL = "PREV_SYMBOL"
+PRIMARY_SYMBOL = "PRIMARY_SYMBOL"
+PRIVILEGES_SYMBOL = "PRIVILEGES_SYMBOL"
+PRIVILEGE_CHECKS_USER_SYMBOL = "PRIVILEGE_CHECKS_USER_SYMBOL"
+PROCEDURE_SYMBOL = "PROCEDURE_SYMBOL"
+PROCESS_SYMBOL = "PROCESS_SYMBOL"
+PROCESSLIST_SYMBOL = "PROCESSLIST_SYMBOL"
+PROFILES_SYMBOL = "PROFILES_SYMBOL"
+PROFILE_SYMBOL = "PROFILE_SYMBOL"
+PROXY_SYMBOL = "PROXY_SYMBOL"
+PURGE_SYMBOL = "PURGE_SYMBOL"
+QUARTER_SYMBOL = "QUARTER_SYMBOL"
+QUERY_SYMBOL = "QUERY_SYMBOL"
+QUICK_SYMBOL = "QUICK_SYMBOL"
+RANDOM_SYMBOL = "RANDOM_SYMBOL"
+RANGE_SYMBOL = "RANGE_SYMBOL"
+RANK_SYMBOL = "RANK_SYMBOL"
+READS_SYMBOL = "READS_SYMBOL"
+READ_ONLY_SYMBOL = "READ_ONLY_SYMBOL"
+READ_SYMBOL = "READ_SYMBOL"
+READ_WRITE_SYMBOL = "READ_WRITE_SYMBOL"
+REBUILD_SYMBOL = "REBUILD_SYMBOL"
+RECOVER_SYMBOL = "RECOVER_SYMBOL"
+REDOFILE_SYMBOL = "REDOFILE_SYMBOL"
+REDO_BUFFER_SIZE_SYMBOL = "REDO_BUFFER_SIZE_SYMBOL"
+REDUNDANT_SYMBOL = "REDUNDANT_SYMBOL"
+REFERENCES_SYMBOL = "REFERENCES_SYMBOL"
+RECURSIVE_SYMBOL = "RECURSIVE_SYMBOL"
+REGEXP_SYMBOL = "REGEXP_SYMBOL"
+RELAYLOG_SYMBOL = "RELAYLOG_SYMBOL"
+RELAY_SYMBOL = "RELAY_SYMBOL"
+RELAY_LOG_FILE_SYMBOL = "RELAY_LOG_FILE_SYMBOL"
+RELAY_LOG_POS_SYMBOL = "RELAY_LOG_POS_SYMBOL"
+RELAY_THREAD_SYMBOL = "RELAY_THREAD_SYMBOL"
+RELEASE_SYMBOL = "RELEASE_SYMBOL"
+RELOAD_SYMBOL = "RELOAD_SYMBOL"
+REMOTE_SYMBOL = "REMOTE_SYMBOL"
+REMOVE_SYMBOL = "REMOVE_SYMBOL"
+RENAME_SYMBOL = "RENAME_SYMBOL"
+REORGANIZE_SYMBOL = "REORGANIZE_SYMBOL"
+REPAIR_SYMBOL = "REPAIR_SYMBOL"
+REPEAT_SYMBOL = "REPEAT_SYMBOL"
+REPEATABLE_SYMBOL = "REPEATABLE_SYMBOL"
+REPLACE_SYMBOL = "REPLACE_SYMBOL"
+REPLICATION_SYMBOL = "REPLICATION_SYMBOL"
+REPLICATE_DO_DB_SYMBOL = "REPLICATE_DO_DB_SYMBOL"
+REPLICATE_IGNORE_DB_SYMBOL = "REPLICATE_IGNORE_DB_SYMBOL"
+REPLICATE_DO_TABLE_SYMBOL = "REPLICATE_DO_TABLE_SYMBOL"
+REPLICATE_IGNORE_TABLE_SYMBOL = "REPLICATE_IGNORE_TABLE_SYMBOL"
+REPLICATE_WILD_DO_TABLE_SYMBOL = "REPLICATE_WILD_DO_TABLE_SYMBOL"
+REPLICATE_WILD_IGNORE_TABLE_SYMBOL = "REPLICATE_WILD_IGNORE_TABLE_SYMBOL"
+REPLICATE_REWRITE_DB_SYMBOL = "REPLICATE_REWRITE_DB_SYMBOL"
+REQUIRE_SYMBOL = "REQUIRE_SYMBOL"
+REQUIRE_ROW_FORMAT_SYMBOL = "REQUIRE_ROW_FORMAT_SYMBOL"
+REQUIRE_TABLE_PRIMARY_KEY_CHECK_SYMBOL = "REQUIRE_TABLE_PRIMARY_KEY_CHECK_SYMBOL"
+RESET_SYMBOL = "RESET_SYMBOL"
+RESIGNAL_SYMBOL = "RESIGNAL_SYMBOL"
+RESOURCE_SYMBOL = "RESOURCE_SYMBOL"
+RESPECT_SYMBOL = "RESPECT_SYMBOL"
+RESTART_SYMBOL = "RESTART_SYMBOL"
+RESTORE_SYMBOL = "RESTORE_SYMBOL"
+RESTRICT_SYMBOL = "RESTRICT_SYMBOL"
+RESUME_SYMBOL = "RESUME_SYMBOL"
+RETAIN_SYMBOL = "RETAIN_SYMBOL"
+RETURNED_SQLSTATE_SYMBOL = "RETURNED_SQLSTATE_SYMBOL"
+RETURNS_SYMBOL = "RETURNS_SYMBOL"
+REUSE_SYMBOL = "REUSE_SYMBOL"
+REVERSE_SYMBOL = "REVERSE_SYMBOL"
+REVOKE_SYMBOL = "REVOKE_SYMBOL"
+RIGHT_SYMBOL = "RIGHT_SYMBOL"
+RLIKE_SYMBOL = "RLIKE_SYMBOL"
+ROLE_SYMBOL = "ROLE_SYMBOL"
+ROLLBACK_SYMBOL = "ROLLBACK_SYMBOL"
+ROLLUP_SYMBOL = "ROLLUP_SYMBOL"
+ROTATE_SYMBOL = "ROTATE_SYMBOL"
+ROW_SYMBOL = "ROW_SYMBOL"
+ROWS_SYMBOL = "ROWS_SYMBOL"
+ROW_COUNT_SYMBOL = "ROW_COUNT_SYMBOL"
+ROW_FORMAT_SYMBOL = "ROW_FORMAT_SYMBOL"
+ROW_NUMBER_SYMBOL = "ROW_NUMBER_SYMBOL"
+RTREE_SYMBOL = "RTREE_SYMBOL"
+SAVEPOINT_SYMBOL = "SAVEPOINT_SYMBOL"
+SCHEMA_SYMBOL = "SCHEMA_SYMBOL"
+SCHEMAS_SYMBOL = "SCHEMAS_SYMBOL"
+SCHEMA_NAME_SYMBOL = "SCHEMA_NAME_SYMBOL"
+SCHEDULE_SYMBOL = "SCHEDULE_SYMBOL"
+SECOND_MICROSECOND_SYMBOL = "SECOND_MICROSECOND_SYMBOL"
+SECOND_SYMBOL = "SECOND_SYMBOL"
+SECONDARY_SYMBOL = "SECONDARY_SYMBOL"
+SECONDARY_ENGINE_SYMBOL = "SECONDARY_ENGINE_SYMBOL"
+SECONDARY_LOAD_SYMBOL = "SECONDARY_LOAD_SYMBOL"
+SECONDARY_UNLOAD_SYMBOL = "SECONDARY_UNLOAD_SYMBOL"
+SECURITY_SYMBOL = "SECURITY_SYMBOL"
+SELECT_SYMBOL = "SELECT_SYMBOL"
+SENSITIVE_SYMBOL = "SENSITIVE_SYMBOL"
+SEPARATOR_SYMBOL = "SEPARATOR_SYMBOL"
+SERIALIZABLE_SYMBOL = "SERIALIZABLE_SYMBOL"
+SERIAL_SYMBOL = "SERIAL_SYMBOL"
+SERVER_SYMBOL = "SERVER_SYMBOL"
+SERVER_OPTIONS_SYMBOL = "SERVER_OPTIONS_SYMBOL"
+SESSION_SYMBOL = "SESSION_SYMBOL"
+SESSION_USER_SYMBOL = "SESSION_USER_SYMBOL"
+SET_VAR_SYMBOL = "SET_VAR_SYMBOL"
+SHARE_SYMBOL = "SHARE_SYMBOL"
+SHOW_SYMBOL = "SHOW_SYMBOL"
+SHUTDOWN_SYMBOL = "SHUTDOWN_SYMBOL"
+SIGNAL_SYMBOL = "SIGNAL_SYMBOL"
+SIGNED_SYMBOL = "SIGNED_SYMBOL"
+SIMPLE_SYMBOL = "SIMPLE_SYMBOL"
+SKIP_SYMBOL = "SKIP_SYMBOL"
+SLAVE_SYMBOL = "SLAVE_SYMBOL"
+SLOW_SYMBOL = "SLOW_SYMBOL"
+SNAPSHOT_SYMBOL = "SNAPSHOT_SYMBOL"
+SOME_SYMBOL = "SOME_SYMBOL"
+SOCKET_SYMBOL = "SOCKET_SYMBOL"
+SONAME_SYMBOL = "SONAME_SYMBOL"
+SOUNDS_SYMBOL = "SOUNDS_SYMBOL"
+SOURCE_SYMBOL = "SOURCE_SYMBOL"
+SPATIAL_SYMBOL = "SPATIAL_SYMBOL"
+SQL_SYMBOL = "SQL_SYMBOL"
+SQLEXCEPTION_SYMBOL = "SQLEXCEPTION_SYMBOL"
+SQLSTATE_SYMBOL = "SQLSTATE_SYMBOL"
+SQLWARNING_SYMBOL = "SQLWARNING_SYMBOL"
+SQL_AFTER_GTIDS_SYMBOL = "SQL_AFTER_GTIDS_SYMBOL"
+SQL_AFTER_MTS_GAPS_SYMBOL = "SQL_AFTER_MTS_GAPS_SYMBOL"
+SQL_BEFORE_GTIDS_SYMBOL = "SQL_BEFORE_GTIDS_SYMBOL"
+SQL_BIG_RESULT_SYMBOL = "SQL_BIG_RESULT_SYMBOL"
+SQL_BUFFER_RESULT_SYMBOL = "SQL_BUFFER_RESULT_SYMBOL"
+SQL_CALC_FOUND_ROWS_SYMBOL = "SQL_CALC_FOUND_ROWS_SYMBOL"
+SQL_CACHE_SYMBOL = "SQL_CACHE_SYMBOL"
+SQL_NO_CACHE_SYMBOL = "SQL_NO_CACHE_SYMBOL"
+SQL_SMALL_RESULT_SYMBOL = "SQL_SMALL_RESULT_SYMBOL"
+SQL_THREAD_SYMBOL = "SQL_THREAD_SYMBOL"
+SQL_TSI_DAY_SYMBOL = "SQL_TSI_DAY_SYMBOL"
+SQL_TSI_HOUR_SYMBOL = "SQL_TSI_HOUR_SYMBOL"
+SQL_TSI_MICROSECOND_SYMBOL = "SQL_TSI_MICROSECOND_SYMBOL"
+SQL_TSI_MINUTE_SYMBOL = "SQL_TSI_MINUTE_SYMBOL"
+SQL_TSI_MONTH_SYMBOL = "SQL_TSI_MONTH_SYMBOL"
+SQL_TSI_QUARTER_SYMBOL = "SQL_TSI_QUARTER_SYMBOL"
+SQL_TSI_SECOND_SYMBOL = "SQL_TSI_SECOND_SYMBOL"
+SQL_TSI_WEEK_SYMBOL = "SQL_TSI_WEEK_SYMBOL"
+SQL_TSI_YEAR_SYMBOL = "SQL_TSI_YEAR_SYMBOL"
+SRID_SYMBOL = "SRID_SYMBOL"
+SSL_SYMBOL = "SSL_SYMBOL"
+STACKED_SYMBOL = "STACKED_SYMBOL"
+STARTING_SYMBOL = "STARTING_SYMBOL"
+STARTS_SYMBOL = "STARTS_SYMBOL"
+STATS_AUTO_RECALC_SYMBOL = "STATS_AUTO_RECALC_SYMBOL"
+STATS_PERSISTENT_SYMBOL = "STATS_PERSISTENT_SYMBOL"
+STATS_SAMPLE_PAGES_SYMBOL = "STATS_SAMPLE_PAGES_SYMBOL"
+STATUS_SYMBOL = "STATUS_SYMBOL"
+STD_SYMBOL = "STD_SYMBOL"
+STDDEV_POP_SYMBOL = "STDDEV_POP_SYMBOL"
+STDDEV_SAMP_SYMBOL = "STDDEV_SAMP_SYMBOL"
+STDDEV_SYMBOL = "STDDEV_SYMBOL"
+STOP_SYMBOL = "STOP_SYMBOL"
+STORAGE_SYMBOL = "STORAGE_SYMBOL"
+STORED_SYMBOL = "STORED_SYMBOL"
+STRAIGHT_JOIN_SYMBOL = "STRAIGHT_JOIN_SYMBOL"
+STREAM_SYMBOL = "STREAM_SYMBOL"
+STRING_SYMBOL = "STRING_SYMBOL"
+SUBCLASS_ORIGIN_SYMBOL = "SUBCLASS_ORIGIN_SYMBOL"
+SUBDATE_SYMBOL = "SUBDATE_SYMBOL"
+SUBJECT_SYMBOL = "SUBJECT_SYMBOL"
+SUBPARTITIONS_SYMBOL = "SUBPARTITIONS_SYMBOL"
+SUBPARTITION_SYMBOL = "SUBPARTITION_SYMBOL"
+SUBSTR_SYMBOL = "SUBSTR_SYMBOL"
+SUBSTRING_SYMBOL = "SUBSTRING_SYMBOL"
+SUM_SYMBOL = "SUM_SYMBOL"
+SUPER_SYMBOL = "SUPER_SYMBOL"
+SUSPEND_SYMBOL = "SUSPEND_SYMBOL"
+SWAPS_SYMBOL = "SWAPS_SYMBOL"
+SWITCHES_SYMBOL = "SWITCHES_SYMBOL"
+SYSDATE_SYMBOL = "SYSDATE_SYMBOL"
+SYSTEM_SYMBOL = "SYSTEM_SYMBOL"
+SYSTEM_USER_SYMBOL = "SYSTEM_USER_SYMBOL"
+TABLE_SYMBOL = "TABLE_SYMBOL"
+TABLES_SYMBOL = "TABLES_SYMBOL"
+TABLESPACE_SYMBOL = "TABLESPACE_SYMBOL"
+TABLE_CHECKSUM_SYMBOL = "TABLE_CHECKSUM_SYMBOL"
+TABLE_NAME_SYMBOL = "TABLE_NAME_SYMBOL"
+TEMPORARY_SYMBOL = "TEMPORARY_SYMBOL"
+TEMPTABLE_SYMBOL = "TEMPTABLE_SYMBOL"
+TERMINATED_SYMBOL = "TERMINATED_SYMBOL"
+THAN_SYMBOL = "THAN_SYMBOL"
+THEN_SYMBOL = "THEN_SYMBOL"
+THREAD_PRIORITY_SYMBOL = "THREAD_PRIORITY_SYMBOL"
+TIES_SYMBOL = "TIES_SYMBOL"
+TIMESTAMP_ADD_SYMBOL = "TIMESTAMP_ADD_SYMBOL"
+TIMESTAMP_DIFF_SYMBOL = "TIMESTAMP_DIFF_SYMBOL"
+TO_SYMBOL = "TO_SYMBOL"
+TRAILING_SYMBOL = "TRAILING_SYMBOL"
+TRANSACTION_SYMBOL = "TRANSACTION_SYMBOL"
+TRIGGER_SYMBOL = "TRIGGER_SYMBOL"
+TRIGGERS_SYMBOL = "TRIGGERS_SYMBOL"
+TRIM_SYMBOL = "TRIM_SYMBOL"
+TRUE_SYMBOL = "TRUE_SYMBOL"
+TRUNCATE_SYMBOL = "TRUNCATE_SYMBOL"
+TYPES_SYMBOL = "TYPES_SYMBOL"
+TYPE_SYMBOL = "TYPE_SYMBOL"
+UDF_RETURNS_SYMBOL = "UDF_RETURNS_SYMBOL"
+UNBOUNDED_SYMBOL = "UNBOUNDED_SYMBOL"
+UNCOMMITTED_SYMBOL = "UNCOMMITTED_SYMBOL"
+UNDEFINED_SYMBOL = "UNDEFINED_SYMBOL"
+UNDO_BUFFER_SIZE_SYMBOL = "UNDO_BUFFER_SIZE_SYMBOL"
+UNDOFILE_SYMBOL = "UNDOFILE_SYMBOL"
+UNDO_SYMBOL = "UNDO_SYMBOL"
+UNICODE_SYMBOL = "UNICODE_SYMBOL"
+UNION_SYMBOL = "UNION_SYMBOL"
+UNIQUE_SYMBOL = "UNIQUE_SYMBOL"
+UNKNOWN_SYMBOL = "UNKNOWN_SYMBOL"
+UNINSTALL_SYMBOL = "UNINSTALL_SYMBOL"
+UNSIGNED_SYMBOL = "UNSIGNED_SYMBOL"
+UPDATE_SYMBOL = "UPDATE_SYMBOL"
+UPGRADE_SYMBOL = "UPGRADE_SYMBOL"
+USAGE_SYMBOL = "USAGE_SYMBOL"
+USER_RESOURCES_SYMBOL = "USER_RESOURCES_SYMBOL"
+USER_SYMBOL = "USER_SYMBOL"
+USE_FRM_SYMBOL = "USE_FRM_SYMBOL"
+USE_SYMBOL = "USE_SYMBOL"
+USING_SYMBOL = "USING_SYMBOL"
+UTC_DATE_SYMBOL = "UTC_DATE_SYMBOL"
+UTC_TIME_SYMBOL = "UTC_TIME_SYMBOL"
+UTC_TIMESTAMP_SYMBOL = "UTC_TIMESTAMP_SYMBOL"
+VALIDATION_SYMBOL = "VALIDATION_SYMBOL"
+VALUE_SYMBOL = "VALUE_SYMBOL"
+VALUES_SYMBOL = "VALUES_SYMBOL"
+VARCHARACTER_SYMBOL = "VARCHARACTER_SYMBOL"
+VARIABLES_SYMBOL = "VARIABLES_SYMBOL"
+VARIANCE_SYMBOL = "VARIANCE_SYMBOL"
+VARYING_SYMBOL = "VARYING_SYMBOL"
+VAR_POP_SYMBOL = "VAR_POP_SYMBOL"
+VAR_SAMP_SYMBOL = "VAR_SAMP_SYMBOL"
+VCPU_SYMBOL = "VCPU_SYMBOL"
+VIEW_SYMBOL = "VIEW_SYMBOL"
+VIRTUAL_SYMBOL = "VIRTUAL_SYMBOL"
+VISIBLE_SYMBOL = "VISIBLE_SYMBOL"
+WAIT_SYMBOL = "WAIT_SYMBOL"
+WARNINGS_SYMBOL = "WARNINGS_SYMBOL"
+WEEK_SYMBOL = "WEEK_SYMBOL"
+WHEN_SYMBOL = "WHEN_SYMBOL"
+WEIGHT_STRING_SYMBOL = "WEIGHT_STRING_SYMBOL"
+WHERE_SYMBOL = "WHERE_SYMBOL"
+WHILE_SYMBOL = "WHILE_SYMBOL"
+WINDOW_SYMBOL = "WINDOW_SYMBOL"
+WITH_SYMBOL = "WITH_SYMBOL"
+WITHOUT_SYMBOL = "WITHOUT_SYMBOL"
+WORK_SYMBOL = "WORK_SYMBOL"
+WRAPPER_SYMBOL = "WRAPPER_SYMBOL"
+WRITE_SYMBOL = "WRITE_SYMBOL"
+XA_SYMBOL = "XA_SYMBOL"
+X509_SYMBOL = "X509_SYMBOL"
+XID_SYMBOL = "XID_SYMBOL"
+XML_SYMBOL = "XML_SYMBOL"
+XOR_SYMBOL = "XOR_SYMBOL"
+YEAR_MONTH_SYMBOL = "YEAR_MONTH_SYMBOL"
+ZEROFILL_SYMBOL = "ZEROFILL_SYMBOL"
+INT1_SYMBOL = "INT1_SYMBOL"
+INT2_SYMBOL = "INT2_SYMBOL"
+INT3_SYMBOL = "INT3_SYMBOL"
+INT4_SYMBOL = "INT4_SYMBOL"
+INT8_SYMBOL = "INT8_SYMBOL"
+IDENTIFIER = "IDENTIFIER"
+BACK_TICK_QUOTED_ID = "BACK_TICK_QUOTED_ID"
+DOUBLE_QUOTED_TEXT = "DOUBLE_QUOTED_TEXT"
+SINGLE_QUOTED_TEXT = "SINGLE_QUOTED_TEXT"
+HEX_NUMBER = "HEX_NUMBER"
+BIN_NUMBER = "BIN_NUMBER"
+DECIMAL_NUMBER = "DECIMAL_NUMBER"
+INT_NUMBER = "INT_NUMBER"
+FLOAT_NUMBER = "FLOAT_NUMBER"
+UNDERSCORE_CHARSET = "UNDERSCORE_CHARSET"
+DOT_IDENTIFIER = "DOT_IDENTIFIER"
+INVALID_INPUT = "INVALID_INPUT"
+LINEBREAK = "LINEBREAK"
+START_SYMBOL = "START_SYMBOL"
+UNLOCK_SYMBOL = "UNLOCK_SYMBOL"
+CLONE_SYMBOL = "CLONE_SYMBOL"
+GET_SYMBOL = "GET_SYMBOL"
+ASCII_SYMBOL = "ASCII_SYMBOL"
+BIT_SYMBOL = "BIT_SYMBOL"
+BUCKETS_SYMBOL = "BUCKETS_SYMBOL"
+COMPONENT_SYMBOL = "COMPONENT_SYMBOL"
+NOW_SYMBOL = "NOW_SYMBOL"
+DEFINITION_SYMBOL = "DEFINITION_SYMBOL"
+DENSE_RANK_SYMBOL = "DENSE_RANK_SYMBOL"
+DESCRIPTION_SYMBOL = "DESCRIPTION_SYMBOL"
+FAILED_LOGIN_ATTEMPTS_SYMBOL = "FAILED_LOGIN_ATTEMPTS_SYMBOL"
+FOLLOWING_SYMBOL = "FOLLOWING_SYMBOL"
+GROUPING_SYMBOL = "GROUPING_SYMBOL"
+GROUPS_SYMBOL = "GROUPS_SYMBOL"
+LAG_SYMBOL = "LAG_SYMBOL"
+LONG_SYMBOL = "LONG_SYMBOL"
+MASTER_COMPRESSION_ALGORITHM_SYMBOL = "MASTER_COMPRESSION_ALGORITHM_SYMBOL"
+NOT2_SYMBOL = "NOT2_SYMBOL"
+NO_SYMBOL = "NO_SYMBOL"
+REFERENCE_SYMBOL = "REFERENCE_SYMBOL"
+RETURN_SYMBOL = "RETURN_SYMBOL"
+SPECIFIC_SYMBOL = "SPECIFIC_SYMBOL"
+AUTHORS_SYMBOL = "AUTHORS_SYMBOL"
+ADDDATE_SYMBOL = "ADDDATE_SYMBOL"
+CONCAT_PIPES_SYMBOL = "CONCAT_PIPES_SYMBOL"
+ACTIVE_SYMBOL = "ACTIVE_SYMBOL"
+ADMIN_SYMBOL = "ADMIN_SYMBOL"
+EXCLUDE_SYMBOL = "EXCLUDE_SYMBOL"
+INACTIVE_SYMBOL = "INACTIVE_SYMBOL"
+LOCKED_SYMBOL = "LOCKED_SYMBOL"
+ROUTINE_SYMBOL = "ROUTINE_SYMBOL"
+UNTIL_SYMBOL = "UNTIL_SYMBOL"
+ARRAY_SYMBOL = "ARRAY_SYMBOL"
+PASSWORD_LOCK_TIME_SYMBOL = "PASSWORD_LOCK_TIME_SYMBOL"
+NCHAR_TEXT = "NCHAR_TEXT"
+LONG_NUMBER = "LONG_NUMBER"
+ULONGLONG_NUMBER = "ULONGLONG_NUMBER"
+CUME_DIST_SYMBO = "CUME_DIST_SYMBO"
+CUME_DIST_SYMBOL = "CUME_DIST_SYMBOL"
+FOUND_ROWS_SYMBOL = "FOUND_ROWS_SYMBOL"
+CONCAT_SYMBOL = "CONCAT_SYMBOL"
+EOF = "EOF"
