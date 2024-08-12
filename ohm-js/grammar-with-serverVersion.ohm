@@ -1,0 +1,1982 @@
+SQL {
+
+query 
+  = EOF
+  | ((simpleStatement | beginWork) ((SEMICOLON_SYMBOL EOF?) | EOF))
+
+EOF
+  = end
+
+simpleStatement 
+  = alterStatement
+  | createStatement
+  | dropStatement
+  | renameTableStatement
+  | truncateTableStatement
+  | importStatement
+  | callStatement
+  | deleteStatement
+  | doStatement
+  | handlerStatement
+  | insertStatement
+  | loadStatement
+  | replaceStatement
+  | selectStatement
+  | updateStatement
+  | transactionOrLockingStatement
+  | replicationStatement
+  | preparedStatement
+  | cloneStatement
+  | accountManagementStatement
+  | tableAdministrationStatement
+  | installUninstallStatment
+  | setStatement
+  | showStatement
+  | resourceGroupManagement
+  | otherAdministrativeStatement
+  | utilityStatement
+  | getDiagnostics
+  | signalStatement
+  | resignalStatement
+
+
+alterStatement 
+  = ALTER_SYMBOL (
+      alterTable
+    | alterDatabase
+    | (PROCEDURE_SYMBOL procedureRef routineAlterOptions?)
+    | (FUNCTION_SYMBOL functionRef routineAlterOptions?)
+    | alterView
+    | alterEvent
+    | alterTablespace
+    | alterUndoTablespace
+    | alterLogfileGroup
+    | alterServer
+    | (INSTANCE_SYMBOL ROTATE_SYMBOL textOrIdentifier MASTER_SYMBOL KEY_SYMBOL)
+  )
+
+
+alterDatabase 
+  = DATABASE_SYMBOL schemaRef (createDatabaseOption+ | (UPGRADE_SYMBOL DATA_SYMBOL DIRECTORY_SYMBOL NAME_SYMBOL))
+
+
+alterEvent 
+  = definerClause? EVENT_SYMBOL eventRef (ON_SYMBOL SCHEDULE_SYMBOL schedule)? (ON_SYMBOL COMPLETION_SYMBOL NOT_SYMBOL? PRESERVE_SYMBOL)? (RENAME_SYMBOL TO_SYMBOL identifier)? (ENABLE_SYMBOL | (DISABLE_SYMBOL (ON_SYMBOL SLAVE_SYMBOL)?))? (COMMENT_SYMBOL textLiteral)? (DO_SYMBOL compoundStatement)?
+
+
+alterLogfileGroup 
+  = LOGFILE_SYMBOL GROUP_SYMBOL logfileGroupRef ADD_SYMBOL UNDOFILE_SYMBOL textLiteral alterLogfileGroupOptions?
+
+
+alterLogfileGroupOptions 
+  = alterLogfileGroupOption (COMMA_SYMBOL? alterLogfileGroupOption)*
+
+
+alterLogfileGroupOption 
+  = tsOptionInitialSize
+  | tsOptionEngine
+  | tsOptionWait
+
+
+alterServer 
+  = SERVER_SYMBOL serverRef serverOptions
+
+
+alterTable 
+  = onlineOption? IGNORE_SYMBOL? TABLE_SYMBOL tableRef alterTableActions?
+
+
+alterTableActions 
+  = (alterCommandList (partitionClause | removePartitioning)?)
+  | partitionClause
+  | removePartitioning
+  | ((alterCommandsModifierList COMMA_SYMBOL)? standaloneAlterCommands)
+
+
+alterCommandList 
+  = alterCommandsModifierList
+  | ((alterCommandsModifierList COMMA_SYMBOL)? alterList)
+
+
+alterCommandsModifierList 
+  = alterCommandsModifier (COMMA_SYMBOL alterCommandsModifier)*
+
+
+standaloneAlterCommands 
+  = (DISCARD_SYMBOL TABLESPACE_SYMBOL)
+  | (IMPORT_SYMBOL TABLESPACE_SYMBOL)
+  | alterPartition
+  | (SECONDARY_LOAD_SYMBOL | SECONDARY_UNLOAD_SYMBOL)
+
+
+alterPartition 
+  = (ADD_SYMBOL PARTITION_SYMBOL noWriteToBinLog? (partitionDefinitions | (PARTITIONS_SYMBOL real_ulong_number)))
+  | (DROP_SYMBOL PARTITION_SYMBOL identifierList)
+  | (REBUILD_SYMBOL PARTITION_SYMBOL noWriteToBinLog? allOrPartitionNameList)
+  | (OPTIMIZE_SYMBOL PARTITION_SYMBOL noWriteToBinLog? allOrPartitionNameList noWriteToBinLog?)
+  | (ANALYZE_SYMBOL PARTITION_SYMBOL noWriteToBinLog? allOrPartitionNameList)
+  | (CHECK_SYMBOL PARTITION_SYMBOL allOrPartitionNameList checkOption*)
+  | (REPAIR_SYMBOL PARTITION_SYMBOL noWriteToBinLog? allOrPartitionNameList repairType*)
+  | (COALESCE_SYMBOL PARTITION_SYMBOL noWriteToBinLog? real_ulong_number)
+  | (TRUNCATE_SYMBOL PARTITION_SYMBOL allOrPartitionNameList)
+  | (REORGANIZE_SYMBOL PARTITION_SYMBOL noWriteToBinLog? (identifierList INTO_SYMBOL partitionDefinitions)?)
+  | (EXCHANGE_SYMBOL PARTITION_SYMBOL identifier WITH_SYMBOL TABLE_SYMBOL tableRef withValidation?)
+  | (DISCARD_SYMBOL PARTITION_SYMBOL allOrPartitionNameList TABLESPACE_SYMBOL)
+  | (IMPORT_SYMBOL PARTITION_SYMBOL allOrPartitionNameList TABLESPACE_SYMBOL)
+
+
+alterList 
+  = (alterListItem | createTableOptionsSpaceSeparated) (COMMA_SYMBOL (alterListItem | alterCommandsModifier | createTableOptionsSpaceSeparated))*
+
+
+alterCommandsModifier 
+  = alterAlgorithmOption
+  | alterLockOption
+  | withValidation
+
+
+alterListItem 
+  = (ADD_SYMBOL COLUMN_SYMBOL? ((identifier fieldDefinition checkOrReferences? place?) | (OPEN_PAR_SYMBOL tableElementList CLOSE_PAR_SYMBOL)))
+  | (ADD_SYMBOL tableConstraintDef)
+  | (CHANGE_SYMBOL COLUMN_SYMBOL? columnInternalRef identifier fieldDefinition place?)
+  | (MODIFY_SYMBOL COLUMN_SYMBOL? columnInternalRef fieldDefinition place?)
+  | (DROP_SYMBOL ((COLUMN_SYMBOL? columnInternalRef restrict?) | (FOREIGN_SYMBOL KEY_SYMBOL (columnInternalRef | columnInternalRef?)) | (PRIMARY_SYMBOL KEY_SYMBOL) | (keyOrIndex indexRef) | (CHECK_SYMBOL identifier) | (CONSTRAINT_SYMBOL identifier)))
+  | (DISABLE_SYMBOL KEYS_SYMBOL)
+  | (ENABLE_SYMBOL KEYS_SYMBOL)
+  | (ALTER_SYMBOL COLUMN_SYMBOL? columnInternalRef ((SET_SYMBOL DEFAULT_SYMBOL (exprWithParentheses | signedLiteral)) | (DROP_SYMBOL DEFAULT_SYMBOL)))
+  | (ALTER_SYMBOL INDEX_SYMBOL indexRef visibility)
+  | (ALTER_SYMBOL CHECK_SYMBOL identifier constraintEnforcement)
+  | (ALTER_SYMBOL CONSTRAINT_SYMBOL identifier constraintEnforcement)
+  | (RENAME_SYMBOL COLUMN_SYMBOL columnInternalRef TO_SYMBOL identifier)
+  | (RENAME_SYMBOL (TO_SYMBOL | AS_SYMBOL)? tableName)
+  | (RENAME_SYMBOL keyOrIndex indexRef TO_SYMBOL indexName)
+  | (CONVERT_SYMBOL TO_SYMBOL charset (DEFAULT_SYMBOL | charsetName) collate?)
+  | FORCE_SYMBOL
+  | (ORDER_SYMBOL BY_SYMBOL alterOrderList)
+  | (UPGRADE_SYMBOL PARTITIONING_SYMBOL)
+
+
+place 
+  = (AFTER_SYMBOL identifier)
+  | FIRST_SYMBOL
+
+
+restrict 
+  = RESTRICT_SYMBOL
+  | CASCADE_SYMBOL
+
+
+alterOrderList 
+  = identifier direction? (COMMA_SYMBOL identifier direction?)*
+
+
+alterAlgorithmOption 
+  = ALGORITHM_SYMBOL EQUAL_OPERATOR? (DEFAULT_SYMBOL | identifier)
+
+
+alterLockOption 
+  = LOCK_SYMBOL EQUAL_OPERATOR? (DEFAULT_SYMBOL | identifier)
+
+
+indexLockAndAlgorithm 
+  = (alterAlgorithmOption alterLockOption?)
+  | (alterLockOption alterAlgorithmOption?)
+
+
+withValidation 
+  = (WITH_SYMBOL | WITHOUT_SYMBOL) VALIDATION_SYMBOL
+
+
+removePartitioning 
+  = REMOVE_SYMBOL PARTITIONING_SYMBOL
+
+
+allOrPartitionNameList 
+  = ALL_SYMBOL
+  | identifierList
+
+
+alterTablespace 
+  = TABLESPACE_SYMBOL tablespaceRef (
+      ((ADD_SYMBOL | DROP_SYMBOL) DATAFILE_SYMBOL textLiteral alterTablespaceOptions?)
+    | (() | (CHANGE_SYMBOL DATAFILE_SYMBOL textLiteral (changeTablespaceOption (COMMA_SYMBOL? changeTablespaceOption)*)?) | (READ_ONLY_SYMBOL | READ_WRITE_SYMBOL) | (NOT_SYMBOL ACCESSIBLE_SYMBOL))
+    | (RENAME_SYMBOL TO_SYMBOL identifier)
+    | alterTablespaceOptions
+  )
+
+
+alterUndoTablespace 
+  = UNDO_SYMBOL TABLESPACE_SYMBOL tablespaceRef SET_SYMBOL (ACTIVE_SYMBOL | INACTIVE_SYMBOL) undoTableSpaceOptions?
+
+
+undoTableSpaceOptions 
+  = undoTableSpaceOption (COMMA_SYMBOL? undoTableSpaceOption)*
+
+
+undoTableSpaceOption 
+  = tsOptionEngine
+
+
+alterTablespaceOptions 
+  = alterTablespaceOption (COMMA_SYMBOL? alterTablespaceOption)*
+
+
+alterTablespaceOption 
+  = (INITIAL_SIZE_SYMBOL EQUAL_OPERATOR? sizeNumber)
+  | tsOptionAutoextendSize
+  | tsOptionMaxSize
+  | tsOptionEngine
+  | tsOptionWait
+  | tsOptionEncryption
+
+
+changeTablespaceOption 
+  = (INITIAL_SIZE_SYMBOL EQUAL_OPERATOR? sizeNumber)
+  | tsOptionAutoextendSize
+  | tsOptionMaxSize
+
+
+alterView 
+  = viewAlgorithm? definerClause? viewSuid? VIEW_SYMBOL viewRef viewTail
+
+
+viewTail 
+  = columnInternalRefList? AS_SYMBOL viewSelect
+
+
+viewSelect 
+  = queryExpressionOrParens viewCheckOption?
+
+
+viewCheckOption 
+  = WITH_SYMBOL (CASCADED_SYMBOL | LOCAL_SYMBOL)? CHECK_SYMBOL OPTION_SYMBOL
+
+
+createStatement 
+  = CREATE_SYMBOL (
+      createDatabase
+    | createTable
+    | createFunction
+    | createProcedure
+    | createUdf
+    | createLogfileGroup
+    | createView
+    | createTrigger
+    | createIndex
+    | createServer
+    | createTablespace
+    | createEvent
+    | createRole
+    | createSpatialReference
+    | createUndoTablespace
+  )
+
+
+createDatabase 
+  = DATABASE_SYMBOL ifNotExists? schemaName createDatabaseOption*
+
+
+createDatabaseOption 
+  = defaultCharset
+  | defaultCollation
+  | defaultEncryption
+
+
+createTable 
+  = TEMPORARY_SYMBOL? TABLE_SYMBOL ifNotExists? tableName (
+      ((OPEN_PAR_SYMBOL tableElementList CLOSE_PAR_SYMBOL)? createTableOptions? partitionClause? duplicateAsQueryExpression?)
+    | (LIKE_SYMBOL tableRef)
+    | (OPEN_PAR_SYMBOL LIKE_SYMBOL tableRef CLOSE_PAR_SYMBOL)
+  )
+
+
+tableElementList 
+  = tableElement (COMMA_SYMBOL tableElement)*
+
+
+tableElement 
+  = columnDefinition
+  | tableConstraintDef
+
+
+duplicateAsQueryExpression 
+  = (REPLACE_SYMBOL | IGNORE_SYMBOL)? AS_SYMBOL? queryExpressionOrParens
+
+
+queryExpressionOrParens 
+  = queryExpression
+  | queryExpressionParens
+
+
+createRoutine 
+  = CREATE_SYMBOL (createProcedure | createFunction | createUdf) SEMICOLON_SYMBOL? EOF
+
+
+createProcedure 
+  = definerClause? PROCEDURE_SYMBOL procedureName OPEN_PAR_SYMBOL (procedureParameter (COMMA_SYMBOL procedureParameter)*)? CLOSE_PAR_SYMBOL routineCreateOption* compoundStatement
+
+
+createFunction 
+  = definerClause? FUNCTION_SYMBOL functionName OPEN_PAR_SYMBOL (functionParameter (COMMA_SYMBOL functionParameter)*)? CLOSE_PAR_SYMBOL RETURNS_SYMBOL typeWithOptCollate routineCreateOption* compoundStatement
+
+
+createUdf 
+  = AGGREGATE_SYMBOL? FUNCTION_SYMBOL udfName RETURNS_SYMBOL (STRING_SYMBOL | INT_SYMBOL | REAL_SYMBOL | DECIMAL_SYMBOL) SONAME_SYMBOL textLiteral
+
+
+routineCreateOption 
+  = routineOption
+  | (NOT_SYMBOL? DETERMINISTIC_SYMBOL)
+
+
+routineAlterOptions 
+  = routineCreateOption+
+
+
+routineOption 
+  = (COMMENT_SYMBOL textLiteral)
+  | (LANGUAGE_SYMBOL SQL_SYMBOL)
+  | (NO_SYMBOL SQL_SYMBOL)
+  | (CONTAINS_SYMBOL SQL_SYMBOL)
+  | (READS_SYMBOL SQL_SYMBOL DATA_SYMBOL)
+  | (MODIFIES_SYMBOL SQL_SYMBOL DATA_SYMBOL)
+  | (SQL_SYMBOL SECURITY_SYMBOL (DEFINER_SYMBOL | INVOKER_SYMBOL))
+
+
+createIndex 
+  = onlineOption? (
+      (UNIQUE_SYMBOL? INDEX_SYMBOL ((indexName indexTypeClause?) | indexNameAndType?) createIndexTarget indexOption*)
+    | (FULLTEXT_SYMBOL INDEX_SYMBOL indexName createIndexTarget fulltextIndexOption*)
+    | (SPATIAL_SYMBOL INDEX_SYMBOL indexName createIndexTarget spatialIndexOption*)
+  ) indexLockAndAlgorithm?
+
+
+indexNameAndType 
+  = (indexName (USING_SYMBOL indexType)?)
+  | (indexName TYPE_SYMBOL indexType)
+
+
+createIndexTarget 
+  = ON_SYMBOL tableRef keyListVariants
+
+
+createLogfileGroup 
+  = LOGFILE_SYMBOL GROUP_SYMBOL logfileGroupName ADD_SYMBOL (UNDOFILE_SYMBOL | REDOFILE_SYMBOL) textLiteral logfileGroupOptions?
+
+
+logfileGroupOptions 
+  = logfileGroupOption (COMMA_SYMBOL? logfileGroupOption)*
+
+
+logfileGroupOption 
+  = tsOptionInitialSize
+  | tsOptionUndoRedoBufferSize
+  | tsOptionNodegroup
+  | tsOptionEngine
+  | tsOptionWait
+  | tsOptionComment
+
+
+createServer 
+  = SERVER_SYMBOL serverName FOREIGN_SYMBOL DATA_SYMBOL WRAPPER_SYMBOL textOrIdentifier serverOptions
+
+
+serverOptions 
+  = OPTIONS_SYMBOL OPEN_PAR_SYMBOL serverOption (COMMA_SYMBOL serverOption)* CLOSE_PAR_SYMBOL
+
+
+serverOption 
+  = (HOST_SYMBOL textLiteral)
+  | (DATABASE_SYMBOL textLiteral)
+  | (USER_SYMBOL textLiteral)
+  | (PASSWORD_SYMBOL textLiteral)
+  | (SOCKET_SYMBOL textLiteral)
+  | (OWNER_SYMBOL textLiteral)
+  | (PORT_SYMBOL ulong_number)
+
+
+createTablespace 
+  = TABLESPACE_SYMBOL tablespaceName tsDataFileName (USE_SYMBOL LOGFILE_SYMBOL GROUP_SYMBOL logfileGroupRef)? tablespaceOptions?
+
+
+createUndoTablespace 
+  = UNDO_SYMBOL TABLESPACE_SYMBOL tablespaceName ADD_SYMBOL tsDataFile undoTableSpaceOptions?
+
+
+tsDataFileName 
+  = (ADD_SYMBOL tsDataFile)?
+  | (ADD_SYMBOL tsDataFile)
+
+
+tsDataFile 
+  = DATAFILE_SYMBOL textLiteral
+
+
+tablespaceOptions 
+  = tablespaceOption (COMMA_SYMBOL? tablespaceOption)*
+
+
+tablespaceOption 
+  = tsOptionInitialSize
+  | tsOptionAutoextendSize
+  | tsOptionMaxSize
+  | tsOptionExtentSize
+  | tsOptionNodegroup
+  | tsOptionEngine
+  | tsOptionWait
+  | tsOptionComment
+  | tsOptionFileblockSize
+  | tsOptionEncryption
+
+
+tsOptionInitialSize 
+  = INITIAL_SIZE_SYMBOL EQUAL_OPERATOR? sizeNumber
+
+
+tsOptionUndoRedoBufferSize 
+  = (UNDO_BUFFER_SIZE_SYMBOL | REDO_BUFFER_SIZE_SYMBOL) EQUAL_OPERATOR? sizeNumber
+
+
+tsOptionAutoextendSize 
+  = AUTOEXTEND_SIZE_SYMBOL EQUAL_OPERATOR? sizeNumber
+
+
+tsOptionMaxSize 
+  = MAX_SIZE_SYMBOL EQUAL_OPERATOR? sizeNumber
+
+
+tsOptionExtentSize 
+  = EXTENT_SIZE_SYMBOL EQUAL_OPERATOR? sizeNumber
+
+
+tsOptionNodegroup 
+  = NODEGROUP_SYMBOL EQUAL_OPERATOR? real_ulong_number
+
+
+tsOptionEngine 
+  = STORAGE_SYMBOL? ENGINE_SYMBOL EQUAL_OPERATOR? engineRef
+
+
+tsOptionWait 
+  = WAIT_SYMBOL
+  | NO_WAIT_SYMBOL
+
+
+tsOptionComment 
+  = COMMENT_SYMBOL EQUAL_OPERATOR? textLiteral
+
+
+tsOptionFileblockSize 
+  = FILE_BLOCK_SIZE_SYMBOL EQUAL_OPERATOR? sizeNumber
+
+
+tsOptionEncryption 
+  = ENCRYPTION_SYMBOL EQUAL_OPERATOR? textStringLiteral
+
+
+
+createView 
+  = viewReplaceOrAlgorithm? definerClause? viewSuid? VIEW_SYMBOL viewName viewTail
+
+
+viewReplaceOrAlgorithm 
+  = (OR_SYMBOL REPLACE_SYMBOL viewAlgorithm?)
+  | viewAlgorithm
+
+
+viewAlgorithm 
+  = ALGORITHM_SYMBOL EQUAL_OPERATOR (UNDEFINED_SYMBOL | MERGE_SYMBOL | TEMPTABLE_SYMBOL)
+
+
+viewSuid 
+  = SQL_SYMBOL SECURITY_SYMBOL (DEFINER_SYMBOL | INVOKER_SYMBOL)
+
+
+createTrigger 
+  = definerClause? TRIGGER_SYMBOL triggerName (BEFORE_SYMBOL | AFTER_SYMBOL) (INSERT_SYMBOL | UPDATE_SYMBOL | DELETE_SYMBOL) ON_SYMBOL tableRef FOR_SYMBOL EACH_SYMBOL ROW_SYMBOL triggerFollowsPrecedesClause? compoundStatement
+
+
+triggerFollowsPrecedesClause 
+  = (FOLLOWS_SYMBOL | PRECEDES_SYMBOL) textOrIdentifier
+
+
+createEvent 
+  = definerClause? EVENT_SYMBOL ifNotExists? eventName ON_SYMBOL SCHEDULE_SYMBOL schedule (ON_SYMBOL COMPLETION_SYMBOL NOT_SYMBOL? PRESERVE_SYMBOL)? (ENABLE_SYMBOL | (DISABLE_SYMBOL (ON_SYMBOL SLAVE_SYMBOL)?))? (COMMENT_SYMBOL textLiteral)? DO_SYMBOL compoundStatement
+
+
+createRole 
+  = ROLE_SYMBOL ifNotExists? roleList
+
+
+createSpatialReference 
+  = (OR_SYMBOL REPLACE_SYMBOL SPATIAL_SYMBOL REFERENCE_SYMBOL SYSTEM_SYMBOL real_ulonglong_number srsAttribute*)
+  | (SPATIAL_SYMBOL REFERENCE_SYMBOL SYSTEM_SYMBOL ifNotExists? real_ulonglong_number srsAttribute*)
+
+
+srsAttribute 
+  = (NAME_SYMBOL TEXT_SYMBOL textStringNoLinebreak)
+  | (DEFINITION_SYMBOL TEXT_SYMBOL textStringNoLinebreak)
+  | (ORGANIZATION_SYMBOL textStringNoLinebreak IDENTIFIED_SYMBOL BY_SYMBOL real_ulonglong_number)
+  | (DESCRIPTION_SYMBOL TEXT_SYMBOL textStringNoLinebreak)
+
+
+dropStatement 
+  = DROP_SYMBOL (
+      dropDatabase
+    | dropEvent
+    | dropFunction
+    | dropProcedure
+    | dropIndex
+    | dropLogfileGroup
+    | dropServer
+    | dropTable
+    | dropTableSpace
+    | dropTrigger
+    | dropView
+    | dropRole
+    | dropSpatialReference
+    | dropUndoTablespace
+  )
+
+
+dropDatabase 
+  = DATABASE_SYMBOL ifExists? schemaRef
+
+
+dropEvent 
+  = EVENT_SYMBOL ifExists? eventRef
+
+
+dropFunction 
+  = FUNCTION_SYMBOL ifExists? functionRef
+
+
+dropProcedure 
+  = PROCEDURE_SYMBOL ifExists? procedureRef
+
+
+dropIndex 
+  = onlineOption? INDEX_SYMBOL indexRef ON_SYMBOL tableRef indexLockAndAlgorithm?
+
+
+dropLogfileGroup 
+  = LOGFILE_SYMBOL GROUP_SYMBOL logfileGroupRef (dropLogfileGroupOption (COMMA_SYMBOL? dropLogfileGroupOption)*)?
+
+
+dropLogfileGroupOption 
+  = tsOptionWait
+  | tsOptionEngine
+
+
+dropServer 
+  = SERVER_SYMBOL ifExists? serverRef
+
+
+dropTable 
+  = TEMPORARY_SYMBOL? (TABLE_SYMBOL | TABLES_SYMBOL) ifExists? tableRefList (RESTRICT_SYMBOL | CASCADE_SYMBOL)?
+
+
+dropTableSpace 
+  = TABLESPACE_SYMBOL tablespaceRef (dropLogfileGroupOption (COMMA_SYMBOL? dropLogfileGroupOption)*)?
+
+
+dropTrigger 
+  = TRIGGER_SYMBOL ifExists? triggerRef
+
+
+dropView 
+  = VIEW_SYMBOL ifExists? viewRefList (RESTRICT_SYMBOL | CASCADE_SYMBOL)?
+
+
+dropRole 
+  = ROLE_SYMBOL ifExists? roleList
+
+
+dropSpatialReference 
+  = SPATIAL_SYMBOL REFERENCE_SYMBOL SYSTEM_SYMBOL ifExists? real_ulonglong_number
+
+
+dropUndoTablespace 
+  = UNDO_SYMBOL TABLESPACE_SYMBOL tablespaceRef undoTableSpaceOptions?
+
+
+renameTableStatement 
+  = RENAME_SYMBOL (TABLE_SYMBOL | TABLES_SYMBOL) renamePair (COMMA_SYMBOL renamePair)*
+
+
+renamePair 
+  = tableRef TO_SYMBOL tableName
+
+
+truncateTableStatement 
+  = TRUNCATE_SYMBOL TABLE_SYMBOL? tableRef
+
+
+importStatement 
+  = IMPORT_SYMBOL TABLE_SYMBOL FROM_SYMBOL textStringLiteralList
+
+
+callStatement 
+  = CALL_SYMBOL procedureRef (OPEN_PAR_SYMBOL exprList? CLOSE_PAR_SYMBOL)?
+
+
+deleteStatement 
+  = withClause? DELETE_SYMBOL deleteStatementOption* (
+      (FROM_SYMBOL ((tableAliasRefList USING_SYMBOL tableReferenceList whereClause?) | (tableRef tableAlias? partitionDelete? whereClause? orderClause? simpleLimitClause?)))
+    | (tableAliasRefList FROM_SYMBOL tableReferenceList whereClause?)
+  )
+
+
+partitionDelete 
+  = PARTITION_SYMBOL OPEN_PAR_SYMBOL identifierList CLOSE_PAR_SYMBOL
+
+
+deleteStatementOption 
+  = QUICK_SYMBOL
+  | LOW_PRIORITY_SYMBOL
+  | QUICK_SYMBOL
+  | IGNORE_SYMBOL
+
+
+doStatement 
+  = DO_SYMBOL (exprList | selectItemList)
+
+
+handlerStatement 
+  = HANDLER_SYMBOL (
+      (tableRef OPEN_SYMBOL tableAlias?)
+    | (identifier (CLOSE_SYMBOL | (READ_SYMBOL handlerReadOrScan whereClause? limitClause?)))
+  )
+
+
+handlerReadOrScan 
+  = (FIRST_SYMBOL | NEXT_SYMBOL)
+  | (identifier ((FIRST_SYMBOL | NEXT_SYMBOL | PREV_SYMBOL | LAST_SYMBOL) | ((EQUAL_OPERATOR | LESS_THAN_OPERATOR | GREATER_THAN_OPERATOR | LESS_OR_EQUAL_OPERATOR | GREATER_OR_EQUAL_OPERATOR) OPEN_PAR_SYMBOL values CLOSE_PAR_SYMBOL)))
+
+
+insertStatement 
+  = INSERT_SYMBOL insertLockOption? IGNORE_SYMBOL? INTO_SYMBOL? tableRef usePartition? (
+      (insertFromConstructor valuesReference?)
+    | (SET_SYMBOL updateList valuesReference?)
+    | insertQueryExpression
+  ) insertUpdateList?
+
+
+insertLockOption 
+  = LOW_PRIORITY_SYMBOL
+  | DELAYED_SYMBOL
+  | HIGH_PRIORITY_SYMBOL
+
+
+insertFromConstructor 
+  = (OPEN_PAR_SYMBOL fields? CLOSE_PAR_SYMBOL)? insertValues
+
+
+fields 
+  = insertIdentifier (COMMA_SYMBOL insertIdentifier)*
+
+
+insertValues 
+  = (VALUES_SYMBOL | VALUE_SYMBOL) valueList
+
+
+insertQueryExpression 
+  = queryExpressionOrParens
+  | (OPEN_PAR_SYMBOL fields? CLOSE_PAR_SYMBOL queryExpressionOrParens)
+
+
+valueList 
+  = OPEN_PAR_SYMBOL values? CLOSE_PAR_SYMBOL (COMMA_SYMBOL OPEN_PAR_SYMBOL values? CLOSE_PAR_SYMBOL)*
+
+
+values 
+  = (expr | DEFAULT_SYMBOL) (COMMA_SYMBOL (expr | DEFAULT_SYMBOL))*
+
+
+valuesReference 
+  = AS_SYMBOL identifier columnInternalRefList?
+
+
+insertUpdateList 
+  = ON_SYMBOL DUPLICATE_SYMBOL KEY_SYMBOL UPDATE_SYMBOL updateList
+
+
+loadStatement 
+  = LOAD_SYMBOL dataOrXml (LOW_PRIORITY_SYMBOL | CONCURRENT_SYMBOL)? LOCAL_SYMBOL? INFILE_SYMBOL textLiteral (REPLACE_SYMBOL | IGNORE_SYMBOL)? INTO_SYMBOL TABLE_SYMBOL tableRef usePartition? charsetClause? xmlRowsIdentifiedBy? fieldsClause? linesClause? loadDataFileTail
+
+
+dataOrXml 
+  = DATA_SYMBOL
+  | XML_SYMBOL
+
+
+xmlRowsIdentifiedBy 
+  = ROWS_SYMBOL IDENTIFIED_SYMBOL BY_SYMBOL textString
+
+
+loadDataFileTail 
+  = (IGNORE_SYMBOL INT_NUMBER (LINES_SYMBOL | ROWS_SYMBOL))? loadDataFileTargetList? (SET_SYMBOL updateList)?
+
+
+loadDataFileTargetList 
+  = OPEN_PAR_SYMBOL fieldOrVariableList? CLOSE_PAR_SYMBOL
+
+
+fieldOrVariableList 
+  = (columnRef | userVariable) (COMMA_SYMBOL (columnRef | userVariable))*
+
+
+replaceStatement 
+  = REPLACE_SYMBOL (LOW_PRIORITY_SYMBOL | DELAYED_SYMBOL)? INTO_SYMBOL? tableRef usePartition? (
+      insertFromConstructor
+    | (SET_SYMBOL updateList)
+    | insertQueryExpression
+  )
+
+
+selectStatement 
+  = (queryExpression lockingClauseList?)
+  | queryExpressionParens
+  | selectStatementWithInto
+
+
+selectStatementWithInto 
+  = (OPEN_PAR_SYMBOL selectStatementWithInto CLOSE_PAR_SYMBOL)
+  | (queryExpression intoClause lockingClauseList?)
+  | (lockingClauseList intoClause)
+
+
+queryExpression 
+  = withClause? (
+      (queryExpressionBody orderClause? limitClause?)
+    | (queryExpressionParens orderClause? limitClause?)
+  ) procedureAnalyseClause?
+
+
+queryExpressionBody 
+  = (queryPrimary | (queryExpressionParens UNION_SYMBOL unionOption? (queryPrimary | queryExpressionParens))) (UNION_SYMBOL unionOption? (queryPrimary | queryExpressionParens))*
+
+
+queryExpressionParens 
+  = OPEN_PAR_SYMBOL (queryExpressionParens | (queryExpression lockingClauseList?)) CLOSE_PAR_SYMBOL
+
+
+queryPrimary 
+  = querySpecification
+  | tableValueConstructor
+  | explicitTable
+
+
+querySpecification 
+  = SELECT_SYMBOL selectOption* selectItemList intoClause? fromClause? whereClause? groupByClause? havingClause? windowClause?
+
+
+subquery 
+  = queryExpressionParens
+
+
+querySpecOption 
+  = ALL_SYMBOL
+  | DISTINCT_SYMBOL
+  | STRAIGHT_JOIN_SYMBOL
+  | HIGH_PRIORITY_SYMBOL
+  | SQL_SMALL_RESULT_SYMBOL
+  | SQL_BIG_RESULT_SYMBOL
+  | SQL_BUFFER_RESULT_SYMBOL
+  | SQL_CALC_FOUND_ROWS_SYMBOL
+
+
+limitClause 
+  = LIMIT_SYMBOL limitOptions
+
+
+simpleLimitClause 
+  = LIMIT_SYMBOL limitOption
+
+
+limitOptions 
+  = limitOption ((COMMA_SYMBOL | OFFSET_SYMBOL) limitOption)?
+
+
+limitOption 
+  = identifier
+  | (PARAM_MARKER | ULONGLONG_NUMBER | LONG_NUMBER | INT_NUMBER)
+
+
+intoClause 
+  = INTO_SYMBOL (
+      (OUTFILE_SYMBOL textStringLiteral charsetClause? fieldsClause? linesClause?)
+    | (DUMPFILE_SYMBOL textStringLiteral)
+    | ((textOrIdentifier | userVariable) (COMMA_SYMBOL (textOrIdentifier | userVariable))*)
+  )
+
+
+procedureAnalyseClause 
+  = PROCEDURE_SYMBOL ANALYSE_SYMBOL OPEN_PAR_SYMBOL (INT_NUMBER (COMMA_SYMBOL INT_NUMBER)?)? CLOSE_PAR_SYMBOL
+
+
+havingClause 
+  = HAVING_SYMBOL expr
+
+
+windowClause 
+  = WINDOW_SYMBOL windowDefinition (COMMA_SYMBOL windowDefinition)*
+
+
+windowDefinition 
+  = windowName AS_SYMBOL windowSpec
+
+
+windowSpec 
+  = OPEN_PAR_SYMBOL windowSpecDetails CLOSE_PAR_SYMBOL
+
+
+windowSpecDetails 
+  = windowName? (PARTITION_SYMBOL BY_SYMBOL orderList)? orderClause? windowFrameClause?
+
+
+windowFrameClause 
+  = windowFrameUnits windowFrameExtent windowFrameExclusion?
+
+
+windowFrameUnits 
+  = ROWS_SYMBOL
+  | RANGE_SYMBOL
+  | GROUPS_SYMBOL
+
+
+windowFrameExtent 
+  = windowFrameStart
+  | windowFrameBetween
+
+
+windowFrameStart 
+  = (UNBOUNDED_SYMBOL PRECEDING_SYMBOL)
+  | (ulonglong_number PRECEDING_SYMBOL)
+  | (PARAM_MARKER PRECEDING_SYMBOL)
+  | (INTERVAL_SYMBOL expr interval PRECEDING_SYMBOL)
+  | (CURRENT_SYMBOL ROW_SYMBOL)
+
+
+windowFrameBetween 
+  = BETWEEN_SYMBOL windowFrameBound AND_SYMBOL windowFrameBound
+
+
+windowFrameBound 
+  = windowFrameStart
+  | (UNBOUNDED_SYMBOL FOLLOWING_SYMBOL)
+  | (ulonglong_number FOLLOWING_SYMBOL)
+  | (PARAM_MARKER FOLLOWING_SYMBOL)
+  | (INTERVAL_SYMBOL expr interval FOLLOWING_SYMBOL)
+
+
+windowFrameExclusion 
+  = EXCLUDE_SYMBOL ((CURRENT_SYMBOL ROW_SYMBOL) | GROUP_SYMBOL | TIES_SYMBOL | (NO_SYMBOL OTHERS_SYMBOL))
+
+
+withClause 
+  = WITH_SYMBOL RECURSIVE_SYMBOL? commonTableExpression (COMMA_SYMBOL commonTableExpression)*
+
+
+commonTableExpression 
+  = identifier columnInternalRefList? AS_SYMBOL subquery
+
+
+groupByClause 
+  = GROUP_SYMBOL BY_SYMBOL orderList olapOption?
+
+
+olapOption 
+  = (WITH_SYMBOL ROLLUP_SYMBOL)
+  | (WITH_SYMBOL CUBE_SYMBOL)
+
+
+orderClause 
+  = ORDER_SYMBOL BY_SYMBOL orderList
+
+
+direction 
+  = ASC_SYMBOL
+  | DESC_SYMBOL
+
+
+fromClause 
+  = FROM_SYMBOL (DUAL_SYMBOL | tableReferenceList)
+
+
+tableReferenceList 
+  = tableReference (COMMA_SYMBOL tableReference)*
+
+
+tableValueConstructor 
+  = VALUES_SYMBOL rowValueExplicit (COMMA_SYMBOL rowValueExplicit)*
+
+
+explicitTable 
+  = TABLE_SYMBOL tableRef
+
+
+rowValueExplicit 
+  = ROW_SYMBOL OPEN_PAR_SYMBOL values? CLOSE_PAR_SYMBOL
+
+
+selectOption 
+  = querySpecOption
+  | SQL_NO_CACHE_SYMBOL
+  | SQL_CACHE_SYMBOL
+  | (MAX_STATEMENT_TIME_SYMBOL EQUAL_OPERATOR real_ulong_number)
+
+
+lockingClauseList 
+  = lockingClause+
+
+
+lockingClause 
+  = (FOR_SYMBOL lockStrengh (OF_SYMBOL tableAliasRefList)? lockedRowAction?)
+  | (LOCK_SYMBOL IN_SYMBOL SHARE_SYMBOL MODE_SYMBOL)
+
+
+lockStrengh 
+  = UPDATE_SYMBOL
+  | SHARE_SYMBOL
+
+
+lockedRowAction 
+  = (SKIP_SYMBOL LOCKED_SYMBOL)
+  | NOWAIT_SYMBOL
+
+
+selectItemList 
+  = (selectItem | MULT_OPERATOR) (COMMA_SYMBOL selectItem)*
+
+
+selectItem 
+  = tableWild
+  | (expr selectAlias?)
+
+
+selectAlias 
+  = AS_SYMBOL? (identifier | textStringLiteral)
+
+
+whereClause 
+  = WHERE_SYMBOL expr
+
+
+tableReference 
+  = (tableFactor | (OPEN_CURLY_SYMBOL (identifier | OJ_SYMBOL) escapedTableReference CLOSE_CURLY_SYMBOL)) joinedTable*
+
+
+escapedTableReference 
+  = tableFactor joinedTable*
+
+
+joinedTable 
+  = (innerJoinType tableReference ((ON_SYMBOL expr) | (USING_SYMBOL identifierListWithParentheses))?)
+  | (outerJoinType tableReference ((ON_SYMBOL expr) | (USING_SYMBOL identifierListWithParentheses)))
+  | (naturalJoinType tableFactor)
+
+
+naturalJoinType 
+  = (NATURAL_SYMBOL INNER_SYMBOL? JOIN_SYMBOL)
+  | (NATURAL_SYMBOL (LEFT_SYMBOL | RIGHT_SYMBOL) OUTER_SYMBOL? JOIN_SYMBOL)
+
+
+innerJoinType 
+  = ((INNER_SYMBOL | CROSS_SYMBOL)? JOIN_SYMBOL)
+  | STRAIGHT_JOIN_SYMBOL
+
+
+outerJoinType 
+  = (LEFT_SYMBOL | RIGHT_SYMBOL) OUTER_SYMBOL? JOIN_SYMBOL
+
+
+tableFactor 
+  = singleTable
+  | singleTableParens
+  | derivedTable
+  | tableReferenceListParens
+  | tableFunction
+
+
+singleTable 
+  = tableRef usePartition? tableAlias? indexHintList?
+
+
+singleTableParens 
+  = OPEN_PAR_SYMBOL (singleTable | singleTableParens) CLOSE_PAR_SYMBOL
+
+
+derivedTable 
+  = (subquery tableAlias? columnInternalRefList?)
+  | (LATERAL_SYMBOL subquery tableAlias? columnInternalRefList?)
+
+
+tableReferenceListParens 
+  = OPEN_PAR_SYMBOL (tableReferenceList | tableReferenceListParens) CLOSE_PAR_SYMBOL
+
+
+tableFunction 
+  = JSON_TABLE_SYMBOL OPEN_PAR_SYMBOL expr COMMA_SYMBOL textStringLiteral columnsClause CLOSE_PAR_SYMBOL tableAlias?
+
+
+columnsClause 
+  = COLUMNS_SYMBOL OPEN_PAR_SYMBOL jtColumn (COMMA_SYMBOL jtColumn)* CLOSE_PAR_SYMBOL
+
+
+jtColumn 
+  = (identifier FOR_SYMBOL ORDINALITY_SYMBOL)
+  | (identifier dataType collate? EXISTS_SYMBOL? PATH_SYMBOL textStringLiteral onEmptyOrError?)
+  | (NESTED_SYMBOL PATH_SYMBOL textStringLiteral columnsClause)
+
+
+onEmptyOrError 
+  = (onEmpty onError?)
+  | (onError onEmpty?)
+
+
+onEmpty 
+  = jtOnResponse ON_SYMBOL EMPTY_SYMBOL
+
+
+onError 
+  = jtOnResponse ON_SYMBOL ERROR_SYMBOL
+
+
+jtOnResponse 
+  = ERROR_SYMBOL
+  | NULL_SYMBOL
+  | (DEFAULT_SYMBOL textStringLiteral)
+
+
+unionOption 
+  = DISTINCT_SYMBOL
+  | ALL_SYMBOL
+
+
+tableAlias 
+  = (AS_SYMBOL | EQUAL_OPERATOR)? identifier
+
+
+indexHintList 
+  = indexHint (COMMA_SYMBOL indexHint)*
+
+
+indexHint 
+  = (indexHintType keyOrIndex indexHintClause? OPEN_PAR_SYMBOL indexList CLOSE_PAR_SYMBOL)
+  | (USE_SYMBOL keyOrIndex indexHintClause? OPEN_PAR_SYMBOL indexList? CLOSE_PAR_SYMBOL)
+
+
+indexHintType 
+  = FORCE_SYMBOL
+  | IGNORE_SYMBOL
+
+
+keyOrIndex 
+  = KEY_SYMBOL
+  | INDEX_SYMBOL
+
+
+constraintKeyType 
+  = (PRIMARY_SYMBOL KEY_SYMBOL)
+  | (UNIQUE_SYMBOL keyOrIndex?)
+
+
+indexHintClause 
+  = FOR_SYMBOL (JOIN_SYMBOL | (ORDER_SYMBOL BY_SYMBOL) | (GROUP_SYMBOL BY_SYMBOL))
+
+
+indexList 
+  = indexListElement (COMMA_SYMBOL indexListElement)*
+
+
+indexListElement 
+  = identifier
+  | PRIMARY_SYMBOL
+
+
+updateStatement 
+  = withClause? UPDATE_SYMBOL LOW_PRIORITY_SYMBOL? IGNORE_SYMBOL? tableReferenceList SET_SYMBOL updateList whereClause? orderClause? simpleLimitClause?
+
+
+transactionOrLockingStatement 
+  = transactionStatement
+  | savepointStatement
+  | lockStatement
+  | xaStatement
+
+
+transactionStatement 
+  = (START_SYMBOL TRANSACTION_SYMBOL transactionCharacteristic*)
+  | (COMMIT_SYMBOL WORK_SYMBOL? (AND_SYMBOL NO_SYMBOL? CHAIN_SYMBOL)? (NO_SYMBOL? RELEASE_SYMBOL)?)
+
+
+beginWork 
+  = BEGIN_SYMBOL WORK_SYMBOL?
+
+
+transactionCharacteristic 
+  = (WITH_SYMBOL CONSISTENT_SYMBOL SNAPSHOT_SYMBOL)
+  | (READ_SYMBOL (WRITE_SYMBOL | ONLY_SYMBOL))
+
+
+savepointStatement 
+  = (SAVEPOINT_SYMBOL identifier)
+  | (ROLLBACK_SYMBOL WORK_SYMBOL? ((TO_SYMBOL SAVEPOINT_SYMBOL? identifier) | ((AND_SYMBOL NO_SYMBOL? CHAIN_SYMBOL)? (NO_SYMBOL? RELEASE_SYMBOL)?)))
+  | (RELEASE_SYMBOL SAVEPOINT_SYMBOL identifier)
+
+
+lockStatement 
+  = (LOCK_SYMBOL (TABLES_SYMBOL | TABLE_SYMBOL) lockItem (COMMA_SYMBOL lockItem)*)
+  | (LOCK_SYMBOL INSTANCE_SYMBOL FOR_SYMBOL BACKUP_SYMBOL)
+  | (UNLOCK_SYMBOL (TABLES_SYMBOL | TABLE_SYMBOL | INSTANCE_SYMBOL))
+
+
+lockItem 
+  = tableRef tableAlias? lockOption
+
+
+lockOption 
+  = (READ_SYMBOL LOCAL_SYMBOL?)
+  | (LOW_PRIORITY_SYMBOL? WRITE_SYMBOL)
+
+
+xaStatement 
+  = XA_SYMBOL (
+      (((START_SYMBOL | BEGIN_SYMBOL) xid (JOIN_SYMBOL | RESUME_SYMBOL)?))
+    | ((END_SYMBOL xid (SUSPEND_SYMBOL (FOR_SYMBOL MIGRATE_SYMBOL)?)?))
+    | ((PREPARE_SYMBOL xid))
+    | ((COMMIT_SYMBOL xid (ONE_SYMBOL PHASE_SYMBOL)?))
+    | ((ROLLBACK_SYMBOL xid))
+    | ((RECOVER_SYMBOL xaConvert))
+  )
+
+EQUAL_OPERATOR = "="
+ASSIGN_OPERATOR = ":="
+NULL_SAFE_EQUAL_OPERATOR = "<=>"
+GREATER_OR_EQUAL_OPERATOR = ">="
+GREATER_THAN_OPERATOR = ">"
+LESS_OR_EQUAL_OPERATOR = "<="
+LESS_THAN_OPERATOR = "<"
+NOT_EQUAL_OPERATOR = "!="
+PLUS_OPERATOR = "+"
+MINUS_OPERATOR = "-"
+MULT_OPERATOR = "*"
+DIV_OPERATOR = "/"
+MOD_OPERATOR = "%"
+LOGICAL_NOT_OPERATOR = "!"
+BITWISE_NOT_OPERATOR = "~"
+SHIFT_LEFT_OPERATOR = "<<"
+SHIFT_RIGHT_OPERATOR = ">>"
+LOGICAL_AND_OPERATOR = "&&"
+BITWISE_AND_OPERATOR = "&"
+BITWISE_XOR_OPERATOR = "^"
+DOT_SYMBOL = "."
+COMMA_SYMBOL = ","
+SEMICOLON_SYMBOL = ";"
+COLON_SYMBOL = ":"
+OPEN_PAR_SYMBOL = "("
+CLOSE_PAR_SYMBOL = ")"
+OPEN_CURLY_SYMBOL = "{"
+CLOSE_CURLY_SYMBOL = "}"
+UNDERLINE_SYMBOL = "_"
+AT_SIGN_SYMBOL = "@"
+AT_AT_SIGN_SYMBOL = "@@"
+NULL2_SYMBOL = "\\N"
+PARAM_MARKER = "?"
+HEX_NUMBER = ("0x" hexDigit+) | ("x'" hexDigit+ "'")
+
+
+BIN_NUMBER = ("0b" digitBinary+) | ("b'" digitBinary+ "'")
+digitBinary = "0" | "1"
+
+
+// TODO use the same determineNumericType() call as the original ANTLR grammar
+INT_NUMBER = digits
+DECIMAL_NUMBER = digits? "." digits
+FLOAT_NUMBER = (digits? ".")? digits "e" ("-" | "+")? digits
+ACCESSIBLE_SYMBOL = caseInsensitive<"ACCESSIBLE">
+ACCOUNT_SYMBOL = caseInsensitive<"ACCOUNT"> { serverVersion >= 50707 }?
+ACTION_SYMBOL = caseInsensitive<"ACTION">
+ADD_SYMBOL = caseInsensitive<"ADD">
+AFTER_SYMBOL = caseInsensitive<"AFTER">
+AGAINST_SYMBOL = caseInsensitive<"AGAINST">
+AGGREGATE_SYMBOL = caseInsensitive<"AGGREGATE">
+ALGORITHM_SYMBOL = caseInsensitive<"ALGORITHM">
+ALL_SYMBOL = caseInsensitive<"ALL">
+ALTER_SYMBOL = caseInsensitive<"ALTER">
+ALWAYS_SYMBOL = caseInsensitive<"ALWAYS"> { serverVersion >= 50707 }?
+ANALYZE_SYMBOL = caseInsensitive<"ANALYZE">
+AND_SYMBOL = caseInsensitive<"AND">
+ANY_SYMBOL = caseInsensitive<"ANY">
+AS_SYMBOL = caseInsensitive<"AS">
+ASC_SYMBOL = caseInsensitive<"ASC">
+ASCII_SYMBOL = caseInsensitive<"ASCII">
+AT_SYMBOL = caseInsensitive<"AT">
+AUTOEXTEND_SIZE_SYMBOL = caseInsensitive<"AUTOEXTEND_SIZE">
+AUTO_INCREMENT_SYMBOL = caseInsensitive<"AUTO_INCREMENT">
+AVG_ROW_LENGTH_SYMBOL = caseInsensitive<"AVG_ROW_LENGTH">
+AVG_SYMBOL = caseInsensitive<"AVG">
+BACKUP_SYMBOL = caseInsensitive<"BACKUP">
+BEFORE_SYMBOL = caseInsensitive<"BEFORE">
+BEGIN_SYMBOL = caseInsensitive<"BEGIN">
+BETWEEN_SYMBOL = caseInsensitive<"BETWEEN">
+BIGINT_SYMBOL = caseInsensitive<"BIGINT">
+BINARY_SYMBOL = caseInsensitive<"BINARY">
+BINLOG_SYMBOL = caseInsensitive<"BINLOG">
+BIN_NUM_SYMBOL = caseInsensitive<"BIN_NUM">
+BIT_AND_SYMBOL = caseInsensitive<"BIT_AND"> { type = determineFunction(text) }
+BIT_OR_SYMBOL = caseInsensitive<"BIT_OR"> { type = determineFunction(text) }
+BIT_SYMBOL = caseInsensitive<"BIT">
+BIT_XOR_SYMBOL = caseInsensitive<"BIT_XOR"> { type = determineFunction(text) }
+BLOB_SYMBOL = caseInsensitive<"BLOB">
+BLOCK_SYMBOL = caseInsensitive<"BLOCK">
+BOOLEAN_SYMBOL = caseInsensitive<"BOOLEAN">
+BOOL_SYMBOL = caseInsensitive<"BOOL">
+BOTH_SYMBOL = caseInsensitive<"BOTH">
+BTREE_SYMBOL = caseInsensitive<"BTREE">
+BY_SYMBOL = caseInsensitive<"BY">
+BYTE_SYMBOL = caseInsensitive<"BYTE">
+CACHE_SYMBOL = caseInsensitive<"CACHE">
+CALL_SYMBOL = caseInsensitive<"CALL">
+CASCADE_SYMBOL = caseInsensitive<"CASCADE">
+CASCADED_SYMBOL = caseInsensitive<"CASCADED">
+CASE_SYMBOL = caseInsensitive<"CASE">
+CAST_SYMBOL = caseInsensitive<"CAST"> { type = determineFunction(text) }
+CATALOG_NAME_SYMBOL = caseInsensitive<"CATALOG_NAME">
+CHAIN_SYMBOL = caseInsensitive<"CHAIN">
+CHANGE_SYMBOL = caseInsensitive<"CHANGE">
+CHANGED_SYMBOL = caseInsensitive<"CHANGED">
+CHANNEL_SYMBOL = caseInsensitive<"CHANNEL"> { serverVersion >= 50706 }?
+CHARSET_SYMBOL = caseInsensitive<"CHARSET">
+CHAR_SYMBOL = caseInsensitive<"CHAR">
+CHECKSUM_SYMBOL = caseInsensitive<"CHECKSUM">
+CHECK_SYMBOL = caseInsensitive<"CHECK">
+CIPHER_SYMBOL = caseInsensitive<"CIPHER">
+CLASS_ORIGIN_SYMBOL = caseInsensitive<"CLASS_ORIGIN">
+CLIENT_SYMBOL = caseInsensitive<"CLIENT">
+CLOSE_SYMBOL = caseInsensitive<"CLOSE">
+COALESCE_SYMBOL = caseInsensitive<"COALESCE">
+CODE_SYMBOL = caseInsensitive<"CODE">
+COLLATE_SYMBOL = caseInsensitive<"COLLATE">
+COLLATION_SYMBOL = caseInsensitive<"COLLATION">
+COLUMNS_SYMBOL = caseInsensitive<"COLUMNS">
+COLUMN_SYMBOL = caseInsensitive<"COLUMN">
+COLUMN_NAME_SYMBOL = caseInsensitive<"COLUMN_NAME">
+COLUMN_FORMAT_SYMBOL = caseInsensitive<"COLUMN_FORMAT">
+COMMENT_SYMBOL = caseInsensitive<"COMMENT">
+COMMITTED_SYMBOL = caseInsensitive<"COMMITTED">
+COMMIT_SYMBOL = caseInsensitive<"COMMIT">
+COMPACT_SYMBOL = caseInsensitive<"COMPACT">
+COMPLETION_SYMBOL = caseInsensitive<"COMPLETION">
+COMPRESSED_SYMBOL = caseInsensitive<"COMPRESSED">
+COMPRESSION_SYMBOL = caseInsensitive<"COMPRESSION"> { serverVersion >= 50707 }?
+CONCURRENT_SYMBOL = caseInsensitive<"CONCURRENT">
+CONDITION_SYMBOL = caseInsensitive<"CONDITION">
+CONNECTION_SYMBOL = caseInsensitive<"CONNECTION">
+CONSISTENT_SYMBOL = caseInsensitive<"CONSISTENT">
+CONSTRAINT_SYMBOL = caseInsensitive<"CONSTRAINT">
+CONSTRAINT_CATALOG_SYMBOL = caseInsensitive<"CONSTRAINT_CATALOG">
+CONSTRAINT_NAME_SYMBOL = caseInsensitive<"CONSTRAINT_NAME">
+CONSTRAINT_SCHEMA_SYMBOL = caseInsensitive<"CONSTRAINT_SCHEMA">
+CONTAINS_SYMBOL = caseInsensitive<"CONTAINS">
+CONTEXT_SYMBOL = caseInsensitive<"CONTEXT">
+CONTINUE_SYMBOL = caseInsensitive<"CONTINUE">
+CONVERT_SYMBOL = caseInsensitive<"CONVERT">
+COUNT_SYMBOL = caseInsensitive<"COUNT"> { type = determineFunction(text) }
+CPU_SYMBOL = caseInsensitive<"CPU">
+CREATE_SYMBOL = caseInsensitive<"CREATE">
+CROSS_SYMBOL = caseInsensitive<"CROSS">
+CUBE_SYMBOL = caseInsensitive<"CUBE">
+CURDATE_SYMBOL = caseInsensitive<"CURDATE"> { type = determineFunction(text) }
+CURRENT_SYMBOL = caseInsensitive<"CURRENT"> { serverVersion >= 50604 }?
+CURRENT_USER_SYMBOL = caseInsensitive<"CURRENT_USER">
+CURSOR_SYMBOL = caseInsensitive<"CURSOR">
+CURSOR_NAME_SYMBOL = caseInsensitive<"CURSOR_NAME">
+CURTIME_SYMBOL = caseInsensitive<"CURTIME"> { type = determineFunction(text) }
+DATABASE_SYMBOL = caseInsensitive<"DATABASE">
+DATABASES_SYMBOL = caseInsensitive<"DATABASES">
+DATAFILE_SYMBOL = caseInsensitive<"DATAFILE">
+DATA_SYMBOL = caseInsensitive<"DATA">
+DATETIME_SYMBOL = caseInsensitive<"DATETIME">
+DATE_ADD_SYMBOL = caseInsensitive<"DATE_ADD"> { type = determineFunction(text) }
+DATE_SUB_SYMBOL = caseInsensitive<"DATE_SUB"> { type = determineFunction(text) }
+DATE_SYMBOL = caseInsensitive<"DATE">
+DAY_HOUR_SYMBOL = caseInsensitive<"DAY_HOUR">
+DAY_MICROSECOND_SYMBOL = caseInsensitive<"DAY_MICROSECOND">
+DAY_MINUTE_SYMBOL = caseInsensitive<"DAY_MINUTE">
+DAY_SECOND_SYMBOL = caseInsensitive<"DAY_SECOND">
+DAY_SYMBOL = caseInsensitive<"DAY">
+DEALLOCATE_SYMBOL = caseInsensitive<"DEALLOCATE">
+DECIMAL_NUM_SYMBOL = caseInsensitive<"DECIMAL_NUM">
+DECIMAL_SYMBOL = caseInsensitive<"DECIMAL">
+DECLARE_SYMBOL = caseInsensitive<"DECLARE">
+DEFAULT_SYMBOL = caseInsensitive<"DEFAULT">
+DEFAULT_AUTH_SYMBOL = caseInsensitive<"DEFAULT_AUTH"> { serverVersion >= 50604 }?
+DEFINER_SYMBOL = caseInsensitive<"DEFINER">
+DELAYED_SYMBOL = caseInsensitive<"DELAYED">
+DELAY_KEY_WRITE_SYMBOL = caseInsensitive<"DELAY_KEY_WRITE">
+DELETE_SYMBOL = caseInsensitive<"DELETE">
+DESC_SYMBOL = caseInsensitive<"DESC">
+DESCRIBE_SYMBOL = caseInsensitive<"DESCRIBE">
+DES_KEY_FILE_SYMBOL = caseInsensitive<"DES_KEY_FILE"> { serverVersion < 80000 }?
+DETERMINISTIC_SYMBOL = caseInsensitive<"DETERMINISTIC">
+DIAGNOSTICS_SYMBOL = caseInsensitive<"DIAGNOSTICS">
+DIRECTORY_SYMBOL = caseInsensitive<"DIRECTORY">
+DISABLE_SYMBOL = caseInsensitive<"DISABLE">
+DISCARD_SYMBOL = caseInsensitive<"DISCARD">
+DISK_SYMBOL = caseInsensitive<"DISK">
+DISTINCT_SYMBOL = caseInsensitive<"DISTINCT">
+DIV_SYMBOL = caseInsensitive<"DIV">
+DOUBLE_SYMBOL = caseInsensitive<"DOUBLE">
+DO_SYMBOL = caseInsensitive<"DO">
+DROP_SYMBOL = caseInsensitive<"DROP">
+DUAL_SYMBOL = caseInsensitive<"DUAL">
+DUMPFILE_SYMBOL = caseInsensitive<"DUMPFILE">
+DUPLICATE_SYMBOL = caseInsensitive<"DUPLICATE">
+DYNAMIC_SYMBOL = caseInsensitive<"DYNAMIC">
+EACH_SYMBOL = caseInsensitive<"EACH">
+ELSE_SYMBOL = caseInsensitive<"ELSE">
+ELSEIF_SYMBOL = caseInsensitive<"ELSEIF">
+ENABLE_SYMBOL = caseInsensitive<"ENABLE">
+ENCLOSED_SYMBOL = caseInsensitive<"ENCLOSED">
+ENCRYPTION_SYMBOL = caseInsensitive<"ENCRYPTION"> { serverVersion >= 50711 }?
+END_SYMBOL = caseInsensitive<"END">
+ENDS_SYMBOL = caseInsensitive<"ENDS">
+END_OF_INPUT_SYMBOL = caseInsensitive<"END_OF_INPUT">
+ENGINES_SYMBOL = caseInsensitive<"ENGINES">
+ENGINE_SYMBOL = caseInsensitive<"ENGINE">
+ENUM_SYMBOL = caseInsensitive<"ENUM">
+ERROR_SYMBOL = caseInsensitive<"ERROR">
+ERRORS_SYMBOL = caseInsensitive<"ERRORS">
+ESCAPED_SYMBOL = caseInsensitive<"ESCAPED">
+ESCAPE_SYMBOL = caseInsensitive<"ESCAPE">
+EVENTS_SYMBOL = caseInsensitive<"EVENTS">
+EVENT_SYMBOL = caseInsensitive<"EVENT">
+EVERY_SYMBOL = caseInsensitive<"EVERY">
+EXCHANGE_SYMBOL = caseInsensitive<"EXCHANGE">
+EXECUTE_SYMBOL = caseInsensitive<"EXECUTE">
+EXISTS_SYMBOL = caseInsensitive<"EXISTS">
+EXIT_SYMBOL = caseInsensitive<"EXIT">
+EXPANSION_SYMBOL = caseInsensitive<"EXPANSION">
+EXPIRE_SYMBOL = caseInsensitive<"EXPIRE"> { serverVersion >= 50606 }?
+EXPLAIN_SYMBOL = caseInsensitive<"EXPLAIN">
+EXPORT_SYMBOL = caseInsensitive<"EXPORT"> { serverVersion >= 50606 }?
+EXTENDED_SYMBOL = caseInsensitive<"EXTENDED">
+EXTENT_SIZE_SYMBOL = caseInsensitive<"EXTENT_SIZE">
+EXTRACT_SYMBOL = caseInsensitive<"EXTRACT"> { type = determineFunction(text) }
+FALSE_SYMBOL = caseInsensitive<"FALSE">
+FAST_SYMBOL = caseInsensitive<"FAST">
+FAULTS_SYMBOL = caseInsensitive<"FAULTS">
+FETCH_SYMBOL = caseInsensitive<"FETCH">
+FILE_SYMBOL = caseInsensitive<"FILE">
+FILE_BLOCK_SIZE_SYMBOL = caseInsensitive<"FILE_BLOCK_SIZE"> { serverVersion >= 50707 }?
+FILTER_SYMBOL = caseInsensitive<"FILTER"> { serverVersion >= 50700 }?
+FIRST_SYMBOL = caseInsensitive<"FIRST">
+FIXED_SYMBOL = caseInsensitive<"FIXED">
+FLOAT_SYMBOL = caseInsensitive<"FLOAT">
+FLUSH_SYMBOL = caseInsensitive<"FLUSH">
+FOLLOWS_SYMBOL = caseInsensitive<"FOLLOWS"> { serverVersion >= 50700 }?
+FORCE_SYMBOL = caseInsensitive<"FORCE">
+FOREIGN_SYMBOL = caseInsensitive<"FOREIGN">
+FOR_SYMBOL = caseInsensitive<"FOR">
+FORMAT_SYMBOL = caseInsensitive<"FORMAT">
+FOUND_SYMBOL = caseInsensitive<"FOUND">
+FROM_SYMBOL = caseInsensitive<"FROM">
+FULL_SYMBOL = caseInsensitive<"FULL">
+FULLTEXT_SYMBOL = caseInsensitive<"FULLTEXT">
+FUNCTION_SYMBOL = caseInsensitive<"FUNCTION">
+GET_SYMBOL = caseInsensitive<"GET"> { serverVersion >= 50604 }?
+GENERAL_SYMBOL = caseInsensitive<"GENERAL">
+GENERATED_SYMBOL = caseInsensitive<"GENERATED"> { serverVersion >= 50707 }?
+GROUP_REPLICATION_SYMBOL = caseInsensitive<"GROUP_REPLICATION"> { serverVersion >= 50707 }?
+GEOMETRYCOLLECTION_SYMBOL = caseInsensitive<"GEOMETRYCOLLECTION">
+GEOMETRY_SYMBOL = caseInsensitive<"GEOMETRY">
+GET_FORMAT_SYMBOL = caseInsensitive<"GET_FORMAT">
+GLOBAL_SYMBOL = caseInsensitive<"GLOBAL">
+GRANT_SYMBOL = caseInsensitive<"GRANT">
+GRANTS_SYMBOL = caseInsensitive<"GRANTS">
+GROUP_SYMBOL = caseInsensitive<"GROUP">
+GROUP_CONCAT_SYMBOL = caseInsensitive<"GROUP_CONCAT"> { type = determineFunction(text) }
+HANDLER_SYMBOL = caseInsensitive<"HANDLER">
+HASH_SYMBOL = caseInsensitive<"HASH">
+HAVING_SYMBOL = caseInsensitive<"HAVING">
+HELP_SYMBOL = caseInsensitive<"HELP">
+HIGH_PRIORITY_SYMBOL = caseInsensitive<"HIGH_PRIORITY">
+HOST_SYMBOL = caseInsensitive<"HOST">
+HOSTS_SYMBOL = caseInsensitive<"HOSTS">
+HOUR_MICROSECOND_SYMBOL = caseInsensitive<"HOUR_MICROSECOND">
+HOUR_MINUTE_SYMBOL = caseInsensitive<"HOUR_MINUTE">
+HOUR_SECOND_SYMBOL = caseInsensitive<"HOUR_SECOND">
+HOUR_SYMBOL = caseInsensitive<"HOUR">
+IDENTIFIED_SYMBOL = caseInsensitive<"IDENTIFIED">
+IF_SYMBOL = caseInsensitive<"IF">
+IGNORE_SYMBOL = caseInsensitive<"IGNORE">
+IGNORE_SERVER_IDS_SYMBOL = caseInsensitive<"IGNORE_SERVER_IDS">
+IMPORT_SYMBOL = caseInsensitive<"IMPORT">
+INDEXES_SYMBOL = caseInsensitive<"INDEXES">
+INDEX_SYMBOL = caseInsensitive<"INDEX">
+INFILE_SYMBOL = caseInsensitive<"INFILE">
+INITIAL_SIZE_SYMBOL = caseInsensitive<"INITIAL_SIZE">
+INNER_SYMBOL = caseInsensitive<"INNER">
+INOUT_SYMBOL = caseInsensitive<"INOUT">
+INSENSITIVE_SYMBOL = caseInsensitive<"INSENSITIVE">
+INSERT_SYMBOL = caseInsensitive<"INSERT">
+INSERT_METHOD_SYMBOL = caseInsensitive<"INSERT_METHOD">
+INSTANCE_SYMBOL = caseInsensitive<"INSTANCE"> { serverVersion >= 50713 }?
+INSTALL_SYMBOL = caseInsensitive<"INSTALL">
+INTERVAL_SYMBOL = caseInsensitive<"INTERVAL">
+INTO_SYMBOL = caseInsensitive<"INTO">
+INT_SYMBOL = caseInsensitive<"INT">
+INVOKER_SYMBOL = caseInsensitive<"INVOKER">
+IN_SYMBOL = caseInsensitive<"IN">
+IO_SYMBOL = caseInsensitive<"IO">
+IPC_SYMBOL = caseInsensitive<"IPC">
+IS_SYMBOL = caseInsensitive<"IS">
+ISOLATION_SYMBOL = caseInsensitive<"ISOLATION">
+ISSUER_SYMBOL = caseInsensitive<"ISSUER">
+ITERATE_SYMBOL = caseInsensitive<"ITERATE">
+JOIN_SYMBOL = caseInsensitive<"JOIN">
+JSON_SYMBOL = caseInsensitive<"JSON"> { serverVersion >= 50708 }?
+KEYS_SYMBOL = caseInsensitive<"KEYS">
+KEY_BLOCK_SIZE_SYMBOL = caseInsensitive<"KEY_BLOCK_SIZE">
+KEY_SYMBOL = caseInsensitive<"KEY">
+KILL_SYMBOL = caseInsensitive<"KILL">
+LANGUAGE_SYMBOL = caseInsensitive<"LANGUAGE">
+LAST_SYMBOL = caseInsensitive<"LAST">
+LEADING_SYMBOL = caseInsensitive<"LEADING">
+LEAVES_SYMBOL = caseInsensitive<"LEAVES">
+LEAVE_SYMBOL = caseInsensitive<"LEAVE">
+LEFT_SYMBOL = caseInsensitive<"LEFT">
+LESS_SYMBOL = caseInsensitive<"LESS">
+LEVEL_SYMBOL = caseInsensitive<"LEVEL">
+LIKE_SYMBOL = caseInsensitive<"LIKE">
+LIMIT_SYMBOL = caseInsensitive<"LIMIT">
+LINEAR_SYMBOL = caseInsensitive<"LINEAR">
+LINES_SYMBOL = caseInsensitive<"LINES">
+LINESTRING_SYMBOL = caseInsensitive<"LINESTRING">
+LIST_SYMBOL = caseInsensitive<"LIST">
+LOAD_SYMBOL = caseInsensitive<"LOAD">
+LOCAL_SYMBOL = caseInsensitive<"LOCAL">
+LOCKS_SYMBOL = caseInsensitive<"LOCKS">
+LOCK_SYMBOL = caseInsensitive<"LOCK">
+LOGFILE_SYMBOL = caseInsensitive<"LOGFILE">
+LOGS_SYMBOL = caseInsensitive<"LOGS">
+LONGBLOB_SYMBOL = caseInsensitive<"LONGBLOB">
+LONGTEXT_SYMBOL = caseInsensitive<"LONGTEXT">
+LONG_NUM_SYMBOL = caseInsensitive<"LONG_NUM">
+LONG_SYMBOL = caseInsensitive<"LONG">
+LOOP_SYMBOL = caseInsensitive<"LOOP">
+LOW_PRIORITY_SYMBOL = caseInsensitive<"LOW_PRIORITY">
+MASTER_AUTO_POSITION_SYMBOL = caseInsensitive<"MASTER_AUTO_POSITION"> { serverVersion >= 50605 }?
+MASTER_BIND_SYMBOL = caseInsensitive<"MASTER_BIND"> { serverVersion >= 50602 }?
+MASTER_CONNECT_RETRY_SYMBOL = caseInsensitive<"MASTER_CONNECT_RETRY">
+MASTER_DELAY_SYMBOL = caseInsensitive<"MASTER_DELAY">
+MASTER_HOST_SYMBOL = caseInsensitive<"MASTER_HOST">
+MASTER_LOG_FILE_SYMBOL = caseInsensitive<"MASTER_LOG_FILE">
+MASTER_LOG_POS_SYMBOL = caseInsensitive<"MASTER_LOG_POS">
+MASTER_PASSWORD_SYMBOL = caseInsensitive<"MASTER_PASSWORD">
+MASTER_PORT_SYMBOL = caseInsensitive<"MASTER_PORT">
+MASTER_RETRY_COUNT_SYMBOL = caseInsensitive<"MASTER_RETRY_COUNT"> { serverVersion >= 50601 }?
+MASTER_SERVER_ID_SYMBOL = caseInsensitive<"MASTER_SERVER_ID">
+MASTER_SSL_CAPATH_SYMBOL = caseInsensitive<"MASTER_SSL_CAPATH">
+MASTER_SSL_CA_SYMBOL = caseInsensitive<"MASTER_SSL_CA">
+MASTER_SSL_CERT_SYMBOL = caseInsensitive<"MASTER_SSL_CERT">
+MASTER_SSL_CIPHER_SYMBOL = caseInsensitive<"MASTER_SSL_CIPHER">
+MASTER_SSL_CRL_SYMBOL = caseInsensitive<"MASTER_SSL_CRL"> { serverVersion >= 50603 }?
+MASTER_SSL_CRLPATH_SYMBOL = caseInsensitive<"MASTER_SSL_CRLPATH"> { serverVersion >= 50603 }?
+MASTER_SSL_KEY_SYMBOL = caseInsensitive<"MASTER_SSL_KEY">
+MASTER_SSL_SYMBOL = caseInsensitive<"MASTER_SSL">
+MASTER_SSL_VERIFY_SERVER_CERT_SYMBOL = caseInsensitive<"MASTER_SSL_VERIFY_SERVER_CERT">
+MASTER_SYMBOL = caseInsensitive<"MASTER">
+MASTER_TLS_VERSION_SYMBOL = caseInsensitive<"MASTER_TLS_VERSION"> { serverVersion >= 50713 }?
+MASTER_USER_SYMBOL = caseInsensitive<"MASTER_USER">
+MASTER_HEARTBEAT_PERIOD_SYMBOL = caseInsensitive<"MASTER_HEARTBEAT_PERIOD">
+MATCH_SYMBOL = caseInsensitive<"MATCH">
+MAX_CONNECTIONS_PER_HOUR_SYMBOL = caseInsensitive<"MAX_CONNECTIONS_PER_HOUR">
+MAX_QUERIES_PER_HOUR_SYMBOL = caseInsensitive<"MAX_QUERIES_PER_HOUR">
+MAX_ROWS_SYMBOL = caseInsensitive<"MAX_ROWS">
+MAX_SIZE_SYMBOL = caseInsensitive<"MAX_SIZE">
+MAX_STATEMENT_TIME_SYMBOL = caseInsensitive<"MAX_STATEMENT_TIME"> { 50704 < serverVersion && serverVersion < 50708 }?
+MAX_SYMBOL = caseInsensitive<"MAX"> { type = determineFunction(text) }
+MAX_UPDATES_PER_HOUR_SYMBOL = caseInsensitive<"MAX_UPDATES_PER_HOUR">
+MAX_USER_CONNECTIONS_SYMBOL = caseInsensitive<"MAX_USER_CONNECTIONS">
+MAXVALUE_SYMBOL = caseInsensitive<"MAXVALUE">
+MEDIUMBLOB_SYMBOL = caseInsensitive<"MEDIUMBLOB">
+MEDIUMINT_SYMBOL = caseInsensitive<"MEDIUMINT">
+MEDIUMTEXT_SYMBOL = caseInsensitive<"MEDIUMTEXT">
+MEDIUM_SYMBOL = caseInsensitive<"MEDIUM">
+MEMORY_SYMBOL = caseInsensitive<"MEMORY">
+MERGE_SYMBOL = caseInsensitive<"MERGE">
+MESSAGE_TEXT_SYMBOL = caseInsensitive<"MESSAGE_TEXT">
+MICROSECOND_SYMBOL = caseInsensitive<"MICROSECOND">
+MIGRATE_SYMBOL = caseInsensitive<"MIGRATE">
+MINUTE_MICROSECOND_SYMBOL = caseInsensitive<"MINUTE_MICROSECOND">
+MINUTE_SECOND_SYMBOL = caseInsensitive<"MINUTE_SECOND">
+MINUTE_SYMBOL = caseInsensitive<"MINUTE">
+MIN_ROWS_SYMBOL = caseInsensitive<"MIN_ROWS">
+MIN_SYMBOL = caseInsensitive<"MIN"> { type = determineFunction(text) }
+MODE_SYMBOL = caseInsensitive<"MODE">
+MODIFIES_SYMBOL = caseInsensitive<"MODIFIES">
+MODIFY_SYMBOL = caseInsensitive<"MODIFY">
+MOD_SYMBOL = caseInsensitive<"MOD">
+MONTH_SYMBOL = caseInsensitive<"MONTH">
+MULTILINESTRING_SYMBOL = caseInsensitive<"MULTILINESTRING">
+MULTIPOINT_SYMBOL = caseInsensitive<"MULTIPOINT">
+MULTIPOLYGON_SYMBOL = caseInsensitive<"MULTIPOLYGON">
+MUTEX_SYMBOL = caseInsensitive<"MUTEX">
+MYSQL_ERRNO_SYMBOL = caseInsensitive<"MYSQL_ERRNO">
+NAMES_SYMBOL = caseInsensitive<"NAMES">
+NAME_SYMBOL = caseInsensitive<"NAME">
+NATIONAL_SYMBOL = caseInsensitive<"NATIONAL">
+NATURAL_SYMBOL = caseInsensitive<"NATURAL">
+NCHAR_STRING_SYMBOL = caseInsensitive<"NCHAR_STRING">
+NCHAR_SYMBOL = caseInsensitive<"NCHAR">
+NDBCLUSTER_SYMBOL = caseInsensitive<"NDBCLUSTER">
+NEG_SYMBOL = caseInsensitive<"NEG">
+NEVER_SYMBOL = caseInsensitive<"NEVER"> { serverVersion >= 50704 }?
+NEW_SYMBOL = caseInsensitive<"NEW">
+NEXT_SYMBOL = caseInsensitive<"NEXT">
+NODEGROUP_SYMBOL = caseInsensitive<"NODEGROUP">
+NONE_SYMBOL = caseInsensitive<"NONE">
+NONBLOCKING_SYMBOL = caseInsensitive<"NONBLOCKING"> { 50700 < serverVersion && serverVersion < 50706 }?
+NOT_SYMBOL = caseInsensitive<"NOT"> { type = isSqlModeActive(HighNotPrecedence) ? "NOT2_SYMBOL" : "NOT_SYMBOL" }
+NOW_SYMBOL = caseInsensitive<"NOW"> { type = determineFunction(text) }
+NO_SYMBOL = caseInsensitive<"NO">
+NO_WAIT_SYMBOL = caseInsensitive<"NO_WAIT">
+NO_WRITE_TO_BINLOG_SYMBOL = caseInsensitive<"NO_WRITE_TO_BINLOG">
+NULL_SYMBOL = caseInsensitive<"NULL">
+NUMBER_SYMBOL = caseInsensitive<"NUMBER"> { serverVersion >= 50606 }?
+NUMERIC_SYMBOL = caseInsensitive<"NUMERIC">
+NVARCHAR_SYMBOL = caseInsensitive<"NVARCHAR">
+OFFLINE_SYMBOL = caseInsensitive<"OFFLINE">
+OFFSET_SYMBOL = caseInsensitive<"OFFSET">
+OLD_PASSWORD_SYMBOL = caseInsensitive<"OLD_PASSWORD"> { serverVersion < 50706 }?
+ON_SYMBOL = caseInsensitive<"ON">
+ONE_SYMBOL = caseInsensitive<"ONE">
+ONLINE_SYMBOL = caseInsensitive<"ONLINE">
+ONLY_SYMBOL = caseInsensitive<"ONLY"> { serverVersion >= 50605 }?
+OPEN_SYMBOL = caseInsensitive<"OPEN">
+OPTIMIZE_SYMBOL = caseInsensitive<"OPTIMIZE">
+OPTIMIZER_COSTS_SYMBOL = caseInsensitive<"OPTIMIZER_COSTS"> { serverVersion >= 50706 }?
+OPTIONS_SYMBOL = caseInsensitive<"OPTIONS">
+OPTION_SYMBOL = caseInsensitive<"OPTION">
+OPTIONALLY_SYMBOL = caseInsensitive<"OPTIONALLY">
+ORDER_SYMBOL = caseInsensitive<"ORDER">
+OR_SYMBOL = caseInsensitive<"OR">
+OUTER_SYMBOL = caseInsensitive<"OUTER">
+OUTFILE_SYMBOL = caseInsensitive<"OUTFILE">
+OUT_SYMBOL = caseInsensitive<"OUT">
+OWNER_SYMBOL = caseInsensitive<"OWNER">
+PACK_KEYS_SYMBOL = caseInsensitive<"PACK_KEYS">
+PAGE_SYMBOL = caseInsensitive<"PAGE">
+PARSER_SYMBOL = caseInsensitive<"PARSER">
+PARTIAL_SYMBOL = caseInsensitive<"PARTIAL">
+PARTITIONING_SYMBOL = caseInsensitive<"PARTITIONING">
+PARTITIONS_SYMBOL = caseInsensitive<"PARTITIONS">
+PARTITION_SYMBOL = caseInsensitive<"PARTITION">
+PASSWORD_SYMBOL = caseInsensitive<"PASSWORD">
+PHASE_SYMBOL = caseInsensitive<"PHASE">
+PLUGINS_SYMBOL = caseInsensitive<"PLUGINS">
+PLUGIN_DIR_SYMBOL = caseInsensitive<"PLUGIN_DIR"> { serverVersion >= 50604 }?
+PLUGIN_SYMBOL = caseInsensitive<"PLUGIN">
+POINT_SYMBOL = caseInsensitive<"POINT">
+POLYGON_SYMBOL = caseInsensitive<"POLYGON">
+PORT_SYMBOL = caseInsensitive<"PORT">
+POSITION_SYMBOL = caseInsensitive<"POSITION"> { type = determineFunction(text) }
+PRECEDES_SYMBOL = caseInsensitive<"PRECEDES"> { serverVersion >= 50700 }?
+PRECISION_SYMBOL = caseInsensitive<"PRECISION">
+PREPARE_SYMBOL = caseInsensitive<"PREPARE">
+PRESERVE_SYMBOL = caseInsensitive<"PRESERVE">
+PREV_SYMBOL = caseInsensitive<"PREV">
+PRIMARY_SYMBOL = caseInsensitive<"PRIMARY">
+PRIVILEGES_SYMBOL = caseInsensitive<"PRIVILEGES">
+PROCEDURE_SYMBOL = caseInsensitive<"PROCEDURE">
+PROCESS_SYMBOL = caseInsensitive<"PROCESS">
+PROCESSLIST_SYMBOL = caseInsensitive<"PROCESSLIST">
+PROFILE_SYMBOL = caseInsensitive<"PROFILE">
+PROFILES_SYMBOL = caseInsensitive<"PROFILES">
+PROXY_SYMBOL = caseInsensitive<"PROXY">
+PURGE_SYMBOL = caseInsensitive<"PURGE">
+QUARTER_SYMBOL = caseInsensitive<"QUARTER">
+QUERY_SYMBOL = caseInsensitive<"QUERY">
+QUICK_SYMBOL = caseInsensitive<"QUICK">
+RANGE_SYMBOL = caseInsensitive<"RANGE">
+READS_SYMBOL = caseInsensitive<"READS">
+READ_ONLY_SYMBOL = caseInsensitive<"READ_ONLY">
+READ_SYMBOL = caseInsensitive<"READ">
+READ_WRITE_SYMBOL = caseInsensitive<"READ_WRITE">
+REAL_SYMBOL = caseInsensitive<"REAL">
+REBUILD_SYMBOL = caseInsensitive<"REBUILD">
+RECOVER_SYMBOL = caseInsensitive<"RECOVER">
+REDOFILE_SYMBOL = caseInsensitive<"REDOFILE"> { serverVersion < 80000 }?
+REDO_BUFFER_SIZE_SYMBOL = caseInsensitive<"REDO_BUFFER_SIZE">
+REDUNDANT_SYMBOL = caseInsensitive<"REDUNDANT">
+REFERENCES_SYMBOL = caseInsensitive<"REFERENCES">
+REGEXP_SYMBOL = caseInsensitive<"REGEXP">
+RELAY_SYMBOL = caseInsensitive<"RELAY">
+RELAYLOG_SYMBOL = caseInsensitive<"RELAYLOG">
+RELAY_LOG_FILE_SYMBOL = caseInsensitive<"RELAY_LOG_FILE">
+RELAY_LOG_POS_SYMBOL = caseInsensitive<"RELAY_LOG_POS">
+RELAY_THREAD_SYMBOL = caseInsensitive<"RELAY_THREAD">
+RELEASE_SYMBOL = caseInsensitive<"RELEASE">
+RELOAD_SYMBOL = caseInsensitive<"RELOAD">
+REMOVE_SYMBOL = caseInsensitive<"REMOVE">
+RENAME_SYMBOL = caseInsensitive<"RENAME">
+REORGANIZE_SYMBOL = caseInsensitive<"REORGANIZE">
+REPAIR_SYMBOL = caseInsensitive<"REPAIR">
+REPEATABLE_SYMBOL = caseInsensitive<"REPEATABLE">
+REPEAT_SYMBOL = caseInsensitive<"REPEAT">
+REPLACE_SYMBOL = caseInsensitive<"REPLACE">
+REPLICATION_SYMBOL = caseInsensitive<"REPLICATION">
+REPLICATE_DO_DB_SYMBOL = caseInsensitive<"REPLICATE_DO_DB"> { serverVersion >= 50700 }?
+REPLICATE_IGNORE_DB_SYMBOL = caseInsensitive<"REPLICATE_IGNORE_DB"> { serverVersion >= 50700 }?
+REPLICATE_DO_TABLE_SYMBOL = caseInsensitive<"REPLICATE_DO_TABLE"> { serverVersion >= 50700 }?
+REPLICATE_IGNORE_TABLE_SYMBOL = caseInsensitive<"REPLICATE_IGNORE_TABLE"> { serverVersion >= 50700 }?
+REPLICATE_WILD_DO_TABLE_SYMBOL = caseInsensitive<"REPLICATE_WILD_DO_TABLE"> { serverVersion >= 50700 }?
+REPLICATE_WILD_IGNORE_TABLE_SYMBOL = caseInsensitive<"REPLICATE_WILD_IGNORE_TABLE"> { serverVersion >= 50700 }?
+REPLICATE_REWRITE_DB_SYMBOL = caseInsensitive<"REPLICATE_REWRITE_DB"> { serverVersion >= 50700 }?
+REQUIRE_SYMBOL = caseInsensitive<"REQUIRE">
+RESET_SYMBOL = caseInsensitive<"RESET">
+RESIGNAL_SYMBOL = caseInsensitive<"RESIGNAL">
+RESTORE_SYMBOL = caseInsensitive<"RESTORE">
+RESTRICT_SYMBOL = caseInsensitive<"RESTRICT">
+RESUME_SYMBOL = caseInsensitive<"RESUME">
+RETURNED_SQLSTATE_SYMBOL = caseInsensitive<"RETURNED_SQLSTATE">
+RETURNS_SYMBOL = caseInsensitive<"RETURNS">
+RETURN_SYMBOL = caseInsensitive<"RETURN">?
+REVERSE_SYMBOL = caseInsensitive<"REVERSE">
+REVOKE_SYMBOL = caseInsensitive<"REVOKE">
+RIGHT_SYMBOL = caseInsensitive<"RIGHT">
+ROLLBACK_SYMBOL = caseInsensitive<"ROLLBACK">
+ROLLUP_SYMBOL = caseInsensitive<"ROLLUP">
+ROTATE_SYMBOL = caseInsensitive<"ROTATE"> { serverVersion >= 50713 }?
+ROUTINE_SYMBOL = caseInsensitive<"ROUTINE">
+ROWS_SYMBOL = caseInsensitive<"ROWS">
+ROW_COUNT_SYMBOL = caseInsensitive<"ROW_COUNT">
+ROW_FORMAT_SYMBOL = caseInsensitive<"ROW_FORMAT">
+ROW_SYMBOL = caseInsensitive<"ROW">
+RTREE_SYMBOL = caseInsensitive<"RTREE">
+SAVEPOINT_SYMBOL = caseInsensitive<"SAVEPOINT">
+SCHEDULE_SYMBOL = caseInsensitive<"SCHEDULE">
+SCHEMA_NAME_SYMBOL = caseInsensitive<"SCHEMA_NAME">
+SECOND_MICROSECOND_SYMBOL = caseInsensitive<"SECOND_MICROSECOND">
+SECOND_SYMBOL = caseInsensitive<"SECOND">
+SECURITY_SYMBOL = caseInsensitive<"SECURITY">
+SELECT_SYMBOL = caseInsensitive<"SELECT">
+```ohm
+  SENSITIVE_SYMBOL = caseInsensitive<"SENSITIVE">
+  SEPARATOR_SYMBOL = caseInsensitive<"SEPARATOR">
+  SERIALIZABLE_SYMBOL = caseInsensitive<"SERIALIZABLE">
+  SERIAL_SYMBOL = caseInsensitive<"SERIAL">
+  SESSION_SYMBOL = caseInsensitive<"SESSION">
+  SERVER_SYMBOL = caseInsensitive<"SERVER">
+  SERVER_OPTIONS_SYMBOL = caseInsensitive<"SERVER_OPTIONS">
+  SET_SYMBOL = caseInsensitive<"SET">
+  SET_VAR_SYMBOL = caseInsensitive<"SET_VAR">
+  SHARE_SYMBOL = caseInsensitive<"SHARE">
+  SHOW_SYMBOL = caseInsensitive<"SHOW">
+  SHUTDOWN_SYMBOL = caseInsensitive<"SHUTDOWN">
+  SIGNAL_SYMBOL = caseInsensitive<"SIGNAL">
+  SIGNED_SYMBOL = caseInsensitive<"SIGNED">
+  SIMPLE_SYMBOL = caseInsensitive<"SIMPLE">
+  SLAVE_SYMBOL = caseInsensitive<"SLAVE">
+  SLOW_SYMBOL = caseInsensitive<"SLOW">
+  SMALLINT_SYMBOL = caseInsensitive<"SMALLINT">
+  SNAPSHOT_SYMBOL = caseInsensitive<"SNAPSHOT">
+  SOCKET_SYMBOL = caseInsensitive<"SOCKET">
+  SONAME_SYMBOL = caseInsensitive<"SONAME">
+  SOUNDS_SYMBOL = caseInsensitive<"SOUNDS">
+  SOURCE_SYMBOL = caseInsensitive<"SOURCE">
+  SPATIAL_SYMBOL = caseInsensitive<"SPATIAL">
+  SPECIFIC_SYMBOL = caseInsensitive<"SPECIFIC">
+  SQLEXCEPTION_SYMBOL = caseInsensitive<"SQLEXCEPTION">
+  SQLSTATE_SYMBOL = caseInsensitive<"SQLSTATE">
+  SQLWARNING_SYMBOL = caseInsensitive<"SQLWARNING">
+  SQL_AFTER_GTIDS_SYMBOL = caseInsensitive<"SQL_AFTER_GTIDS">
+  SQL_AFTER_MTS_GAPS_SYMBOL = caseInsensitive<"SQL_AFTER_MTS_GAPS"> { serverVersion >= 50606 }?
+  SQL_BEFORE_GTIDS_SYMBOL = caseInsensitive<"SQL_BEFORE_GTIDS">
+  SQL_BIG_RESULT_SYMBOL = caseInsensitive<"SQL_BIG_RESULT">
+  SQL_BUFFER_RESULT_SYMBOL = caseInsensitive<"SQL_BUFFER_RESULT">
+  SQL_CACHE_SYMBOL = caseInsensitive<"SQL_CACHE"> { serverVersion < 80000 }?
+  SQL_CALC_FOUND_ROWS_SYMBOL = caseInsensitive<"SQL_CALC_FOUND_ROWS">
+  SQL_NO_CACHE_SYMBOL = caseInsensitive<"SQL_NO_CACHE">
+  SQL_SMALL_RESULT_SYMBOL = caseInsensitive<"SQL_SMALL_RESULT">
+  SQL_SYMBOL = caseInsensitive<"SQL">
+  SQL_THREAD_SYMBOL = caseInsensitive<"SQL_THREAD">
+  SSL_SYMBOL = caseInsensitive<"SSL">
+  STACKED_SYMBOL = caseInsensitive<"STACKED"> { serverVersion >= 50700 }?
+  STARTING_SYMBOL = caseInsensitive<"STARTING">
+  STARTS_SYMBOL = caseInsensitive<"STARTS">
+  START_SYMBOL = caseInsensitive<"START">
+  STATS_AUTO_RECALC_SYMBOL = caseInsensitive<"STATS_AUTO_RECALC">
+  STATS_PERSISTENT_SYMBOL = caseInsensitive<"STATS_PERSISTENT">
+  STATS_SAMPLE_PAGES_SYMBOL = caseInsensitive<"STATS_SAMPLE_PAGES">
+  STATUS_SYMBOL = caseInsensitive<"STATUS">
+  STDDEV_SAMP_SYMBOL = caseInsensitive<"STDDEV_SAMP"> { type = determineFunction(text) }
+  STDDEV_SYMBOL = caseInsensitive<"STDDEV"> { type = determineFunction("STD_SYMBOL") }
+  STDDEV_POP_SYMBOL = caseInsensitive<"STDDEV_POP"> { type = determineFunction("STD_SYMBOL") }
+  STD_SYMBOL = caseInsensitive<"STD"> { type = determineFunction(text) }
+  STOP_SYMBOL = caseInsensitive<"STOP">
+  STORAGE_SYMBOL = caseInsensitive<"STORAGE">
+  STORED_SYMBOL = caseInsensitive<"STORED"> { serverVersion >= 50707 }?
+  STRAIGHT_JOIN_SYMBOL = caseInsensitive<"STRAIGHT_JOIN">
+  STRING_SYMBOL = caseInsensitive<"STRING">
+  SUBCLASS_ORIGIN_SYMBOL = caseInsensitive<"SUBCLASS_ORIGIN">
+  SUBDATE_SYMBOL = caseInsensitive<"SUBDATE"> { type = determineFunction(text) }
+  SUBJECT_SYMBOL = caseInsensitive<"SUBJECT">
+  SUBPARTITIONS_SYMBOL = caseInsensitive<"SUBPARTITIONS">
+  SUBPARTITION_SYMBOL = caseInsensitive<"SUBPARTITION">
+  SUBSTR_SYMBOL = caseInsensitive<"SUBSTR"> { type = determineFunction("SUBSTRING_SYMBOL") }
+  SUBSTRING_SYMBOL = caseInsensitive<"SUBSTRING"> { type = determineFunction(text) }
+  SUM_SYMBOL = caseInsensitive<"SUM"> { type = determineFunction(text) }
+  SUPER_SYMBOL = caseInsensitive<"SUPER">
+  SUSPEND_SYMBOL = caseInsensitive<"SUSPEND">
+  SWAPS_SYMBOL = caseInsensitive<"SWAPS">
+  SWITCHES_SYMBOL = caseInsensitive<"SWITCHES">
+  SYSDATE_SYMBOL = caseInsensitive<"SYSDATE"> { type = determineFunction(text) }
+  TABLES_SYMBOL = caseInsensitive<"TABLES">
+  TABLESPACE_SYMBOL = caseInsensitive<"TABLESPACE">
+  TABLE_REF_PRIORITY_SYMBOL = caseInsensitive<"TABLE_REF_PRIORITY"> { serverVersion < 80000 }?
+  TABLE_SYMBOL = caseInsensitive<"TABLE">
+  TABLE_CHECKSUM_SYMBOL = caseInsensitive<"TABLE_CHECKSUM">
+  TABLE_NAME_SYMBOL = caseInsensitive<"TABLE_NAME">
+  TEMPORARY_SYMBOL = caseInsensitive<"TEMPORARY">
+  TEMPTABLE_SYMBOL = caseInsensitive<"TEMPTABLE">
+  TERMINATED_SYMBOL = caseInsensitive<"TERMINATED">
+  TEXT_SYMBOL = caseInsensitive<"TEXT">
+  THAN_SYMBOL = caseInsensitive<"THAN">
+  THEN_SYMBOL = caseInsensitive<"THEN">
+  TIMESTAMP_SYMBOL = caseInsensitive<"TIMESTAMP">
+  TIMESTAMP_ADD_SYMBOL = caseInsensitive<"TIMESTAMP_ADD">
+  TIMESTAMP_DIFF_SYMBOL = caseInsensitive<"TIMESTAMP_DIFF">
+  TIME_SYMBOL = caseInsensitive<"TIME">
+  TINYBLOB_SYMBOL = caseInsensitive<"TINYBLOB">
+  TINYINT_SYMBOL = caseInsensitive<"TINYINT">
+  TINYTEXT_SYMBOL = caseInsensitive<"TINYTEXT">
+  TO_SYMBOL = caseInsensitive<"TO">
+  TRAILING_SYMBOL = caseInsensitive<"TRAILING">
+  TRANSACTION_SYMBOL = caseInsensitive<"TRANSACTION">
+  TRIGGERS_SYMBOL = caseInsensitive<"TRIGGERS">
+  TRIGGER_SYMBOL = caseInsensitive<"TRIGGER">
+  TRIM_SYMBOL = caseInsensitive<"TRIM"> { type = determineFunction(text) }
+  TRUE_SYMBOL = caseInsensitive<"TRUE">
+  TRUNCATE_SYMBOL = caseInsensitive<"TRUNCATE">
+  TYPES_SYMBOL = caseInsensitive<"TYPES">
+  TYPE_SYMBOL = caseInsensitive<"TYPE">
+  UDF_RETURNS_SYMBOL = caseInsensitive<"UDF_RETURNS">
+  UNCOMMITTED_SYMBOL = caseInsensitive<"UNCOMMITTED">
+  UNDEFINED_SYMBOL = caseInsensitive<"UNDEFINED">
+  UNDOFILE_SYMBOL = caseInsensitive<"UNDOFILE">
+  UNDO_BUFFER_SIZE_SYMBOL = caseInsensitive<"UNDO_BUFFER_SIZE">
+  UNDO_SYMBOL = caseInsensitive<"UNDO">
+  UNICODE_SYMBOL = caseInsensitive<"UNICODE">
+  UNINSTALL_SYMBOL = caseInsensitive<"UNINSTALL">
+  UNION_SYMBOL = caseInsensitive<"UNION">
+  UNIQUE_SYMBOL = caseInsensitive<"UNIQUE">
+  UNKNOWN_SYMBOL = caseInsensitive<"UNKNOWN">
+  UNLOCK_SYMBOL = caseInsensitive<"UNLOCK">
+  UNSIGNED_SYMBOL = caseInsensitive<"UNSIGNED">
+  UNTIL_SYMBOL = caseInsensitive<"UNTIL">
+  UPDATE_SYMBOL = caseInsensitive<"UPDATE">
+  UPGRADE_SYMBOL = caseInsensitive<"UPGRADE">
+  USAGE_SYMBOL = caseInsensitive<"USAGE">
+  USER_RESOURCES_SYMBOL = caseInsensitive<"USER_RESOURCES">
+  USER_SYMBOL = caseInsensitive<"USER">
+  USE_FRM_SYMBOL = caseInsensitive<"USE_FRM">
+  USE_SYMBOL = caseInsensitive<"USE">
+  USING_SYMBOL = caseInsensitive<"USING">
+  UTC_DATE_SYMBOL = caseInsensitive<"UTC_DATE">
+  UTC_TIMESTAMP_SYMBOL = caseInsensitive<"UTC_TIMESTAMP">
+  UTC_TIME_SYMBOL = caseInsensitive<"UTC_TIME">
+  VALIDATION_SYMBOL = caseInsensitive<"VALIDATION"> { serverVersion >= 50706 }?
+  VALUES_SYMBOL = caseInsensitive<"VALUES">
+  VALUE_SYMBOL = caseInsensitive<"VALUE">
+  VARBINARY_SYMBOL = caseInsensitive<"VARBINARY">
+  VARCHAR_SYMBOL = caseInsensitive<"VARCHAR">
+  VARIABLES_SYMBOL = caseInsensitive<"VARIABLES">
+  VARIANCE_SYMBOL = caseInsensitive<"VARIANCE"> { type = determineFunction(text) }
+  VARYING_SYMBOL = caseInsensitive<"VARYING">
+  VAR_POP_SYMBOL = caseInsensitive<"VAR_POP"> { type = determineFunction("VARIANCE_SYMBOL") }
+  VAR_SAMP_SYMBOL = caseInsensitive<"VAR_SAMP"> { type = determineFunction(text) }
+  VIEW_SYMBOL = caseInsensitive<"VIEW">
+  VIRTUAL_SYMBOL = caseInsensitive<"VIRTUAL"> { serverVersion >= 50707 }?
+  WAIT_SYMBOL = caseInsensitive<"WAIT">
+  WARNINGS_SYMBOL = caseInsensitive<"WARNINGS">
+  WEEK_SYMBOL = caseInsensitive<"WEEK">
+  WEIGHT_STRING_SYMBOL = caseInsensitive<"WEIGHT_STRING">
+  WHEN_SYMBOL = caseInsensitive<"WHEN">
+  WHERE_SYMBOL = caseInsensitive<"WHERE">
+  WHILE_SYMBOL = caseInsensitive<"WHILE">
+  WITH_SYMBOL = caseInsensitive<"WITH">
+  WITHOUT_SYMBOL = caseInsensitive<"WITHOUT">
+  WORK_SYMBOL = caseInsensitive<"WORK">
+  WRAPPER_SYMBOL = caseInsensitive<"WRAPPER">
+  WRITE_SYMBOL = caseInsensitive<"WRITE">
+  X509_SYMBOL = caseInsensitive<"X509">
+  XA_SYMBOL = caseInsensitive<"XA">
+  XID_SYMBOL = caseInsensitive<"XID"> { serverVersion >= 50704 }?
+  XML_SYMBOL = caseInsensitive<"XML">
+  XOR_SYMBOL = caseInsensitive<"XOR">
+  YEAR_MONTH_SYMBOL = caseInsensitive<"YEAR_MONTH">
+  YEAR_SYMBOL = caseInsensitive<"YEAR">
+  ZEROFILL_SYMBOL = caseInsensitive<"ZEROFILL">
+  PERSIST_SYMBOL = caseInsensitive<"PERSIST"> { serverVersion >= 80000 }?
+  ROLE_SYMBOL = caseInsensitive<"ROLE"> { serverVersion >= 80000 }?
+  ADMIN_SYMBOL = caseInsensitive<"ADMIN"> { serverVersion >= 80000 }?
+  INVISIBLE_SYMBOL = caseInsensitive<"INVISIBLE"> { serverVersion >= 80000 }?
+  VISIBLE_SYMBOL = caseInsensitive<"VISIBLE"> { serverVersion >= 80000 }?
+  EXCEPT_SYMBOL = caseInsensitive<"EXCEPT"> { serverVersion >= 80000 }?
+  COMPONENT_SYMBOL = caseInsensitive<"COMPONENT"> { serverVersion >= 80000 }?
+  RECURSIVE_SYMBOL = caseInsensitive<"RECURSIVE"> { serverVersion >= 80000 }?
+  JSON_OBJECTAGG_SYMBOL = caseInsensitive<"JSON_OBJECTAGG"> { serverVersion >= 80000 }?
+  JSON_ARRAYAGG_SYMBOL = caseInsensitive<"JSON_ARRAYAGG"> { serverVersion >= 80000 }?
+  OF_SYMBOL = caseInsensitive<"OF"> { serverVersion >= 80000 }?
+  SKIP_SYMBOL = caseInsensitive<"SKIP"> { serverVersion >= 80000 }?
+  LOCKED_SYMBOL = caseInsensitive<"LOCKED"> { serverVersion >= 80000 }?
+  NOWAIT_SYMBOL = caseInsensitive<"NOWAIT"> { serverVersion >= 80000 }?
+  GROUPING_SYMBOL = caseInsensitive<"GROUPING"> { serverVersion >= 80000 }?
+  PERSIST_ONLY_SYMBOL = caseInsensitive<"PERSIST_ONLY"> { serverVersion >= 80000 }?
+  HISTOGRAM_SYMBOL = caseInsensitive<"HISTOGRAM"> { serverVersion >= 80000 }?
+  BUCKETS_SYMBOL = caseInsensitive<"BUCKETS"> { serverVersion >= 80000 }?
+  REMOTE_SYMBOL = caseInsensitive<"REMOTE"> { serverVersion >= 80003 && serverVersion < 80014 }?
+  CLONE_SYMBOL = caseInsensitive<"CLONE"> { serverVersion >= 80000 }?
+  CUME_DIST_SYMBOL = caseInsensitive<"CUME_DIST"> { serverVersion >= 80000 }?
+  DENSE_RANK_SYMBOL = caseInsensitive<"DENSE_RANK"> { serverVersion >= 80000 }?
+  EXCLUDE_SYMBOL = caseInsensitive<"EXCLUDE"> { serverVersion >= 80000 }?
+  FIRST_VALUE_SYMBOL = caseInsensitive<"FIRST_VALUE"> { serverVersion >= 80000 }?
+  FOLLOWING_SYMBOL = caseInsensitive<"FOLLOWING"> { serverVersion >= 80000 }?
+  GROUPS_SYMBOL = caseInsensitive<"GROUPS"> { serverVersion >= 80000 }?
+  LAG_SYMBOL = caseInsensitive<"LAG"> { serverVersion >= 80000 }?
+  LAST_VALUE_SYMBOL = caseInsensitive<"LAST_VALUE"> { serverVersion >= 80000 }?
+  LEAD_SYMBOL = caseInsensitive<"LEAD"> { serverVersion >= 80000 }?
+  NTH_VALUE_SYMBOL = caseInsensitive<"NTH_VALUE"> { serverVersion >= 80000 }?
+  NTILE_SYMBOL = caseInsensitive<"NTILE"> { serverVersion >= 80000 }?
+  NULLS_SYMBOL = caseInsensitive<"NULLS"> { serverVersion >= 80000 }?
+  OTHERS_SYMBOL = caseInsensitive<"OTHERS"> { serverVersion >= 80000 }?
+  OVER_SYMBOL = caseInsensitive<"OVER"> { serverVersion >= 80000 }?
+  PERCENT_RANK_SYMBOL = caseInsensitive<"PERCENT_RANK"> { serverVersion >= 80000 }?
+  PRECEDING_SYMBOL = caseInsensitive<"PRECEDING"> { serverVersion >= 80000 }?
+  RANK_SYMBOL = caseInsensitive<"RANK"> { serverVersion >= 80000 }?
+  RESPECT_SYMBOL = caseInsensitive<"RESPECT"> { serverVersion >= 80000 }?
+  ROW_NUMBER_SYMBOL = caseInsensitive<"ROW_NUMBER"> { serverVersion >= 80000 }?
+  TIES_SYMBOL = caseInsensitive<"TIES"> { serverVersion >= 80000 }?
+  UNBOUNDED_SYMBOL = caseInsensitive<"UNBOUNDED"> { serverVersion >= 80000 }?
+  WINDOW_SYMBOL = caseInsensitive<"WINDOW"> { serverVersion >= 80000 }?
+  EMPTY_SYMBOL = caseInsensitive<"EMPTY"> { serverVersion >= 80000 }?
+  JSON_TABLE_SYMBOL = caseInsensitive<"JSON_TABLE"> { serverVersion >= 80000 }?
+  NESTED_SYMBOL = caseInsensitive<"NESTED"> { serverVersion >= 80000 }?
+  ORDINALITY_SYMBOL = caseInsensitive<"ORDINALITY"> { serverVersion >= 80000 }?
+  PATH_SYMBOL = caseInsensitive<"PATH"> { serverVersion >= 80000 }?
+  HISTORY_SYMBOL = caseInsensitive<"HISTORY"> { serverVersion >= 80000 }?
+  REUSE_SYMBOL = caseInsensitive<"REUSE"> { serverVersion >= 80000 }?
+  SRID_SYMBOL = caseInsensitive<"SRID"> { serverVersion >= 80000 }?
+  THREAD_PRIORITY_SYMBOL = caseInsensitive<"THREAD_PRIORITY"> { serverVersion >= 80000 }?
+  RESOURCE_SYMBOL = caseInsensitive<"RESOURCE"> { serverVersion >= 80000 }?
+  SYSTEM_SYMBOL = caseInsensitive<"SYSTEM"> { serverVersion >= 80000 }?
+  VCPU_SYMBOL = caseInsensitive<"VCPU"> { serverVersion >= 80000 }?
+  MASTER_PUBLIC_KEY_PATH_SYMBOL = caseInsensitive<"MASTER_PUBLIC_KEY_PATH"> { serverVersion >= 80000 }?
+  GET_MASTER_PUBLIC_KEY_SYMBOL = caseInsensitive<"GET_MASTER_PUBLIC_KEY_SYM"> { serverVersion >= 80000 }?
+  RESTART_SYMBOL = caseInsensitive<"RESTART"> { serverVersion >= 80011 }?
+  DEFINITION_SYMBOL = caseInsensitive<"DEFINITION"> { serverVersion >= 80011 }?
+  DESCRIPTION_SYMBOL = caseInsensitive<"DESCRIPTION"> { serverVersion >= 80011 }?
+  ORGANIZATION_SYMBOL = caseInsensitive<"ORGANIZATION"> { serverVersion >= 80011 }?
+  REFERENCE_SYMBOL = caseInsensitive<"REFERENCE"> { serverVersion >= 80011 }?
+  OPTIONAL_SYMBOL = caseInsensitive<"OPTIONAL"> { serverVersion >= 80013 }?
+  SECONDARY_SYMBOL = caseInsensitive<"SECONDARY"> { serverVersion >= 80013 }?
+  SECONDARY_ENGINE_SYMBOL = caseInsensitive<"SECONDARY_ENGINE"> { serverVersion >= 80013 }?
+  SECONDARY_LOAD_SYMBOL = caseInsensitive<"SECONDARY_LOAD"> { serverVersion >= 80013 }?
+  SECONDARY_UNLOAD_SYMBOL = caseInsensitive<"SECONDARY_UNLOAD"> { serverVersion >= 80013 }?
+  ACTIVE_SYMBOL = caseInsensitive<"ACTIVE"> { serverVersion >= 80014 }?
+  INACTIVE_SYMBOL = caseInsensitive<"INACTIVE"> { serverVersion >= 80014 }?
+  LATERAL_SYMBOL = caseInsensitive<"LATERAL"> { serverVersion >= 80014 }?
+  RETAIN_SYMBOL = caseInsensitive<"RETAIN"> { serverVersion >= 80014 }?
+  OLD_SYMBOL = caseInsensitive<"OLD"> { serverVersion >= 80014 }?
+  NETWORK_NAMESPACE_SYMBOL = caseInsensitive<"NETWORK_NAMESPACE"> { serverVersion >= 80017 }?
+  ENFORCED_SYMBOL = caseInsensitive<"ENFORCED"> { serverVersion >= 80017 }?
+  ARRAY_SYMBOL = caseInsensitive<"ARRAY"> { serverVersion >= 80017 }?
+  OJ_SYMBOL = caseInsensitive<"OJ"> { serverVersion >= 80017 }?
+  MEMBER_SYMBOL = caseInsensitive<"MEMBER"> { serverVersion >= 80017 }?
+  RANDOM_SYMBOL = caseInsensitive<"RANDOM"> { serverVersion >= 80018 }?
+  MASTER_COMPRESSION_ALGORITHM_SYMBOL = caseInsensitive<"MASTER_COMPRESSION_ALGORITHM"> { serverVersion >= 80018 }?
+  MASTER_ZSTD_COMPRESSION_LEVEL_SYMBOL = caseInsensitive<"MASTER_ZSTD_COMPRESSION_LEVEL"> { serverVersion >= 80018 }?
+  PRIVILEGE_CHECKS_USER_SYMBOL = caseInsensitive<"PRIVILEGE_CHECKS_USER"> { serverVersion >= 80018 }?
+  MASTER_TLS_CIPHERSUITES_SYMBOL = caseInsensitive<"MASTER_TLS_CIPHERSUITES"> { serverVersion >= 80018 }?
+  REQUIRE_ROW_FORMAT_SYMBOL = caseInsensitive<"REQUIRE_ROW_FORMAT"> { serverVersion >= 80019 }?
+  PASSWORD_LOCK_TIME_SYMBOL = caseInsensitive<"PASSWORD_LOCK_TIME"> { serverVersion >= 80019 }?
+  FAILED_LOGIN_ATTEMPTS_SYMBOL = caseInsensitive<"FAILED_LOGIN_ATTEMPTS"> { serverVersion >= 80019 }?
+  REQUIRE_TABLE_PRIMARY_KEY_CHECK_SYMBOL = caseInsensitive<"REQUIRE_TABLE_PRIMARY_KEY_CHECK"> { serverVersion >= 80019 }?
+  STREAM_SYMBOL = caseInsensitive<"STREAM"> { serverVersion >= 80019 }?
+  OFF_SYMBOL = caseInsensitive<"OFF"> { serverVersion >= 80019 }?
+  INT1_SYMBOL = "INT1" { type = "TINYINT_SYMBOL" }
+  INT2_SYMBOL = "INT2" { type = "SMALLINT_SYMBOL" }
+  INT3_SYMBOL = "INT3" { type = "MEDIUMINT_SYMBOL" }
+  INT4_SYMBOL = "INT4" { type = "INT_SYMBOL" }
+  INT8_SYMBOL = "INT8" { type = "BIGINT_SYMBOL" }
+  SQL_TSI_SECOND_SYMBOL = "SQL_TSI_SECOND" { type = "SECOND_SYMBOL" }
+  SQL_TSI_MINUTE_SYMBOL = "SQL_TSI_MINUTE" { type = "MINUTE_SYMBOL" }
+  SQL_TSI_HOUR_SYMBOL = "SQL_TSI_HOUR" { type = "HOUR_SYMBOL" }
+  SQL_TSI_DAY_SYMBOL = "SQL_TSI_DAY" { type = "DAY_SYMBOL" }
+  SQL_TSI_WEEK_SYMBOL = "SQL_TSI_WEEK" { type = "WEEK_SYMBOL" }
+  SQL_TSI_MONTH_SYMBOL = "SQL_TSI_MONTH" { type = "MONTH_SYMBOL" }
+  SQL_TSI_QUARTER_SYMBOL = "SQL_TSI_QUARTER" { type = "QUARTER_SYMBOL" }
+  SQL_TSI_YEAR_SYMBOL = "SQL_TSI_YEAR" { type = "YEAR_SYMBOL" }
+  WHITESPACE = [ \t\f\r\n] { skip() }
+  INVALID_INPUT = [\u0001-\u0008] | "\u000B" | "\u000C" | [\u000E-\u001F] | "[" | "]"
+  UNDERSCORE_CHARSET = "_" [a-z0-9]+ { type = checkCharset(text) }
+  IDENTIFIER = digits+ "e" (letterWhenUnquotedNoDigit letterWhenUnquoted*)? | digits+ letterWithoutFloatPart letterWhenUnquoted* | letterWhenUnquotedNoDigit letterWhenUnquoted*
+  NCHAR_TEXT = "n" SINGLE_QUOTED_TEXT
+  BACK_TICK_QUOTED_ID = "`" (("\\" .)? .)*? "`"
+  DOUBLE_QUOTED_TEXT = (DOUBLE_QUOTE (("\\" .)? .)*? DOUBLE_QUOTE)+
+  SINGLE_QUOTED_TEXT = (SINGLE_QUOTE (("\\" .)? .)*? SINGLE_QUOTE)+
+  LOGICAL_OR_OPERATOR = "||" { type = isSqlModeActive(PipesAsConcat) ? "CONCAT_PIPES_SYMBOL" : "LOGICAL_OR_OPERATOR" }
+  BITWISE_OR_OPERATOR = "|"
+  JSON_SEPARATOR_SYMBOL = "->" { serverVersion >= 50708 }?
+  JSON_UNQUOTED_SEPARATOR_SYMBOL = "->>" { serverVersion >= 50713 }?
+  DOT_IDENTIFIER = "." letterWhenUnquotedNoDigit letterWhenUnquoted* { emitDot() type = "IDENTIFIER" }
+  NOT2_SYMBOL = caseInsensitive<"NOT">
+  CONCAT_PIPES_SYMBOL = "||"
+  LONG_NUMBER = digits { type = determineNumericType(text) }
+  ULONGLONG_NUMBER = digits { type = determineNumericType(text) }
+  AT_TEXT_SUFFIX = "@" SIMPLE_IDENTIFIER
+  CHARACTER_SYMBOL = "CHARACTER" { type = "CHAR_SYMBOL" }
+  CURRENT_DATE_SYMBOL = "CURRENT_DATE" { type = determineFunction("CURDATE_SYMBOL") }
+  CURRENT_TIME_SYMBOL = "CURRENT_TIME" { type = determineFunction("CURTIME_SYMBOL") }
+  CURRENT_TIMESTAMP_SYMBOL = "CURRENT_TIMESTAMP" { type = "NOW_SYMBOL" }
+  DAYOFMONTH_SYMBOL = "DAYOFMONTH" { type = "DAY_SYMBOL" }
+  DEC_SYMBOL = "DEC" { type = "DECIMAL_SYMBOL" }
+  DISTINCTROW_SYMBOL = "DISTINCTROW" { type = "DISTINCT_SYMBOL" }
+  FIELDS_SYMBOL = "FIELDS" { type = "COLUMNS_SYMBOL" }
+  FLOAT4_SYMBOL = "FLOAT4" { type = "FLOAT_SYMBOL" }
+  FLOAT8_SYMBOL = "FLOAT8" { type = "DOUBLE_SYMBOL" }
+  INTEGER_SYMBOL = "INTEGER" { type = "INT_SYMBOL" }
+  IO_THREAD_SYMBOL = "IO_THREAD" { type = "RELAY_THREAD_SYMBOL" }
+  LOCALTIME_SYMBOL = "LOCALTIME" { type = "NOW_SYMBOL" }
+  LOCALTIMESTAMP_SYMBOL = "LOCALTIMESTAMP" { type = "NOW_SYMBOL" }
+  MIDDLEINT_SYMBOL = "MIDDLEINT" { type = "MEDIUMINT_SYMBOL" }
+  MID_SYMBOL = "MID" { type = determineFunction("SUBSTRING_SYMBOL") }
+  NDB_SYMBOL = "NDB" { type = "NDBCLUSTER_SYMBOL" }
+  RLIKE_SYMBOL = "RLIKE" { type = "REGEXP_SYMBOL" }
+  SCHEMA_SYMBOL = "SCHEMA" { type = "DATABASE_SYMBOL" }
+  SCHEMAS_SYMBOL = "SCHEMAS" { type = "DATABASES_SYMBOL" }
+  SESSION_USER_SYMBOL = "SESSION_USER" { type = determineFunction("USER_SYMBOL") }
+  SOME_SYMBOL = "SOME" { type = "ANY_SYMBOL" }
+  SUBSTR_SYMBOL = "SUBSTR" { type = determineFunction("SUBSTRING_SYMBOL") }
+  SYSTEM_USER_SYMBOL = "SYSTEM_USER" { type = determineFunction("USER_SYMBOL") }
+  VARCHARACTER_SYMBOL = "VARCHARACTER" { type = "VARCHAR_SYMBOL" }
+  VERSION_COMMENT_START = ("/*!" digits) (checkVersion(text)? | .*? "*/") { skip() }
+  MYSQL_COMMENT_START = "/*!" { inVersionComment = true skip() }
+  VERSION_COMMENT_END = "*/" { inVersionComment ? inVersionComment = false : skip() }
+  BLOCK_COMMENT = ("/**/" | "/*" ~"!" .*? "*/") { skip() }
+  POUND_COMMENT = "#" ~([\n\r])* { skip() }
+  DASHDASH_COMMENT = "--" ([ \t] (~[\n\r])* | lineBreak | end) { skip() }
+  digits = digit+
+  hexDigit = [0-9a-fA-F]
+  letterWhenUnquoted = digit | letterWhenUnquotedNoDigit
+  letterWhenUnquotedNoDigit = [a-zA-Z_$\u0080-\uffff]
+  letterWithoutFloatPart = [a-df-zA-DF-Z_$\u0080-\uffff]
+  DOUBLE_QUOTE = "\""
+  SINGLE_QUOTE = "'"
+  lineBreak = [\n\r]
+  SIMPLE_IDENTIFIER = (digit | [a-zA-Z_$] | ".")+
+}

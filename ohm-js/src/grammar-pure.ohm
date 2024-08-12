@@ -1,0 +1,2252 @@
+SQL {
+
+Query 
+  = EOF --EOF
+  | ((SimpleStatement | BeginWork) ((SEMICOLON_SYMBOL EOF?) | EOF)) --data
+
+EOF
+  = end
+
+SimpleStatement 
+  = AlterStatement
+  | CreateStatement
+  | DropStatement
+  | RenameTableStatement
+  | TruncateTableStatement
+  | ImportStatement
+  | CallStatement
+  | DeleteStatement
+  | DoStatement
+  | HandlerStatement
+  | InsertStatement
+  | LoadStatement
+  | ReplaceStatement
+  | SelectStatement
+  | UpdateStatement
+  | TransactionOrLockingStatement
+/*
+  @TODO
+  | replicationStatement
+  | preparedStatement
+  | cloneStatement
+  | accountManagementStatement
+  | tableAdministrationStatement
+  | installUninstallStatment
+  | setStatement
+  | showStatement
+  | resourceGroupManagement
+  | otherAdministrativeStatement
+  | utilityStatement
+  | getDiagnostics
+  | signalStatement
+  | resignalStatement
+*/
+
+AlterStatement 
+  =   ALTER_SYMBOL AlterTable
+    | ALTER_SYMBOL AlterDatabase
+    | ALTER_SYMBOL (PROCEDURE_SYMBOL ProcedureRef RoutineAlterOptions?) --procedure
+    | ALTER_SYMBOL (FUNCTION_SYMBOL FunctionRef RoutineAlterOptions?) --function
+    | ALTER_SYMBOL AlterView
+    | ALTER_SYMBOL AlterEvent
+    | ALTER_SYMBOL AlterTablespace
+    | ALTER_SYMBOL AlterUndoTablespace
+    | ALTER_SYMBOL AlterLogfileGroup
+    | ALTER_SYMBOL AlterServer
+    | ALTER_SYMBOL (INSTANCE_SYMBOL ROTATE_SYMBOL TextOrIdentifier MASTER_SYMBOL KEY_SYMBOL) --instance
+
+
+AlterDatabase 
+  = DATABASE_SYMBOL SchemaRef (CreateDatabaseOption+ | (UPGRADE_SYMBOL DATA_SYMBOL DIRECTORY_SYMBOL NAME_SYMBOL))
+
+
+AlterEvent 
+  = DefinerClause? EVENT_SYMBOL EventRef (ON_SYMBOL SCHEDULE_SYMBOL Schedule)? (ON_SYMBOL COMPLETION_SYMBOL NOT_SYMBOL? PRESERVE_SYMBOL)? (RENAME_SYMBOL TO_SYMBOL IDENTIFIER)? (ENABLE_SYMBOL | (DISABLE_SYMBOL (ON_SYMBOL SLAVE_SYMBOL)?))? (COMMENT_SYMBOL TextLiteral)? (DO_SYMBOL CompoundStatement)?
+
+
+AlterLogfileGroup 
+  = LOGFILE_SYMBOL GROUP_SYMBOL LogfileGroupRef ADD_SYMBOL UNDOFILE_SYMBOL TextLiteral AlterLogfileGroupOptions?
+
+
+AlterLogfileGroupOptions 
+  = AlterLogfileGroupOption (COMMA_SYMBOL? AlterLogfileGroupOption)*
+
+
+AlterLogfileGroupOption 
+  = TsOptionInitialSize
+  | TsOptionEngine
+  | TsOptionWait
+
+
+AlterServer 
+  = SERVER_SYMBOL ServerRef ServerOptions
+
+
+AlterTable 
+  = OnlineOption? IGNORE_SYMBOL? TABLE_SYMBOL TableRef AlterTableActions?
+
+
+AlterTableActions 
+  = (AlterCommandList (PartitionClause | RemovePartitioning)?)
+  | PartitionClause
+  | RemovePartitioning
+  | ((AlterCommandsModifierList COMMA_SYMBOL)? StandaloneAlterCommands)
+
+
+AlterCommandList 
+  = AlterCommandsModifierList
+  | ((AlterCommandsModifierList COMMA_SYMBOL)? AlterList)
+
+
+AlterCommandsModifierList 
+  = AlterCommandsModifier (COMMA_SYMBOL AlterCommandsModifier)*
+
+
+StandaloneAlterCommands 
+  = (DISCARD_SYMBOL TABLESPACE_SYMBOL)
+  | (IMPORT_SYMBOL TABLESPACE_SYMBOL)
+  | AlterPartition
+  | (SECONDARY_LOAD_SYMBOL | SECONDARY_UNLOAD_SYMBOL)
+
+
+AlterPartition 
+  = (ADD_SYMBOL PARTITION_SYMBOL NoWriteToBinLog? (PartitionDefinitions | (PARTITIONS_SYMBOL Real_ulong_number)))
+  | (DROP_SYMBOL PARTITION_SYMBOL IdentifierList)
+  | (REBUILD_SYMBOL PARTITION_SYMBOL NoWriteToBinLog? AllOrPartitionNameList)
+  | (OPTIMIZE_SYMBOL PARTITION_SYMBOL NoWriteToBinLog? AllOrPartitionNameList NoWriteToBinLog?)
+  | (ANALYZE_SYMBOL PARTITION_SYMBOL NoWriteToBinLog? AllOrPartitionNameList)
+  | (CHECK_SYMBOL PARTITION_SYMBOL AllOrPartitionNameList CheckOption*)
+  | (REPAIR_SYMBOL PARTITION_SYMBOL NoWriteToBinLog? AllOrPartitionNameList RepairType*)
+  | (COALESCE_SYMBOL PARTITION_SYMBOL NoWriteToBinLog? Real_ulong_number)
+  | (TRUNCATE_SYMBOL PARTITION_SYMBOL AllOrPartitionNameList)
+  | (REORGANIZE_SYMBOL PARTITION_SYMBOL NoWriteToBinLog? (IdentifierList INTO_SYMBOL PartitionDefinitions)?)
+  | (EXCHANGE_SYMBOL PARTITION_SYMBOL IDENTIFIER WITH_SYMBOL TABLE_SYMBOL TableRef WithValidation?)
+  | (DISCARD_SYMBOL PARTITION_SYMBOL AllOrPartitionNameList TABLESPACE_SYMBOL)
+  | (IMPORT_SYMBOL PARTITION_SYMBOL AllOrPartitionNameList TABLESPACE_SYMBOL)
+
+
+AlterList 
+  = (AlterListItem | CreateTableOptionsSpaceSeparated) (COMMA_SYMBOL (AlterListItem | AlterCommandsModifier | CreateTableOptionsSpaceSeparated))*
+
+
+AlterCommandsModifier 
+  = AlterAlgorithmOption
+  | AlterLockOption
+  | WithValidation
+
+
+AlterListItem 
+  = (ADD_SYMBOL COLUMN_SYMBOL? ((IDENTIFIER FieldDefinition CheckOrReferences? Place?) | (OPEN_PAR_SYMBOL TableElementList CLOSE_PAR_SYMBOL)))
+  | (ADD_SYMBOL TableConstraintDef)
+  | (CHANGE_SYMBOL COLUMN_SYMBOL? ColumnInternalRef IDENTIFIER FieldDefinition Place?)
+  | (MODIFY_SYMBOL COLUMN_SYMBOL? ColumnInternalRef FieldDefinition Place?)
+  | (DROP_SYMBOL ((COLUMN_SYMBOL? ColumnInternalRef Restrict?) | (FOREIGN_SYMBOL KEY_SYMBOL (ColumnInternalRef | ColumnInternalRef?)) | (PRIMARY_SYMBOL KEY_SYMBOL) | (KeyOrIndex IndexRef) | (CHECK_SYMBOL IDENTIFIER) | (CONSTRAINT_SYMBOL IDENTIFIER)))
+  | (DISABLE_SYMBOL KEYS_SYMBOL)
+  | (ENABLE_SYMBOL KEYS_SYMBOL)
+  | (ALTER_SYMBOL COLUMN_SYMBOL? ColumnInternalRef ((SET_SYMBOL DEFAULT_SYMBOL (ExprWithParentheses | SignedLiteral)) | (DROP_SYMBOL DEFAULT_SYMBOL)))
+  | (ALTER_SYMBOL INDEX_SYMBOL IndexRef visibility)
+  | (ALTER_SYMBOL CHECK_SYMBOL IDENTIFIER constraintEnforcement)
+  | (ALTER_SYMBOL CONSTRAINT_SYMBOL IDENTIFIER constraintEnforcement)
+  | (RENAME_SYMBOL COLUMN_SYMBOL ColumnInternalRef TO_SYMBOL IDENTIFIER)
+  | (RENAME_SYMBOL (TO_SYMBOL | AS_SYMBOL)? TableName)
+  | (RENAME_SYMBOL KeyOrIndex IndexRef TO_SYMBOL IndexName)
+  | (CONVERT_SYMBOL TO_SYMBOL Charset (DEFAULT_SYMBOL | CharsetName) Collate?)
+  | FORCE_SYMBOL
+  | (ORDER_SYMBOL BY_SYMBOL AlterOrderList)
+  | (UPGRADE_SYMBOL PARTITIONING_SYMBOL)
+
+
+Place 
+  = (AFTER_SYMBOL IDENTIFIER)
+  | FIRST_SYMBOL
+
+
+Restrict 
+  = RESTRICT_SYMBOL
+  | CASCADE_SYMBOL
+
+
+AlterOrderList 
+  = IDENTIFIER Direction? (COMMA_SYMBOL IDENTIFIER Direction?)*
+
+
+AlterAlgorithmOption 
+  = ALGORITHM_SYMBOL EQUAL_OPERATOR? (DEFAULT_SYMBOL | IDENTIFIER)
+
+
+AlterLockOption 
+  = LOCK_SYMBOL EQUAL_OPERATOR? (DEFAULT_SYMBOL | IDENTIFIER)
+
+
+IndexLockAndAlgorithm 
+  = (AlterAlgorithmOption AlterLockOption?)
+  | (AlterLockOption AlterAlgorithmOption?)
+
+
+WithValidation 
+  = (WITH_SYMBOL | WITHOUT_SYMBOL) VALIDATION_SYMBOL
+
+
+RemovePartitioning 
+  = REMOVE_SYMBOL PARTITIONING_SYMBOL
+
+
+AllOrPartitionNameList 
+  = ALL_SYMBOL
+  | IdentifierList
+
+
+AlterTablespace 
+  = TABLESPACE_SYMBOL TablespaceRef (
+      ((ADD_SYMBOL | DROP_SYMBOL) DATAFILE_SYMBOL TextLiteral AlterTablespaceOptions?)
+    | (() | (CHANGE_SYMBOL DATAFILE_SYMBOL TextLiteral (ChangeTablespaceOption (COMMA_SYMBOL? ChangeTablespaceOption)*)?) | (READ_ONLY_SYMBOL | READ_WRITE_SYMBOL) | (NOT_SYMBOL ACCESSIBLE_SYMBOL))
+    | (RENAME_SYMBOL TO_SYMBOL IDENTIFIER)
+    | AlterTablespaceOptions
+  )
+
+
+AlterUndoTablespace 
+  = UNDO_SYMBOL TABLESPACE_SYMBOL TablespaceRef SET_SYMBOL (ACTIVE_SYMBOL | INACTIVE_SYMBOL) UndoTableSpaceOptions?
+
+
+UndoTableSpaceOptions 
+  = UndoTableSpaceOption (COMMA_SYMBOL? UndoTableSpaceOption)*
+
+
+UndoTableSpaceOption 
+  = TsOptionEngine
+
+
+AlterTablespaceOptions 
+  = AlterTablespaceOption (COMMA_SYMBOL? AlterTablespaceOption)*
+
+
+AlterTablespaceOption 
+  = (INITIAL_SIZE_SYMBOL EQUAL_OPERATOR? SizeNumber)
+  | TsOptionAutoextendSize
+  | TsOptionMaxSize
+  | TsOptionEngine
+  | TsOptionWait
+  | TsOptionEncryption
+
+
+ChangeTablespaceOption 
+  = (INITIAL_SIZE_SYMBOL EQUAL_OPERATOR? SizeNumber)
+  | TsOptionAutoextendSize
+  | TsOptionMaxSize
+
+
+AlterView 
+  = ViewAlgorithm? DefinerClause? ViewSuid? VIEW_SYMBOL ViewRef ViewTail
+
+
+ViewTail 
+  = ColumnInternalRefList? AS_SYMBOL ViewSelect
+
+
+ViewSelect 
+  = QueryExpressionOrParens ViewCheckOption?
+
+
+ViewCheckOption 
+  = WITH_SYMBOL (CASCADED_SYMBOL | LOCAL_SYMBOL)? CHECK_SYMBOL OPTION_SYMBOL
+
+
+CreateStatement 
+  = CREATE_SYMBOL (
+      CreateDatabase
+    | CreateTable
+    | CreateFunction
+    | CreateProcedure
+    | CreateUdf
+    | CreateLogfileGroup
+    | CreateView
+    | CreateTrigger
+    | CreateIndex
+    | CreateServer
+    | CreateTablespace
+    | CreateEvent
+    | CreateRole
+    | CreateSpatialReference
+    | CreateUndoTablespace
+  )
+
+
+CreateDatabase 
+  = DATABASE_SYMBOL IfNotExists? SchemaName CreateDatabaseOption*
+
+
+CreateDatabaseOption 
+  = DefaultCharset
+  | DefaultCollation
+  | DefaultEncryption
+
+
+CreateTable 
+  = TEMPORARY_SYMBOL? TABLE_SYMBOL IfNotExists? TableName (
+      ((OPEN_PAR_SYMBOL TableElementList CLOSE_PAR_SYMBOL)? CreateTableOptions? PartitionClause? DuplicateAsQueryExpression?)
+    | (LIKE_SYMBOL TableRef)
+    | (OPEN_PAR_SYMBOL LIKE_SYMBOL TableRef CLOSE_PAR_SYMBOL)
+  )
+
+
+TableElementList 
+  = TableElement (COMMA_SYMBOL TableElement)*
+
+
+TableElement 
+  = ColumnDefinition
+  | TableConstraintDef
+
+
+DuplicateAsQueryExpression 
+  = (REPLACE_SYMBOL | IGNORE_SYMBOL)? AS_SYMBOL? QueryExpressionOrParens
+
+
+QueryExpressionOrParens 
+  = QueryExpression
+  | QueryExpressionParens
+
+
+CreateRoutine 
+  = CREATE_SYMBOL (CreateProcedure | CreateFunction | CreateUdf) SEMICOLON_SYMBOL? EOF
+
+
+CreateProcedure 
+  = DefinerClause? PROCEDURE_SYMBOL ProcedureName OPEN_PAR_SYMBOL (ProcedureParameter (COMMA_SYMBOL ProcedureParameter)*)? CLOSE_PAR_SYMBOL RoutineCreateOption* CompoundStatement
+
+
+CreateFunction 
+  = DefinerClause? FUNCTION_SYMBOL FunctionName OPEN_PAR_SYMBOL (FunctionParameter (COMMA_SYMBOL FunctionParameter)*)? CLOSE_PAR_SYMBOL RETURNS_SYMBOL TypeWithOptCollate RoutineCreateOption* CompoundStatement
+
+
+CreateUdf 
+  = AGGREGATE_SYMBOL? FUNCTION_SYMBOL UdfName RETURNS_SYMBOL (STRING_SYMBOL | INT_SYMBOL | REAL_SYMBOL | DECIMAL_SYMBOL) SONAME_SYMBOL TextLiteral
+
+
+RoutineCreateOption 
+  = RoutineOption
+  | (NOT_SYMBOL? DETERMINISTIC_SYMBOL)
+
+
+RoutineAlterOptions 
+  = RoutineCreateOption+
+
+
+RoutineOption 
+  = (COMMENT_SYMBOL TextLiteral)
+  | (LANGUAGE_SYMBOL SQL_SYMBOL)
+  | (NO_SYMBOL SQL_SYMBOL)
+  | (CONTAINS_SYMBOL SQL_SYMBOL)
+  | (READS_SYMBOL SQL_SYMBOL DATA_SYMBOL)
+  | (MODIFIES_SYMBOL SQL_SYMBOL DATA_SYMBOL)
+  | (SQL_SYMBOL SECURITY_SYMBOL (DEFINER_SYMBOL | INVOKER_SYMBOL))
+
+
+CreateIndex 
+  = OnlineOption? (
+      (UNIQUE_SYMBOL? INDEX_SYMBOL ((IndexName IndexTypeClause?) | IndexNameAndType?) CreateIndexTarget IndexOption*)
+    | (FULLTEXT_SYMBOL INDEX_SYMBOL IndexName CreateIndexTarget FulltextIndexOption*)
+    | (SPATIAL_SYMBOL INDEX_SYMBOL IndexName CreateIndexTarget SpatialIndexOption*)
+  ) IndexLockAndAlgorithm?
+
+
+IndexNameAndType 
+  = (IndexName (USING_SYMBOL IndexType)?)
+  | (IndexName TYPE_SYMBOL IndexType)
+
+
+CreateIndexTarget 
+  = ON_SYMBOL TableRef KeyListVariants
+
+
+CreateLogfileGroup 
+  = LOGFILE_SYMBOL GROUP_SYMBOL LogfileGroupName ADD_SYMBOL (UNDOFILE_SYMBOL | REDOFILE_SYMBOL) TextLiteral LogfileGroupOptions?
+
+
+LogfileGroupOptions 
+  = LogfileGroupOption (COMMA_SYMBOL? LogfileGroupOption)*
+
+
+LogfileGroupOption 
+  = TsOptionInitialSize
+  | TsOptionUndoRedoBufferSize
+  | TsOptionNodegroup
+  | TsOptionEngine
+  | TsOptionWait
+  | TsOptionComment
+
+
+CreateServer 
+  = SERVER_SYMBOL ServerName FOREIGN_SYMBOL DATA_SYMBOL WRAPPER_SYMBOL TextOrIdentifier ServerOptions
+
+
+
+ServerOptions 
+  = OPTIONS_SYMBOL OPEN_PAR_SYMBOL ServerOption (COMMA_SYMBOL ServerOption)* CLOSE_PAR_SYMBOL
+
+
+ServerOption 
+  = (HOST_SYMBOL TextLiteral)
+  | (DATABASE_SYMBOL TextLiteral)
+  | (USER_SYMBOL TextLiteral)
+  | (PASSWORD_SYMBOL TextLiteral)
+  | (SOCKET_SYMBOL TextLiteral)
+  | (OWNER_SYMBOL TextLiteral)
+  | (PORT_SYMBOL Ulong_number)
+
+
+CreateTablespace 
+  = TABLESPACE_SYMBOL TablespaceName TsDataFileName (USE_SYMBOL LOGFILE_SYMBOL GROUP_SYMBOL LogfileGroupRef)? TablespaceOptions?
+
+
+CreateUndoTablespace 
+  = UNDO_SYMBOL TABLESPACE_SYMBOL TablespaceName ADD_SYMBOL TsDataFile UndoTableSpaceOptions?
+
+
+TsDataFileName 
+  = (ADD_SYMBOL TsDataFile)?
+  | (ADD_SYMBOL TsDataFile)
+
+
+TsDataFile 
+  = DATAFILE_SYMBOL TextLiteral
+
+
+TablespaceOptions 
+  = TablespaceOption (COMMA_SYMBOL? TablespaceOption)*
+
+
+TablespaceOption 
+  = TsOptionInitialSize
+  | TsOptionAutoextendSize
+  | TsOptionMaxSize
+  | TsOptionExtentSize
+  | TsOptionNodegroup
+  | TsOptionEngine
+  | TsOptionWait
+  | TsOptionComment
+  | TsOptionFileblockSize
+  | TsOptionEncryption
+
+
+TsOptionInitialSize 
+  = INITIAL_SIZE_SYMBOL EQUAL_OPERATOR? SizeNumber
+
+
+TsOptionUndoRedoBufferSize 
+  = (UNDO_BUFFER_SIZE_SYMBOL | REDO_BUFFER_SIZE_SYMBOL) EQUAL_OPERATOR? SizeNumber
+
+
+TsOptionAutoextendSize 
+  = AUTOEXTEND_SIZE_SYMBOL EQUAL_OPERATOR? SizeNumber
+
+
+TsOptionMaxSize 
+  = MAX_SIZE_SYMBOL EQUAL_OPERATOR? SizeNumber
+
+
+TsOptionExtentSize 
+  = EXTENT_SIZE_SYMBOL EQUAL_OPERATOR? SizeNumber
+
+
+TsOptionNodegroup 
+  = NODEGROUP_SYMBOL EQUAL_OPERATOR? Real_ulong_number
+
+
+TsOptionEngine 
+  = STORAGE_SYMBOL? ENGINE_SYMBOL EQUAL_OPERATOR? EngineRef
+
+
+TsOptionWait 
+  = WAIT_SYMBOL
+  | NO_WAIT_SYMBOL
+
+
+TsOptionComment 
+  = COMMENT_SYMBOL EQUAL_OPERATOR? TextLiteral
+
+
+TsOptionFileblockSize 
+  = FILE_BLOCK_SIZE_SYMBOL EQUAL_OPERATOR? SizeNumber
+
+
+TsOptionEncryption 
+  = ENCRYPTION_SYMBOL EQUAL_OPERATOR? TextStringLiteral
+
+
+CreateView 
+  = ViewReplaceOrAlgorithm? DefinerClause? ViewSuid? VIEW_SYMBOL ViewName ViewTail
+
+
+ViewReplaceOrAlgorithm 
+  = (OR_SYMBOL REPLACE_SYMBOL ViewAlgorithm?)
+  | ViewAlgorithm
+
+
+ViewAlgorithm 
+  = ALGORITHM_SYMBOL EQUAL_OPERATOR (UNDEFINED_SYMBOL | MERGE_SYMBOL | TEMPTABLE_SYMBOL)
+
+
+ViewSuid 
+  = SQL_SYMBOL SECURITY_SYMBOL (DEFINER_SYMBOL | INVOKER_SYMBOL)
+
+
+CreateTrigger 
+  = DefinerClause? TRIGGER_SYMBOL TriggerName (BEFORE_SYMBOL | AFTER_SYMBOL) (INSERT_SYMBOL | UPDATE_SYMBOL | DELETE_SYMBOL) ON_SYMBOL TableRef FOR_SYMBOL EACH_SYMBOL ROW_SYMBOL TriggerFollowsPrecedesClause? CompoundStatement
+
+
+TriggerFollowsPrecedesClause 
+  = (FOLLOWS_SYMBOL | PRECEDES_SYMBOL) TextOrIdentifier
+
+
+CreateEvent 
+  = DefinerClause? EVENT_SYMBOL IfNotExists? EventName ON_SYMBOL SCHEDULE_SYMBOL Schedule (ON_SYMBOL COMPLETION_SYMBOL NOT_SYMBOL? PRESERVE_SYMBOL)? (ENABLE_SYMBOL | (DISABLE_SYMBOL (ON_SYMBOL SLAVE_SYMBOL)?))? (COMMENT_SYMBOL TextLiteral)? DO_SYMBOL CompoundStatement
+
+
+CreateRole 
+  = ROLE_SYMBOL IfNotExists? RoleList
+
+
+CreateSpatialReference 
+  = (OR_SYMBOL REPLACE_SYMBOL SPATIAL_SYMBOL REFERENCE_SYMBOL SYSTEM_SYMBOL Real_ulonglong_number SrsAttribute*)
+  | (SPATIAL_SYMBOL REFERENCE_SYMBOL SYSTEM_SYMBOL IfNotExists? Real_ulonglong_number SrsAttribute*)
+
+
+SrsAttribute 
+  = (NAME_SYMBOL TEXT_SYMBOL TextStringNoLinebreak)
+  | (DEFINITION_SYMBOL TEXT_SYMBOL TextStringNoLinebreak)
+  | (ORGANIZATION_SYMBOL TextStringNoLinebreak IDENTIFIED_SYMBOL BY_SYMBOL Real_ulonglong_number)
+  | (DESCRIPTION_SYMBOL TEXT_SYMBOL TextStringNoLinebreak)
+
+
+DropStatement 
+  = DROP_SYMBOL (
+      DropDatabase
+    | DropEvent
+    | DropFunction
+    | DropProcedure
+    | DropIndex
+    | DropLogfileGroup
+    | DropServer
+    | DropTable
+    | DropTableSpace
+    | DropTrigger
+    | DropView
+    | DropRole
+    | DropSpatialReference
+    | DropUndoTablespace
+  )
+
+
+DropDatabase 
+  = DATABASE_SYMBOL IfExists? SchemaRef
+
+
+DropEvent 
+  = EVENT_SYMBOL IfExists? EventRef
+
+
+DropFunction 
+  = FUNCTION_SYMBOL IfExists? FunctionRef
+
+
+DropProcedure 
+  = PROCEDURE_SYMBOL IfExists? ProcedureRef
+
+
+DropIndex 
+  = OnlineOption? INDEX_SYMBOL IndexRef ON_SYMBOL TableRef IndexLockAndAlgorithm?
+
+
+DropLogfileGroup 
+  = LOGFILE_SYMBOL GROUP_SYMBOL LogfileGroupRef (DropLogfileGroupOption (COMMA_SYMBOL? DropLogfileGroupOption)*)?
+
+
+DropLogfileGroupOption 
+  = TsOptionWait
+  | TsOptionEngine
+
+
+DropServer 
+  = SERVER_SYMBOL IfExists? ServerRef
+
+
+DropTable 
+  = TEMPORARY_SYMBOL? (TABLE_SYMBOL | TABLES_SYMBOL) IfExists? TableRefList (RESTRICT_SYMBOL | CASCADE_SYMBOL)?
+
+
+DropTableSpace 
+  = TABLESPACE_SYMBOL TablespaceRef (DropLogfileGroupOption (COMMA_SYMBOL? DropLogfileGroupOption)*)?
+
+
+DropTrigger 
+  = TRIGGER_SYMBOL IfExists? TriggerRef
+
+
+DropView 
+  = VIEW_SYMBOL IfExists? ViewRefList (RESTRICT_SYMBOL | CASCADE_SYMBOL)?
+
+
+DropRole 
+  = ROLE_SYMBOL IfExists? RoleList
+
+
+DropSpatialReference 
+  = SPATIAL_SYMBOL REFERENCE_SYMBOL SYSTEM_SYMBOL IfExists? Real_ulonglong_number
+
+
+DropUndoTablespace 
+  = UNDO_SYMBOL TABLESPACE_SYMBOL TablespaceRef UndoTableSpaceOptions?
+
+
+RenameTableStatement 
+  = RENAME_SYMBOL (TABLE_SYMBOL | TABLES_SYMBOL) RenamePair (COMMA_SYMBOL RenamePair)*
+
+
+RenamePair 
+  = TableRef TO_SYMBOL TableName
+
+
+TruncateTableStatement 
+  = TRUNCATE_SYMBOL TABLE_SYMBOL? TableRef
+
+
+ImportStatement 
+  = IMPORT_SYMBOL TABLE_SYMBOL FROM_SYMBOL TextStringLiteralList
+
+
+CallStatement 
+  = CALL_SYMBOL ProcedureRef (OPEN_PAR_SYMBOL ExprList? CLOSE_PAR_SYMBOL)?
+
+
+DeleteStatement 
+  = WithClause? DELETE_SYMBOL DeleteStatementOption* (
+      (FROM_SYMBOL ((TableAliasRefList USING_SYMBOL TableReferenceList WhereClause?) | (TableRef TableAlias? PartitionDelete? WhereClause? OrderClause? SimpleLimitClause?)))
+    | (TableAliasRefList FROM_SYMBOL TableReferenceList WhereClause?)
+  )
+
+
+PartitionDelete 
+  = PARTITION_SYMBOL OPEN_PAR_SYMBOL IdentifierList CLOSE_PAR_SYMBOL
+
+
+DeleteStatementOption 
+  = QUICK_SYMBOL
+  | LOW_PRIORITY_SYMBOL
+  | QUICK_SYMBOL
+  | IGNORE_SYMBOL
+
+
+DoStatement 
+  = DO_SYMBOL (ExprList | SelectItemList)
+
+
+HandlerStatement 
+  = HANDLER_SYMBOL (
+      (TableRef OPEN_SYMBOL TableAlias?)
+    | (IDENTIFIER (CLOSE_SYMBOL | (READ_SYMBOL HandlerReadOrScan WhereClause? LimitClause?)))
+  )
+
+
+HandlerReadOrScan 
+  = (FIRST_SYMBOL | NEXT_SYMBOL)
+  | (IDENTIFIER ((FIRST_SYMBOL | NEXT_SYMBOL | PREV_SYMBOL | LAST_SYMBOL) | ((EQUAL_OPERATOR | LESS_THAN_OPERATOR | GREATER_THAN_OPERATOR | LESS_OR_EQUAL_OPERATOR | GREATER_OR_EQUAL_OPERATOR) OPEN_PAR_SYMBOL Values CLOSE_PAR_SYMBOL)))
+
+
+InsertStatement 
+  = INSERT_SYMBOL InsertLockOption? IGNORE_SYMBOL? INTO_SYMBOL? TableRef UsePartition? (
+      (InsertFromConstructor ValuesReference?)
+    | (SET_SYMBOL UpdateList ValuesReference?)
+    | InsertQueryExpression
+  ) InsertUpdateList?
+
+
+InsertLockOption 
+  = LOW_PRIORITY_SYMBOL
+  | DELAYED_SYMBOL
+  | HIGH_PRIORITY_SYMBOL
+
+
+InsertFromConstructor 
+  = (OPEN_PAR_SYMBOL Fields? CLOSE_PAR_SYMBOL)? InsertValues
+
+
+Fields 
+  = InsertIdentifier (COMMA_SYMBOL InsertIdentifier)*
+
+
+InsertValues 
+  = (VALUES_SYMBOL | VALUE_SYMBOL) ValueList
+
+
+InsertQueryExpression 
+  = QueryExpressionOrParens
+  | (OPEN_PAR_SYMBOL Fields? CLOSE_PAR_SYMBOL QueryExpressionOrParens)
+
+
+ValueList 
+  = OPEN_PAR_SYMBOL Values? CLOSE_PAR_SYMBOL (COMMA_SYMBOL OPEN_PAR_SYMBOL Values? CLOSE_PAR_SYMBOL)*
+
+
+Values 
+  = (Expr | DEFAULT_SYMBOL) (COMMA_SYMBOL (Expr | DEFAULT_SYMBOL))*
+
+
+ValuesReference 
+  = AS_SYMBOL IDENTIFIER ColumnInternalRefList?
+
+
+InsertUpdateList 
+  = ON_SYMBOL DUPLICATE_SYMBOL KEY_SYMBOL UPDATE_SYMBOL UpdateList
+
+
+LoadStatement 
+  = LOAD_SYMBOL DataOrXml (LOW_PRIORITY_SYMBOL | CONCURRENT_SYMBOL)? LOCAL_SYMBOL? INFILE_SYMBOL TextLiteral (REPLACE_SYMBOL | IGNORE_SYMBOL)? INTO_SYMBOL TABLE_SYMBOL TableRef UsePartition? CharsetClause? XmlRowsIdentifiedBy? FieldsClause? LinesClause? LoadDataFileTail
+
+
+DataOrXml 
+  = DATA_SYMBOL
+  | XML_SYMBOL
+
+
+XmlRowsIdentifiedBy 
+  = ROWS_SYMBOL IDENTIFIED_SYMBOL BY_SYMBOL TextString
+
+
+LoadDataFileTail 
+  = (IGNORE_SYMBOL INT_NUMBER (LINES_SYMBOL | ROWS_SYMBOL))? LoadDataFileTargetList? (SET_SYMBOL UpdateList)?
+
+
+LoadDataFileTargetList 
+  = OPEN_PAR_SYMBOL FieldOrVariableList? CLOSE_PAR_SYMBOL
+
+
+FieldOrVariableList 
+  = (ColumnRef | UserVariable) (COMMA_SYMBOL (ColumnRef | UserVariable))*
+
+
+ReplaceStatement 
+  = REPLACE_SYMBOL (LOW_PRIORITY_SYMBOL | DELAYED_SYMBOL)? INTO_SYMBOL? TableRef UsePartition? (
+      InsertFromConstructor
+    | (SET_SYMBOL UpdateList)
+    | InsertQueryExpression
+  )
+
+
+SelectStatement 
+  = (QueryExpression LockingClauseList?)
+  | QueryExpressionParens
+  | SelectStatementWithInto
+
+
+SelectStatementWithInto 
+  = (OPEN_PAR_SYMBOL SelectStatementWithInto CLOSE_PAR_SYMBOL)
+  | (QueryExpression IntoClause LockingClauseList?)
+  | (LockingClauseList IntoClause)
+
+
+QueryExpression 
+  = WithClause? (
+      (QueryExpressionBody OrderClause? LimitClause?)
+    | (QueryExpressionParens OrderClause? LimitClause?)
+  ) ProcedureAnalyseClause?
+
+
+QueryExpressionBody 
+  = (QueryPrimary | (QueryExpressionParens UNION_SYMBOL UnionOption? (QueryPrimary | QueryExpressionParens))) (UNION_SYMBOL UnionOption? (QueryPrimary | QueryExpressionParens))*
+
+
+QueryExpressionParens 
+  = OPEN_PAR_SYMBOL (QueryExpressionParens | (QueryExpression LockingClauseList?)) CLOSE_PAR_SYMBOL
+
+
+QueryPrimary 
+  = QuerySpecification
+  | TableValueConstructor
+  | ExplicitTable
+
+
+QuerySpecification 
+  = SELECT_SYMBOL SelectOption* SelectItemList IntoClause? FromClause? WhereClause? GroupByClause? HavingClause? WindowClause?
+
+
+Subquery 
+  = QueryExpressionParens
+
+
+QuerySpecOption 
+  = ALL_SYMBOL
+  | DISTINCT_SYMBOL
+  | STRAIGHT_JOIN_SYMBOL
+  | HIGH_PRIORITY_SYMBOL
+  | SQL_SMALL_RESULT_SYMBOL
+  | SQL_BIG_RESULT_SYMBOL
+  | SQL_BUFFER_RESULT_SYMBOL
+  | SQL_CALC_FOUND_ROWS_SYMBOL
+
+
+LimitClause 
+  = LIMIT_SYMBOL LimitOptions
+
+
+SimpleLimitClause 
+  = LIMIT_SYMBOL LimitOption
+
+
+LimitOptions 
+  = LimitOption ((COMMA_SYMBOL | OFFSET_SYMBOL) LimitOption)?
+
+
+LimitOption 
+  = IDENTIFIER
+  | (PARAM_MARKER | ULONGLONG_NUMBER | LONG_NUMBER | INT_NUMBER)
+
+
+IntoClause 
+  = INTO_SYMBOL (
+      (OUTFILE_SYMBOL TextStringLiteral CharsetClause? FieldsClause? LinesClause?)
+    | (DUMPFILE_SYMBOL TextStringLiteral)
+    | ((TextOrIdentifier | UserVariable) (COMMA_SYMBOL (TextOrIdentifier | UserVariable))*)
+  )
+
+
+ProcedureAnalyseClause 
+  = PROCEDURE_SYMBOL ANALYSE_SYMBOL OPEN_PAR_SYMBOL (INT_NUMBER (COMMA_SYMBOL INT_NUMBER)?)? CLOSE_PAR_SYMBOL
+
+
+HavingClause 
+  = HAVING_SYMBOL Expr
+
+
+WindowClause 
+  = WINDOW_SYMBOL WindowDefinition (COMMA_SYMBOL WindowDefinition)*
+
+
+WindowDefinition 
+  = WindowName AS_SYMBOL WindowSpec
+
+
+WindowSpec 
+  = OPEN_PAR_SYMBOL WindowSpecDetails CLOSE_PAR_SYMBOL
+
+
+WindowSpecDetails 
+  = WindowName? (PARTITION_SYMBOL BY_SYMBOL OrderList)? OrderClause? WindowFrameClause?
+
+
+WindowFrameClause 
+  = WindowFrameUnits WindowFrameExtent WindowFrameExclusion?
+
+
+WindowFrameUnits 
+  = ROWS_SYMBOL
+  | RANGE_SYMBOL
+  | GROUPS_SYMBOL
+
+
+WindowFrameExtent 
+  = WindowFrameStart
+  | WindowFrameBetween
+
+
+WindowFrameStart 
+  = (UNBOUNDED_SYMBOL PRECEDING_SYMBOL)
+  | (ULONGLONG_NUMBER PRECEDING_SYMBOL)
+  | (PARAM_MARKER PRECEDING_SYMBOL)
+  | (INTERVAL_SYMBOL Expr Interval PRECEDING_SYMBOL)
+  | (CURRENT_SYMBOL ROW_SYMBOL)
+
+
+WindowFrameBetween 
+  = BETWEEN_SYMBOL WindowFrameBound AND_SYMBOL WindowFrameBound
+
+
+WindowFrameBound 
+  = WindowFrameStart
+  | (UNBOUNDED_SYMBOL FOLLOWING_SYMBOL)
+  | (ULONGLONG_NUMBER FOLLOWING_SYMBOL)
+  | (PARAM_MARKER FOLLOWING_SYMBOL)
+  | (INTERVAL_SYMBOL Expr Interval FOLLOWING_SYMBOL)
+
+
+WindowFrameExclusion 
+  = EXCLUDE_SYMBOL ((CURRENT_SYMBOL ROW_SYMBOL) | GROUP_SYMBOL | TIES_SYMBOL | (NO_SYMBOL OTHERS_SYMBOL))
+
+
+WithClause 
+  = WITH_SYMBOL RECURSIVE_SYMBOL? CommonTableExpression (COMMA_SYMBOL CommonTableExpression)*
+
+
+CommonTableExpression 
+  = IDENTIFIER ColumnInternalRefList? AS_SYMBOL Subquery
+
+
+GroupByClause 
+  = GROUP_SYMBOL BY_SYMBOL OrderList OlapOption?
+
+
+OlapOption 
+  = (WITH_SYMBOL ROLLUP_SYMBOL)
+  | (WITH_SYMBOL CUBE_SYMBOL)
+
+
+OrderClause 
+  = ORDER_SYMBOL BY_SYMBOL OrderList
+
+
+Direction 
+  = ASC_SYMBOL
+  | DESC_SYMBOL
+
+
+FromClause 
+  = FROM_SYMBOL (DUAL_SYMBOL | TableReferenceList)
+
+
+TableReferenceList 
+  = TableReference (COMMA_SYMBOL TableReference)*
+
+
+TableValueConstructor 
+  = VALUES_SYMBOL RowValueExplicit (COMMA_SYMBOL RowValueExplicit)*
+
+
+ExplicitTable 
+  = TABLE_SYMBOL TableRef
+
+
+RowValueExplicit 
+  = ROW_SYMBOL OPEN_PAR_SYMBOL Values? CLOSE_PAR_SYMBOL
+
+
+SelectOption 
+  = QuerySpecOption
+  | SQL_NO_CACHE_SYMBOL
+  | SQL_CACHE_SYMBOL
+  | (MAX_STATEMENT_TIME_SYMBOL EQUAL_OPERATOR Real_ulong_number)
+
+
+LockingClauseList 
+  = LockingClause+
+
+
+LockingClause 
+  = (FOR_SYMBOL LockStrengh (OF_SYMBOL TableAliasRefList)? LockedRowAction?)
+  | (LOCK_SYMBOL IN_SYMBOL SHARE_SYMBOL MODE_SYMBOL)
+
+
+LockStrengh 
+  = UPDATE_SYMBOL
+  | SHARE_SYMBOL
+
+
+LockedRowAction 
+  = (SKIP_SYMBOL LOCKED_SYMBOL)
+  | NOWAIT_SYMBOL
+
+
+SelectItemList 
+  = (SelectItem | MULT_OPERATOR) (COMMA_SYMBOL SelectItem)*
+
+
+SelectItem 
+  = TableWild
+  | (Expr SelectAlias?)
+
+
+SelectAlias 
+  = AS_SYMBOL? (IDENTIFIER | TextStringLiteral)
+
+
+WhereClause 
+  = WHERE_SYMBOL Expr
+
+
+TableReference 
+  = (TableFactor | (OPEN_CURLY_SYMBOL (IDENTIFIER | OJ_SYMBOL) EscapedTableReference CLOSE_CURLY_SYMBOL)) JoinedTable*
+
+
+EscapedTableReference 
+  = TableFactor JoinedTable*
+
+
+JoinedTable 
+  = (InnerJoinType TableReference ((ON_SYMBOL Expr) | (USING_SYMBOL IdentifierListWithParentheses))?)
+  | (OuterJoinType TableReference ((ON_SYMBOL Expr) | (USING_SYMBOL IdentifierListWithParentheses)))
+  | (NaturalJoinType TableFactor)
+
+
+NaturalJoinType 
+  = (NATURAL_SYMBOL INNER_SYMBOL? JOIN_SYMBOL)
+  | (NATURAL_SYMBOL (LEFT_SYMBOL | RIGHT_SYMBOL) OUTER_SYMBOL? JOIN_SYMBOL)
+
+
+InnerJoinType 
+  = ((INNER_SYMBOL | CROSS_SYMBOL)? JOIN_SYMBOL)
+  | STRAIGHT_JOIN_SYMBOL
+
+
+OuterJoinType 
+  = (LEFT_SYMBOL | RIGHT_SYMBOL) OUTER_SYMBOL? JOIN_SYMBOL
+
+
+TableFactor 
+  = SingleTable
+  | SingleTableParens
+  | DerivedTable
+  | TableReferenceListParens
+  | TableFunction
+
+
+SingleTable 
+  = TableRef UsePartition? TableAlias? IndexHintList?
+
+
+SingleTableParens 
+  = OPEN_PAR_SYMBOL (SingleTable | SingleTableParens) CLOSE_PAR_SYMBOL
+
+
+DerivedTable 
+  = (Subquery TableAlias? ColumnInternalRefList?)
+  | (LATERAL_SYMBOL Subquery TableAlias? ColumnInternalRefList?)
+
+
+TableReferenceListParens 
+  = OPEN_PAR_SYMBOL (TableReferenceList | TableReferenceListParens) CLOSE_PAR_SYMBOL
+
+
+TableFunction 
+  = JSON_TABLE_SYMBOL OPEN_PAR_SYMBOL Expr COMMA_SYMBOL TextStringLiteral ColumnsClause CLOSE_PAR_SYMBOL TableAlias?
+
+
+ColumnsClause 
+  = COLUMNS_SYMBOL OPEN_PAR_SYMBOL JtColumn (COMMA_SYMBOL JtColumn)* CLOSE_PAR_SYMBOL
+
+
+JtColumn 
+  = (IDENTIFIER FOR_SYMBOL ORDINALITY_SYMBOL)
+  | (IDENTIFIER DataType Collate? EXISTS_SYMBOL? PATH_SYMBOL TextStringLiteral OnEmptyOrError?)
+  | (NESTED_SYMBOL PATH_SYMBOL TextStringLiteral ColumnsClause)
+
+
+OnEmptyOrError 
+  = (OnEmpty OnError?)
+  | (OnError OnEmpty?)
+
+
+OnEmpty 
+  = JtOnResponse ON_SYMBOL EMPTY_SYMBOL
+
+
+OnError 
+  = JtOnResponse ON_SYMBOL ERROR_SYMBOL
+
+
+JtOnResponse 
+  = ERROR_SYMBOL
+  | NULL_SYMBOL
+  | (DEFAULT_SYMBOL TextStringLiteral)
+
+TextStringLiteral 
+  = SINGLE_QUOTED_TEXT
+   | DOUBLE_QUOTED_TEXT
+
+UnionOption 
+  = DISTINCT_SYMBOL
+  | ALL_SYMBOL
+
+
+TableAlias 
+  = (AS_SYMBOL | EQUAL_OPERATOR)? IDENTIFIER
+
+
+IndexHintList 
+  = IndexHint (COMMA_SYMBOL IndexHint)*
+
+
+IndexHint 
+  = (IndexHintType KeyOrIndex IndexHintClause? OPEN_PAR_SYMBOL IndexList CLOSE_PAR_SYMBOL)
+  | (USE_SYMBOL KeyOrIndex IndexHintClause? OPEN_PAR_SYMBOL IndexList? CLOSE_PAR_SYMBOL)
+
+
+IndexHintType 
+  = FORCE_SYMBOL
+  | IGNORE_SYMBOL
+
+
+KeyOrIndex 
+  = KEY_SYMBOL
+  | INDEX_SYMBOL
+
+
+ConstraintKeyType 
+  = (PRIMARY_SYMBOL KEY_SYMBOL)
+  | (UNIQUE_SYMBOL KeyOrIndex?)
+
+
+IndexHintClause 
+  = FOR_SYMBOL (JOIN_SYMBOL | (ORDER_SYMBOL BY_SYMBOL) | (GROUP_SYMBOL BY_SYMBOL))
+
+
+IndexList 
+  = IndexListElement (COMMA_SYMBOL IndexListElement)*
+
+
+IndexListElement 
+  = IDENTIFIER
+  | PRIMARY_SYMBOL
+
+
+UpdateStatement 
+  = WithClause? UPDATE_SYMBOL LOW_PRIORITY_SYMBOL? IGNORE_SYMBOL? TableReferenceList SET_SYMBOL UpdateList WhereClause? OrderClause? SimpleLimitClause?
+
+
+TransactionOrLockingStatement 
+  = TransactionStatement
+  | SavepointStatement
+  | LockStatement
+  | XaStatement
+
+
+TransactionStatement 
+  = (START_SYMBOL TRANSACTION_SYMBOL TransactionCharacteristic*)
+  | (COMMIT_SYMBOL WORK_SYMBOL? (AND_SYMBOL NO_SYMBOL? CHAIN_SYMBOL)? (NO_SYMBOL? RELEASE_SYMBOL)?)
+
+
+BeginWork 
+  = BEGIN_SYMBOL WORK_SYMBOL?
+
+
+TransactionCharacteristic 
+  = (WITH_SYMBOL CONSISTENT_SYMBOL SNAPSHOT_SYMBOL)
+  | (READ_SYMBOL (WRITE_SYMBOL | ONLY_SYMBOL))
+
+
+SavepointStatement 
+  = (SAVEPOINT_SYMBOL IDENTIFIER)
+  | (ROLLBACK_SYMBOL WORK_SYMBOL? ((TO_SYMBOL SAVEPOINT_SYMBOL? IDENTIFIER) | ((AND_SYMBOL NO_SYMBOL? CHAIN_SYMBOL)? (NO_SYMBOL? RELEASE_SYMBOL)?)))
+  | (RELEASE_SYMBOL SAVEPOINT_SYMBOL IDENTIFIER)
+
+
+LockStatement 
+  = (LOCK_SYMBOL (TABLES_SYMBOL | TABLE_SYMBOL) LockItem (COMMA_SYMBOL LockItem)*)
+  | (LOCK_SYMBOL INSTANCE_SYMBOL FOR_SYMBOL BACKUP_SYMBOL)
+  | (UNLOCK_SYMBOL (TABLES_SYMBOL | TABLE_SYMBOL | INSTANCE_SYMBOL))
+
+
+LockItem 
+  = TableRef TableAlias? LockOption
+
+
+LockOption 
+  = (READ_SYMBOL LOCAL_SYMBOL?)
+  | (LOW_PRIORITY_SYMBOL? WRITE_SYMBOL)
+
+
+XaStatement 
+  = XA_SYMBOL (
+      (((START_SYMBOL | BEGIN_SYMBOL) Xid (JOIN_SYMBOL | RESUME_SYMBOL)?))
+    | ((END_SYMBOL Xid (SUSPEND_SYMBOL (FOR_SYMBOL MIGRATE_SYMBOL)?)?))
+    | ((PREPARE_SYMBOL Xid))
+    | ((COMMIT_SYMBOL Xid (ONE_SYMBOL PHASE_SYMBOL)?))
+    | ((ROLLBACK_SYMBOL Xid))
+    | ((RECOVER_SYMBOL XaConvert))
+  )
+BoolPri = Predicate | (BoolPri IS_SYMBOL NotRule? NULL_SYMBOL) | (BoolPri CompOp Predicate) | (BoolPri CompOp (ALL_SYMBOL | ANY_SYMBOL) Subquery)
+Charset = (CHAR_SYMBOL SET_SYMBOL) | CHARSET_SYMBOL
+ColumnInternalRef = IDENTIFIER
+ColumnName = IDENTIFIER | FieldIdentifier
+CreateTableOption = (ENGINE_SYMBOL EQUAL_OPERATOR? EngineRef) | (SECONDARY_ENGINE_SYMBOL Equal? (NULL_SYMBOL | TextOrIdentifier)) | (MAX_ROWS_SYMBOL EQUAL_OPERATOR? ULONGLONG_NUMBER) | (MIN_ROWS_SYMBOL EQUAL_OPERATOR? ULONGLONG_NUMBER) | (AVG_ROW_LENGTH_SYMBOL EQUAL_OPERATOR? Ulong_number) | (PASSWORD_SYMBOL EQUAL_OPERATOR? TextStringLiteral) | (COMMENT_SYMBOL EQUAL_OPERATOR? TextStringLiteral) | (COMPRESSION_SYMBOL EQUAL_OPERATOR? TextString) | (ENCRYPTION_SYMBOL EQUAL_OPERATOR? TextString) | (AUTO_INCREMENT_SYMBOL EQUAL_OPERATOR? ULONGLONG_NUMBER) | (PACK_KEYS_SYMBOL EQUAL_OPERATOR? TernaryOption) | ((STATS_AUTO_RECALC_SYMBOL | STATS_PERSISTENT_SYMBOL | STATS_SAMPLE_PAGES_SYMBOL) EQUAL_OPERATOR? TernaryOption) | ((CHECKSUM_SYMBOL | TABLE_CHECKSUM_SYMBOL) EQUAL_OPERATOR? Ulong_number) | (DELAY_KEY_WRITE_SYMBOL EQUAL_OPERATOR? Ulong_number) | (ROW_FORMAT_SYMBOL EQUAL_OPERATOR? (DEFAULT_SYMBOL | DYNAMIC_SYMBOL | FIXED_SYMBOL | COMPRESSED_SYMBOL | REDUNDANT_SYMBOL | COMPACT_SYMBOL)) | (UNION_SYMBOL EQUAL_OPERATOR? OPEN_PAR_SYMBOL TableRefList CLOSE_PAR_SYMBOL) | DefaultCharset | DefaultCollation | (INSERT_METHOD_SYMBOL EQUAL_OPERATOR? (NO_SYMBOL | FIRST_SYMBOL | LAST_SYMBOL)) | (DATA_SYMBOL DIRECTORY_SYMBOL EQUAL_OPERATOR? TextString) | (INDEX_SYMBOL DIRECTORY_SYMBOL EQUAL_OPERATOR? TextString) | (TABLESPACE_SYMBOL (EQUAL_OPERATOR? | ()) IDENTIFIER) | (STORAGE_SYMBOL (DISK_SYMBOL | MEMORY_SYMBOL)) | (CONNECTION_SYMBOL EQUAL_OPERATOR? TextString) | (KEY_BLOCK_SIZE_SYMBOL EQUAL_OPERATOR? Ulong_number)
+DataType = ((INT_SYMBOL | TINYINT_SYMBOL | SMALLINT_SYMBOL | MEDIUMINT_SYMBOL | BIGINT_SYMBOL) FieldLength? FieldOptions?) | ((REAL_SYMBOL | (DOUBLE_SYMBOL PRECISION_SYMBOL?)) Precision? FieldOptions?) | ((FLOAT_SYMBOL | DECIMAL_SYMBOL | NUMERIC_SYMBOL | FIXED_SYMBOL) floatOptions? FieldOptions?) | (BIT_SYMBOL FieldLength?) | (BOOL_SYMBOL | BOOLEAN_SYMBOL) | (CHAR_SYMBOL FieldLength? charsetWithOptBinary?) | (nchar FieldLength? BINARY_SYMBOL?) | (BINARY_SYMBOL FieldLength?) | (((CHAR_SYMBOL VARYING_SYMBOL) | VARCHAR_SYMBOL) FieldLength charsetWithOptBinary?) | (((NATIONAL_SYMBOL VARCHAR_SYMBOL) | NVARCHAR_SYMBOL | (NCHAR_SYMBOL VARCHAR_SYMBOL) | (NATIONAL_SYMBOL CHAR_SYMBOL VARYING_SYMBOL) | (NCHAR_SYMBOL VARYING_SYMBOL)) FieldLength BINARY_SYMBOL?) | (VARBINARY_SYMBOL FieldLength) | (YEAR_SYMBOL FieldLength? FieldOptions?) | DATE_SYMBOL | (TIME_SYMBOL typeDatetimePrecision?) | (TIMESTAMP_SYMBOL typeDatetimePrecision?) | (DATETIME_SYMBOL typeDatetimePrecision?) | TINYBLOB_SYMBOL | (BLOB_SYMBOL FieldLength?) | (MEDIUMBLOB_SYMBOL | LONGBLOB_SYMBOL) | (LONG_SYMBOL VARBINARY_SYMBOL) | (LONG_SYMBOL ((CHAR_SYMBOL VARYING_SYMBOL) | VARCHAR_SYMBOL)? charsetWithOptBinary?) | (TINYTEXT_SYMBOL charsetWithOptBinary?) | (TEXT_SYMBOL FieldLength? charsetWithOptBinary?) | (MEDIUMTEXT_SYMBOL charsetWithOptBinary?) | (LONGTEXT_SYMBOL charsetWithOptBinary?) | (ENUM_SYMBOL stringList charsetWithOptBinary?) | (SET_SYMBOL stringList charsetWithOptBinary?) | SERIAL_SYMBOL | JSON_SYMBOL | (GEOMETRY_SYMBOL | GEOMETRYCOLLECTION_SYMBOL | POINT_SYMBOL | MULTIPOINT_SYMBOL | LINESTRING_SYMBOL | MULTILINESTRING_SYMBOL | POLYGON_SYMBOL | MULTIPOLYGON_SYMBOL)
+DefaultCollation = DEFAULT_SYMBOL? COLLATE_SYMBOL EQUAL_OPERATOR? CollationName
+EventName = QualifiedIdentifier
+EventRef = QualifiedIdentifier
+FieldDefinition = DataType (ColumnAttribute* | (Collate? (GENERATED_SYMBOL ALWAYS_SYMBOL)? AS_SYMBOL ExprWithParentheses (VIRTUAL_SYMBOL | STORED_SYMBOL)? (GcolAttribute* | ColumnAttribute*)))
+FieldIdentifier = DotIdentifier | (QualifiedIdentifier DotIdentifier?)
+FieldsClause = COLUMNS_SYMBOL FieldTerm+
+FunctionName = QualifiedIdentifier
+IdentifierListWithParentheses = OPEN_PAR_SYMBOL IdentifierList CLOSE_PAR_SYMBOL
+IndexRef = FieldIdentifier
+IndexType = BTREE_SYMBOL | RTREE_SYMBOL | HASH_SYMBOL
+IndexTypeClause = (USING_SYMBOL | TYPE_SYMBOL) IndexType
+Interval = IntervalTimeStamp | (SECOND_MICROSECOND_SYMBOL | MINUTE_MICROSECOND_SYMBOL | MINUTE_SECOND_SYMBOL | HOUR_MICROSECOND_SYMBOL | HOUR_SECOND_SYMBOL | HOUR_MINUTE_SYMBOL | DAY_MICROSECOND_SYMBOL | DAY_SECOND_SYMBOL | DAY_MINUTE_SYMBOL | DAY_HOUR_SYMBOL | YEAR_MONTH_SYMBOL)
+KeyListVariants = KeyListWithExpression | KeyList
+NotRule = NOT_SYMBOL | NOT2_SYMBOL
+OrderExpression = Expr Direction?
+PartitionDefinitions = OPEN_PAR_SYMBOL PartitionDefinition (COMMA_SYMBOL PartitionDefinition)* CLOSE_PAR_SYMBOL
+PartitionTypeDef = (LINEAR_SYMBOL? KEY_SYMBOL PartitionKeyAlgorithm? OPEN_PAR_SYMBOL IdentifierList? CLOSE_PAR_SYMBOL) | (LINEAR_SYMBOL? HASH_SYMBOL OPEN_PAR_SYMBOL BitExpr CLOSE_PAR_SYMBOL) | ((RANGE_SYMBOL | LIST_SYMBOL) ((OPEN_PAR_SYMBOL BitExpr CLOSE_PAR_SYMBOL) | (COLUMNS_SYMBOL OPEN_PAR_SYMBOL IdentifierList? CLOSE_PAR_SYMBOL)))
+ProcedureName = QualifiedIdentifier
+PureIdentifier = (IDENTIFIER | BACK_TICK_QUOTED_ID) | DOUBLE_QUOTED_TEXT
+QualifiedIdentifier = IDENTIFIER DotIdentifier?
+RoleList = Role (COMMA_SYMBOL Role)*
+SchemaName = IDENTIFIER
+TableConstraintDef = ((KEY_SYMBOL | INDEX_SYMBOL) IndexNameAndType? KeyListVariants IndexOption*) | (FULLTEXT_SYMBOL KeyOrIndex? IndexName? KeyListVariants FulltextIndexOption*) | (SPATIAL_SYMBOL KeyOrIndex? IndexName? KeyListVariants SpatialIndexOption*) | (constraintName? ((((PRIMARY_SYMBOL KEY_SYMBOL) | (UNIQUE_SYMBOL KeyOrIndex?)) IndexNameAndType? KeyListVariants IndexOption*) | (FOREIGN_SYMBOL KEY_SYMBOL IndexName? KeyList References) | (CheckConstraint constraintEnforcement?)))
+TableName = QualifiedIdentifier | DotIdentifier
+TableRefList = TableRef (COMMA_SYMBOL TableRef)*
+TableRefWithWildcard = IDENTIFIER (("." "*") | (DotIdentifier (("." "*"))?))?
+
+TriggerName = QualifiedIdentifier
+TriggerRef = QualifiedIdentifier
+Ulong_number = INT_NUMBER | HEX_NUMBER | LONG_NUMBER | ULONGLONG_NUMBER | DECIMAL_NUMBER | FLOAT_NUMBER
+UpdateElement = ColumnRef EQUAL_OPERATOR (Expr | DEFAULT_SYMBOL)
+UsePartition = PARTITION_SYMBOL IdentifierListWithParentheses
+User = UserIdentifierOrText | (CURRENT_USER_SYMBOL Parentheses?)
+UserVariable = (AT_SIGN_SYMBOL TextOrIdentifier) | AT_TEXT_SUFFIX
+ViewName = QualifiedIdentifier | DotIdentifier
+ViewRef = QualifiedIdentifier | DotIdentifier
+ViewRefList = ViewRef (COMMA_SYMBOL ViewRef)*
+XaConvert = (CONVERT_SYMBOL XID_SYMBOL)? | ()
+
+
+ANALYSE_SYMBOL = "ANALYSE"
+CharsetClause = Charset CharsetName
+ColumnDefinition = ColumnName FieldDefinition CheckOrReferences?
+ColumnInternalRefList = OPEN_PAR_SYMBOL ColumnInternalRef (COMMA_SYMBOL ColumnInternalRef)* CLOSE_PAR_SYMBOL
+ColumnRef = FieldIdentifier
+CreateTableOptionsSpaceSeparated = CreateTableOption+
+DefaultCharset = DEFAULT_SYMBOL? Charset EQUAL_OPERATOR? CharsetName
+DefinerClause = DEFINER_SYMBOL EQUAL_OPERATOR User
+EngineRef = TextOrIdentifier
+Expr = (BoolPri (IS_SYMBOL NotRule? (TRUE_SYMBOL | FALSE_SYMBOL | UNKNOWN_SYMBOL))?) | (NOT_SYMBOL Expr) | (Expr (AND_SYMBOL | LOGICAL_AND_OPERATOR) Expr) | (Expr XOR_SYMBOL Expr) | (Expr (OR_SYMBOL | LOGICAL_OR_OPERATOR) Expr)
+ExprList = Expr (COMMA_SYMBOL Expr)*
+FunctionRef = QualifiedIdentifier
+IDENTIFIER = PureIdentifier | IdentifierKeyword
+IdentifierList = IDENTIFIER (COMMA_SYMBOL IDENTIFIER)*
+IfExists = IF_SYMBOL EXISTS_SYMBOL
+IfNotExists = IF_SYMBOL NotRule EXISTS_SYMBOL
+IndexName = IDENTIFIER
+InsertIdentifier = ColumnRef | TableWild
+LogfileGroupName = IDENTIFIER
+LogfileGroupRef = IDENTIFIER
+NoWriteToBinLog = LOCAL_SYMBOL | NO_WRITE_TO_BINLOG_SYMBOL
+OnlineOption = ONLINE_SYMBOL | OFFLINE_SYMBOL
+OrderList = OrderExpression (COMMA_SYMBOL OrderExpression)*
+PartitionClause = PARTITION_SYMBOL BY_SYMBOL PartitionTypeDef (PARTITIONS_SYMBOL Real_ulong_number)? SubPartitions? PartitionDefinitions?
+ProcedureRef = QualifiedIdentifier
+Real_ulong_number = INT_NUMBER | HEX_NUMBER | LONG_NUMBER | ULONGLONG_NUMBER
+Real_ulonglong_number = INT_NUMBER | HEX_NUMBER | ULONGLONG_NUMBER | LONG_NUMBER
+SchemaRef = IDENTIFIER
+ServerName = TextOrIdentifier
+ServerRef = TextOrIdentifier
+SizeNumber = Real_ulonglong_number | PureIdentifier
+TableAliasRefList = TableRefWithWildcard (COMMA_SYMBOL TableRefWithWildcard)*
+TableRef = QualifiedIdentifier | DotIdentifier
+TableWild = IDENTIFIER DOT_SYMBOL (IDENTIFIER DOT_SYMBOL)? MULT_OPERATOR
+TablespaceName = IDENTIFIER
+TablespaceRef = IDENTIFIER
+TextLiteral = ((UNDERLINE_SYMBOL Charset? TextStringLiteral) | NCHAR_TEXT) TextStringLiteral*
+TextOrIdentifier = IDENTIFIER | TextStringLiteral
+TextString = TextStringLiteral | HEX_NUMBER | BIN_NUMBER
+TextStringLiteralList = TextStringLiteral (COMMA_SYMBOL TextStringLiteral)*
+TextStringNoLinebreak = TextStringLiteral
+UdfName = IDENTIFIER
+ULONGLONG_NUMBER = INT_NUMBER | LONG_NUMBER | ULONGLONG_NUMBER | DECIMAL_NUMBER | FLOAT_NUMBER
+UpdateList = UpdateElement (COMMA_SYMBOL UpdateElement)*
+WindowName = IDENTIFIER
+Xid = TextString (COMMA_SYMBOL TextString (COMMA_SYMBOL Ulong_number)?)?
+
+CharsetName = TextOrIdentifier | BINARY_SYMBOL | DEFAULT_SYMBOL
+CheckOption = (FOR_SYMBOL UPGRADE_SYMBOL) | (QUICK_SYMBOL | FAST_SYMBOL | MEDIUM_SYMBOL | EXTENDED_SYMBOL | CHANGED_SYMBOL)
+CheckOrReferences = CheckConstraint | References
+Collate = COLLATE_SYMBOL CollationName
+CollationName = TextOrIdentifier | DEFAULT_SYMBOL | BINARY_SYMBOL
+ColumnAttribute = (NOT_SYMBOL? NullLiteral) | (NOT_SYMBOL SECONDARY_SYMBOL) | (DEFAULT_SYMBOL (SignedLiteral | (NOW_SYMBOL timeFunctionParameters?) | ExprWithParentheses)) | (ON_SYMBOL UPDATE_SYMBOL NOW_SYMBOL timeFunctionParameters?) | AUTO_INCREMENT_SYMBOL | (SERIAL_SYMBOL DEFAULT_SYMBOL VALUE_SYMBOL) | (PRIMARY_SYMBOL? KEY_SYMBOL) | (UNIQUE_SYMBOL KEY_SYMBOL?) | (COMMENT_SYMBOL TextLiteral) | Collate | (COLUMN_FORMAT_SYMBOL columnFormat) | (STORAGE_SYMBOL storageMedia) | (SRID_SYMBOL Real_ulonglong_number) | (constraintName? CheckConstraint) | constraintEnforcement
+
+CompoundStatement = SimpleStatement | ReturnStatement | ifStatement | caseStatement | labeledBlock | unlabeledBlock | labeledControl | unlabeledControl | leaveStatement | iterateStatement | cursorOpen | cursorFetch | cursorClose
+CreateTableOptions = CreateTableOption (COMMA_SYMBOL? CreateTableOption)*
+DefaultEncryption = DEFAULT_SYMBOL? ENCRYPTION_SYMBOL EQUAL_OPERATOR? TextStringLiteral
+DotIdentifier = DOT_SYMBOL IDENTIFIER
+FieldLength = OPEN_PAR_SYMBOL (Real_ulonglong_number | DECIMAL_NUMBER) CLOSE_PAR_SYMBOL
+FieldTerm = (TERMINATED_SYMBOL BY_SYMBOL TextString) | (OPTIONALLY_SYMBOL? ENCLOSED_SYMBOL BY_SYMBOL TextString) | (ESCAPED_SYMBOL BY_SYMBOL TextString)
+FunctionParameter = ParameterName TypeWithOptCollate
+IdentifierKeyword = (LabelKeyword | RoleOrIdentifierKeyword | EXECUTE_SYMBOL | SHUTDOWN_SYMBOL | RESTART_SYMBOL) | (identifierKeywordsUnambiguous | identifierKeywordsAmbiguous1RolesAndLabels | identifierKeywordsAmbiguous2Labels | identifierKeywordsAmbiguous3Roles | identifierKeywordsAmbiguous4SystemVariables)
+IndexOption = CommonIndexOption | IndexTypeClause
+IntervalTimeStamp = MICROSECOND_SYMBOL | SECOND_SYMBOL | MINUTE_SYMBOL | HOUR_SYMBOL | DAY_SYMBOL | WEEK_SYMBOL | MONTH_SYMBOL | QUARTER_SYMBOL | YEAR_SYMBOL
+KeyListWithExpression = OPEN_PAR_SYMBOL KeyPartOrExpression (COMMA_SYMBOL KeyPartOrExpression)* CLOSE_PAR_SYMBOL
+LinesClause = LINES_SYMBOL LineTerm+
+PartitionDefinition = PARTITION_SYMBOL IDENTIFIER ((VALUES_SYMBOL LESS_SYMBOL THAN_SYMBOL (PartitionValueItemListParen | MAXVALUE_SYMBOL)) | (VALUES_SYMBOL IN_SYMBOL PartitionValuesIn))? partitionOption* (OPEN_PAR_SYMBOL subpartitionDefinition (COMMA_SYMBOL subpartitionDefinition)* CLOSE_PAR_SYMBOL)?
+PartitionKeyAlgorithm = ALGORITHM_SYMBOL EQUAL_OPERATOR Real_ulong_number
+Predicate = BitExpr ((NotRule? predicateOperations) | (MEMBER_SYMBOL OF_SYMBOL? simpleExprWithParentheses) | (SOUNDS_SYMBOL LIKE_SYMBOL BitExpr))?
+ProcedureParameter = (IN_SYMBOL | OUT_SYMBOL | INOUT_SYMBOL)? FunctionParameter
+Role = RoleIdentifierOrText ((AT_SIGN_SYMBOL TextOrIdentifier) | AT_TEXT_SUFFIX)?
+Schedule = (AT_SYMBOL Expr) | (EVERY_SYMBOL Expr Interval (STARTS_SYMBOL Expr)? (ENDS_SYMBOL Expr)?)
+SubPartitions = SUBPARTITION_SYMBOL BY_SYMBOL LINEAR_SYMBOL? ((HASH_SYMBOL OPEN_PAR_SYMBOL BitExpr CLOSE_PAR_SYMBOL) | (KEY_SYMBOL PartitionKeyAlgorithm? IdentifierListWithParentheses)) (SUBPARTITIONS_SYMBOL Real_ulong_number)?
+UserIdentifierOrText = TextOrIdentifier ((AT_SIGN_SYMBOL TextOrIdentifier) | AT_TEXT_SUFFIX)?
+BitExpr = SimpleExpr | (BitExpr BITWISE_XOR_OPERATOR BitExpr) | (BitExpr (MULT_OPERATOR | DIV_OPERATOR | MOD_OPERATOR | DIV_SYMBOL | MOD_SYMBOL) BitExpr) | (BitExpr (PLUS_OPERATOR | MINUS_OPERATOR) BitExpr) | (BitExpr (PLUS_OPERATOR | MINUS_OPERATOR) INTERVAL_SYMBOL Expr Interval) | (BitExpr (SHIFT_LEFT_OPERATOR | SHIFT_RIGHT_OPERATOR) BitExpr) | (BitExpr BITWISE_AND_OPERATOR BitExpr) | (BitExpr BITWISE_OR_OPERATOR BitExpr)
+CheckConstraint = CHECK_SYMBOL ExprWithParentheses
+CommonIndexOption = (KEY_BLOCK_SIZE_SYMBOL EQUAL_OPERATOR? Ulong_number) | (COMMENT_SYMBOL TextLiteral) | visibility
+CompOp = EQUAL_OPERATOR | NULL_SAFE_EQUAL_OPERATOR | GREATER_OR_EQUAL_OPERATOR | GREATER_THAN_OPERATOR | LESS_OR_EQUAL_OPERATOR | LESS_THAN_OPERATOR | NOT_EQUAL_OPERATOR
+Equal = EQUAL_OPERATOR | ASSIGN_OPERATOR
+ExprWithParentheses = OPEN_PAR_SYMBOL Expr CLOSE_PAR_SYMBOL
+FieldOptions = (SIGNED_SYMBOL | UNSIGNED_SYMBOL | ZEROFILL_SYMBOL)+
+FulltextIndexOption = CommonIndexOption | (WITH_SYMBOL PARSER_SYMBOL IDENTIFIER)
+KeyList = OPEN_PAR_SYMBOL KeyPart (COMMA_SYMBOL KeyPart)* CLOSE_PAR_SYMBOL
+KeyPartOrExpression = KeyPart | (ExprWithParentheses Direction?)
+LabelKeyword = (RoleOrLabelKeyword | EVENT_SYMBOL | FILE_SYMBOL | NONE_SYMBOL | PROCESS_SYMBOL | PROXY_SYMBOL | RELOAD_SYMBOL | REPLICATION_SYMBOL | RESOURCE_SYMBOL | SUPER_SYMBOL) | (identifierKeywordsUnambiguous | identifierKeywordsAmbiguous3Roles | identifierKeywordsAmbiguous4SystemVariables)
+LineTerm = (TERMINATED_SYMBOL | STARTING_SYMBOL) BY_SYMBOL TextString
+NullLiteral = NULL_SYMBOL | NULL2_SYMBOL
+ParameterName = IDENTIFIER
+Parentheses = OPEN_PAR_SYMBOL CLOSE_PAR_SYMBOL
+PartitionValueItemListParen = OPEN_PAR_SYMBOL PartitionValueItem (COMMA_SYMBOL PartitionValueItem)* CLOSE_PAR_SYMBOL
+RepairType = QUICK_SYMBOL | EXTENDED_SYMBOL | USE_FRM_SYMBOL
+RoleIdentifierOrText = RoleIdentifier | TextStringLiteral
+TypeWithOptCollate = DataType Collate?
+
+GcolAttribute = ("UNIQUE" "KEY"?) | (COMMENT_SYMBOL TextString) | (NotRule? "NULL") | ("PRIMARY"? "KEY")
+KeyPart = IDENTIFIER FieldLength? Direction?
+PartitionValueItem = BitExpr | "MAXVALUE"
+PartitionValuesIn = PartitionValueItemListParen | (OPEN_PAR_SYMBOL PartitionValueItemListParen (COMMA_SYMBOL PartitionValueItemListParen)* CLOSE_PAR_SYMBOL)
+Precision = OPEN_PAR_SYMBOL INT_NUMBER COMMA_SYMBOL INT_NUMBER CLOSE_PAR_SYMBOL
+References = "References" TableRef IdentifierListWithParentheses? ("MATCH" ("FULL" | "PARTIAL" | "SIMPLE"))? (("ON" "UPDATE" deleteOption ("ON" "DELETE" deleteOption)?) | ("ON" "DELETE" deleteOption ("ON" "UPDATE" deleteOption)?))?
+ReturnStatement = "RETURN" Expr
+RoleIdentifier = PureIdentifier | roleKeyword
+RoleOrIdentifierKeyword = ("ACCOUNT" | "ASCII" | "ALWAYS" | "BACKUP" | "BEGIN" | "BYTE" | "CACHE" | "Charset" | "CHECKSUM" | "CLONE" | "CLOSE" | COMMENT_SYMBOL | "COMMIT" | "CONTAINS" | "DEALLOCATE" | "DO" | "END" | "FLUSH" | "FOLLOWS" | "FORMAT" | "GROUP_REPLICATION" | "HANDLER" | "HELP" | "HOST" | "INSTALL" | "INVISIBLE" | "LANGUAGE" | "NO" | "OPEN" | "OPTIONS" | "OWNER" | "PARSER" | "PARTITION" | "PORT" | "PRECEDES" | "PREPARE" | "REMOVE" | "REPAIR" | "RESET" | "RESTORE" | "Role" | "ROLLBACK" | "SAVEPOINT" | "SECONDARY" | "SECONDARY_ENGINE" | "SECONDARY_LOAD" | "SECONDARY_UNLOAD" | "SECURITY" | "SERVER" | "SIGNED" | "SOCKET" | "SLAVE" | "SONAME" | "START" | "STOP" | "TRUNCATE" | "UNICODE" | "UNINSTALL" | "UPGRADE" | "VISIBLE" | "WRAPPER" | "XA") | "SHUTDOWN" | "IMPORT"
+RoleOrLabelKeyword = ("ACTION" | "ACTIVE" | "ADDDATE" | "AFTER" | "AGAINST" | "AGGREGATE" | "ALGORITHM" | ANALYSE_SYMBOL | "ANY" | "AT" | "AUTHORS" | "AUTO_INCREMENT" | "AUTOEXTEND_SIZE" | "AVG_ROW_LENGTH" | "AVG" | "BINLOG" | "BIT" | "BLOCK" | "BOOL" | "BOOLEAN" | "BTREE" | "BUCKETS" | "CASCADED" | "CATALOG_NAME" | "CHAIN" | "CHANGED" | "CHANNEL" | "CIPHER" | "CLIENT" | "CLASS_ORIGIN" | "COALESCE" | "CODE" | "COLLATION" | "COLUMN_NAME" | "COLUMN_FORMAT" | "COLUMNS" | "COMMITTED" | "COMPACT" | "COMPLETION" | "COMPONENT" | "COMPRESSED" | "COMPRESSION" | "CONCURRENT" | "CONNECTION" | "CONSISTENT" | "CONSTRAINT_CATALOG" | "CONSTRAINT_SCHEMA" | "CONSTRAINT_NAME" | "CONTEXT" | "CONTRIBUTORS" | "CPU" | "CURRENT" | "CURSOR_NAME" | "DATA" | "DATAFILE" | "DATETIME" | "DATE" | "DAY" | "DEFAULT_AUTH" | "DEFINER" | "DELAY_KEY_WRITE" | "DES_KEY_FILE" | "DESCRIPTION" | "DIAGNOSTICS" | "DIRECTORY" | "DISABLE" | "DISCARD" | "DISK" | "DUMPFILE" | "DUPLICATE" | "DYNAMIC" | "ENCRYPTION" | "ENDS" | "ENUM" | "ENGINE" | "ENGINES" | "ERROR" | "ERRORS" | "ESCAPE" | "EVENTS" | "EVERY" | "EXCLUDE" | "EXPANSION" | "EXPORT" | "EXTENDED" | "EXTENT_SIZE" | "FAULTS" | "FAST" | "FOLLOWING" | "FOUND" | "ENABLE" | "FULL" | "FILE_BLOCK_SIZE" | "FILTER" | "FIRST" | "FIXED" | "GENERAL" | "GEOMETRY" | "GEOMETRYCOLLECTION" | "GET_FORMAT" | "GRANTS" | "GLOBAL" | "HASH" | "HISTOGRAM" | "HISTORY" | "HOSTS" | "HOUR" | "IDENTIFIED" | "IGNORE_SERVER_IDS" | "INVOKER" | "INDEXES" | "INITIAL_SIZE" | "INSTANCE" | "INACTIVE" | "IO" | "IPC" | "ISOLATION" | "ISSUER" | "INSERT_METHOD" | "JSON" | "KEY_BLOCK_SIZE" | "LAST" | "LEAVES" | "LESS" | "LEVEL" | "LINESTRING" | "LIST" | "LOCAL" | "LOCKED" | "LOCKS" | "LOGFILE" | "LOGS" | "MAX_ROWS" | "MASTER" | "MASTER_HEARTBEAT_PERIOD" | "MASTER_HOST" | "MASTER_PORT" | "MASTER_LOG_FILE" | "MASTER_LOG_POS" | "MASTER_USER" | "MASTER_PASSWORD" | "MASTER_PUBLIC_KEY_PATH" | "MASTER_SERVER_ID" | "MASTER_CONNECT_RETRY" | "MASTER_RETRY_COUNT" | "MASTER_DELAY" | "MASTER_SSL" | "MASTER_SSL_CA" | "MASTER_SSL_CAPATH" | "MASTER_TLS_VERSION" | "MASTER_SSL_CERT" | "MASTER_SSL_CIPHER" | "MASTER_SSL_CRL" | "MASTER_SSL_CRLPATH" | "MASTER_SSL_KEY" | "MASTER_AUTO_POSITION" | "MAX_CONNECTIONS_PER_HOUR" | "MAX_QUERIES_PER_HOUR" | "MAX_STATEMENT_TIME" | "MAX_SIZE" | "MAX_UPDATES_PER_HOUR" | "MAX_USER_CONNECTIONS" | "MEDIUM" | "MEMORY" | "MERGE" | "MESSAGE_TEXT" | "MICROSECOND" | "MIGRATE" | "MINUTE" | "MIN_ROWS" | "MODIFY" | "MODE" | "MONTH" | "MULTILINESTRING" | "MULTIPOINT" | "MULTIPOLYGON" | "MUTEX" | "MYSQL_ERRNO" | "NAME" | "NAMES" | "NATIONAL" | "NCHAR" | "NDBCLUSTER" | "NESTED" | "NEVER" | "NEXT" | "NEW" | "NO_WAIT" | "NODEGROUP" | "NULLS" | "NOWAIT" | "NUMBER" | "NVARCHAR" | "OFFSET" | "OLD" | "OLD_PASSWORD" | "ONE" | "OPTIONAL" | "ORDINALITY" | "ORGANIZATION" | "OTHERS" | "PACK_KEYS" | "PAGE" | "PARTIAL" | "PARTITIONING" | "PARTITIONS" | "PASSWORD" | "PATH" | "PHASE" | "PLUGIN_DIR" | "PLUGIN" | "PLUGINS" | "POINT" | "POLYGON" | "PRECEDING" | "PRESERVE" | "PREV" | "THREAD_PRIORITY" | "PRIVILEGES" | "PROCESSLIST" | "PROFILE" | "PROFILES" | "QUARTER" | "Query" | "QUICK" | "READ_ONLY" | "REBUILD" | "RECOVER" | "REDO_BUFFER_SIZE" | "REDOFILE" | "REDUNDANT" | "RELAY" | "RELAYLOG" | "RELAY_LOG_FILE" | "RELAY_LOG_POS" | "RELAY_THREAD" | "REMOTE" | "REORGANIZE" | "REPEATABLE" | "REPLICATE_DO_DB" | "REPLICATE_IGNORE_DB" | "REPLICATE_DO_TABLE" | "REPLICATE_IGNORE_TABLE" | "REPLICATE_WILD_DO_TABLE" | "REPLICATE_WILD_IGNORE_TABLE" | "REPLICATE_REWRITE_DB" | "USER_RESOURCES" | "RESPECT" | "RESUME" | "RETAIN" | "RETURNED_SQLSTATE" | "RETURNS" | "REUSE" | "REVERSE" | "ROLLUP" | "ROTATE" | "ROUTINE" | "ROW_COUNT" | "ROW_FORMAT" | "RTREE" | "Schedule" | "SCHEMA_NAME" | "SECOND" | "SERIAL" | "SERIALIZABLE" | "SESSION" | "SHARE" | "SIMPLE" | "SKIP" | "SLOW" | "SNAPSHOT" | "SOUNDS" | "SOURCE" | "SQL_AFTER_GTIDS" | "SQL_AFTER_MTS_GAPS" | "SQL_BEFORE_GTIDS" | "SQL_CACHE" | "SQL_BUFFER_RESULT" | "SQL_NO_CACHE" | "SQL_THREAD" | "SRID" | "STACKED" | "STARTS" | "STATS_AUTO_RECALC" | "STATS_PERSISTENT" | "STATS_SAMPLE_PAGES" | "STATUS" | "STORAGE" | "STRING" | "SUBCLASS_ORIGIN" | "SUBDATE" | "SUBJECT" | "SUBPARTITION" | "SubPartitions" | "SUPER" | "SUSPEND" | "SWAPS" | "SWITCHES" | "TABLE_NAME" | "TABLES" | "TABLE_CHECKSUM" | "TABLESPACE" | "TEMPORARY" | "TEMPTABLE" | "TEXT" | "THAN" | "TIES" | "TRANSACTION" | "TRIGGERS" | "TIMESTAMP" | "TIMESTAMP_ADD" | "TIMESTAMP_DIFF" | "TIME" | "TYPES" | "TYPE" | "UDF_RETURNS" | "UNBOUNDED" | "UNCOMMITTED" | "UNDEFINED" | "UNDO_BUFFER_SIZE" | "UNDOFILE" | "UNKNOWN" | "UNTIL" | "User" | "USE_FRM" | "VARIABLES" | "VCPU" | "VIEW" | "VALUE" | "WARNINGS" | "WAIT" | "WEEK" | "WORK" | "WEIGHT_STRING" | "X509" | "Xid" | "XML" | "YEAR") | "SHUTDOWN" | ("CUBE" | "IMPORT" | "FUNCTION" | "ROWS" | "ROW") | ("EXCHANGE" | "EXPIRE" | "ONLY" | "SUPER" | "VALIDATION" | "WITHOUT") | "ADMIN"
+SignedLiteral = literal | (PLUS_OPERATOR Ulong_number) | (MINUS_OPERATOR Ulong_number)
+SimpleExpr = (variable (EQUAL_OPERATOR Expr)?) | (ColumnRef jsonOperator?) | runtimeFunctionCall | functionCall | (SimpleExpr COLLATE_SYMBOL TextOrIdentifier) | literal | PARAM_MARKER | sumExpr | groupingOperation | windowFunctionCall | (SimpleExpr "||" SimpleExpr) | ((PLUS_OPERATOR | MINUS_OPERATOR | BITWISE_NOT_OPERATOR) SimpleExpr) | (not2Rule SimpleExpr) | ("ROW"? OPEN_PAR_SYMBOL ExprList CLOSE_PAR_SYMBOL) | ("EXISTS"? Subquery) | (OPEN_CURLY_SYMBOL IDENTIFIER Expr CLOSE_CURLY_SYMBOL) | ("MATCH" identListArg "AGAINST" OPEN_PAR_SYMBOL BitExpr fulltextOptions? CLOSE_PAR_SYMBOL) | ("BINARY" SimpleExpr) | ("CAST" OPEN_PAR_SYMBOL Expr "AS" castType arrayCast? CLOSE_PAR_SYMBOL) | ("CASE" Expr? (whenExpression thenExpression)+ elseExpression? "END") | ("CONVERT" OPEN_PAR_SYMBOL Expr COMMA_SYMBOL castType CLOSE_PAR_SYMBOL) | ("CONVERT" OPEN_PAR_SYMBOL Expr "USING" CharsetName CLOSE_PAR_SYMBOL) | ("DEFAULT" OPEN_PAR_SYMBOL simpleIdentifier CLOSE_PAR_SYMBOL) | ("Values" OPEN_PAR_SYMBOL simpleIdentifier CLOSE_PAR_SYMBOL) | (INTERVAL_SYMBOL Expr Interval PLUS_OPERATOR Expr)
+SpatialIndexOption = CommonIndexOption
+TernaryOption = Ulong_number | "DEFAULT"
+
+EQUAL_OPERATOR = "="
+ASSIGN_OPERATOR = ":="
+NULL_SAFE_EQUAL_OPERATOR = "<=>"
+GREATER_OR_EQUAL_OPERATOR = ">="
+GREATER_THAN_OPERATOR = ">"
+LESS_OR_EQUAL_OPERATOR = "<="
+LESS_THAN_OPERATOR = "<"
+NOT_EQUAL_OPERATOR = "!="
+PLUS_OPERATOR = "+"
+MINUS_OPERATOR = "-"
+MULT_OPERATOR = "*"
+DIV_OPERATOR = "/"
+MOD_OPERATOR = "%"
+LOGICAL_NOT_OPERATOR = "!"
+BITWISE_NOT_OPERATOR = "~"
+SHIFT_LEFT_OPERATOR = "<<"
+SHIFT_RIGHT_OPERATOR = ">>"
+LOGICAL_AND_OPERATOR = "&&"
+BITWISE_AND_OPERATOR = "&"
+BITWISE_XOR_OPERATOR = "^"
+DOT_SYMBOL = "."
+COMMA_SYMBOL = ","
+SEMICOLON_SYMBOL = ";"
+COLON_SYMBOL = ":"
+OPEN_PAR_SYMBOL = "("
+CLOSE_PAR_SYMBOL = ")"
+OPEN_CURLY_SYMBOL = "{"
+CLOSE_CURLY_SYMBOL = "}"
+UNDERLINE_SYMBOL = "_"
+AT_SIGN_SYMBOL = "@"
+AT_AT_SIGN_SYMBOL = "@@"
+NULL2_SYMBOL = "\\N"
+PARAM_MARKER = "?"
+HEX_NUMBER = ("0x" hexDigit+) | ("x'" hexDigit+ "'")
+
+
+BIN_NUMBER = ("0b" DigitBinary+) | ("b'" DigitBinary+ "'")
+DigitBinary = "0" | "1"
+
+
+// TODO use the same determineNumericType() call as the original ANTLR grammar
+INT_NUMBER = Digits
+DECIMAL_NUMBER = Digits? "." Digits
+FLOAT_NUMBER = (Digits? ".")? Digits "e" ("-" | "+")? Digits
+ACCESSIBLE_SYMBOL = caseInsensitive<"ACCESSIBLE">
+ACCOUNT_SYMBOL = caseInsensitive<"ACCOUNT"> 
+ACTION_SYMBOL = caseInsensitive<"ACTION">
+ADD_SYMBOL = caseInsensitive<"ADD">
+AFTER_SYMBOL = caseInsensitive<"AFTER">
+AGAINST_SYMBOL = caseInsensitive<"AGAINST">
+AGGREGATE_SYMBOL = caseInsensitive<"AGGREGATE">
+ALGORITHM_SYMBOL = caseInsensitive<"ALGORITHM">
+ALL_SYMBOL = caseInsensitive<"ALL">
+ALTER_SYMBOL = caseInsensitive<"ALTER">
+ALWAYS_SYMBOL = caseInsensitive<"ALWAYS"> 
+ANALYZE_SYMBOL = caseInsensitive<"ANALYZE">
+AND_SYMBOL = caseInsensitive<"AND">
+ANY_SYMBOL = caseInsensitive<"ANY">
+AS_SYMBOL = caseInsensitive<"AS">
+ASC_SYMBOL = caseInsensitive<"ASC">
+ASCII_SYMBOL = caseInsensitive<"ASCII">
+AT_SYMBOL = caseInsensitive<"AT">
+AUTOEXTEND_SIZE_SYMBOL = caseInsensitive<"AUTOEXTEND_SIZE">
+AUTO_INCREMENT_SYMBOL = caseInsensitive<"AUTO_INCREMENT">
+AVG_ROW_LENGTH_SYMBOL = caseInsensitive<"AVG_ROW_LENGTH">
+AVG_SYMBOL = caseInsensitive<"AVG">
+BACKUP_SYMBOL = caseInsensitive<"BACKUP">
+BEFORE_SYMBOL = caseInsensitive<"BEFORE">
+BEGIN_SYMBOL = caseInsensitive<"BEGIN">
+BETWEEN_SYMBOL = caseInsensitive<"BETWEEN">
+BIGINT_SYMBOL = caseInsensitive<"BIGINT">
+BINARY_SYMBOL = caseInsensitive<"BINARY">
+BINLOG_SYMBOL = caseInsensitive<"BINLOG">
+BIN_NUM_SYMBOL = caseInsensitive<"BIN_NUM">
+BIT_AND_SYMBOL = caseInsensitive<"BIT_AND"> 
+BIT_OR_SYMBOL = caseInsensitive<"BIT_OR"> 
+BIT_SYMBOL = caseInsensitive<"BIT">
+BIT_XOR_SYMBOL = caseInsensitive<"BIT_XOR"> 
+BLOB_SYMBOL = caseInsensitive<"BLOB">
+BLOCK_SYMBOL = caseInsensitive<"BLOCK">
+BOOLEAN_SYMBOL = caseInsensitive<"BOOLEAN">
+BOOL_SYMBOL = caseInsensitive<"BOOL">
+BOTH_SYMBOL = caseInsensitive<"BOTH">
+BTREE_SYMBOL = caseInsensitive<"BTREE">
+BY_SYMBOL = caseInsensitive<"BY">
+BYTE_SYMBOL = caseInsensitive<"BYTE">
+CACHE_SYMBOL = caseInsensitive<"CACHE">
+CALL_SYMBOL = caseInsensitive<"CALL">
+CASCADE_SYMBOL = caseInsensitive<"CASCADE">
+CASCADED_SYMBOL = caseInsensitive<"CASCADED">
+CASE_SYMBOL = caseInsensitive<"CASE">
+CAST_SYMBOL = caseInsensitive<"CAST"> 
+CATALOG_NAME_SYMBOL = caseInsensitive<"CATALOG_NAME">
+CHAIN_SYMBOL = caseInsensitive<"CHAIN">
+CHANGE_SYMBOL = caseInsensitive<"CHANGE">
+CHANGED_SYMBOL = caseInsensitive<"CHANGED">
+CHANNEL_SYMBOL = caseInsensitive<"CHANNEL"> 
+CHARSET_SYMBOL = caseInsensitive<"Charset">
+CHAR_SYMBOL = caseInsensitive<"CHAR">
+CHECKSUM_SYMBOL = caseInsensitive<"CHECKSUM">
+CHECK_SYMBOL = caseInsensitive<"CHECK">
+CIPHER_SYMBOL = caseInsensitive<"CIPHER">
+CLASS_ORIGIN_SYMBOL = caseInsensitive<"CLASS_ORIGIN">
+CLIENT_SYMBOL = caseInsensitive<"CLIENT">
+CLOSE_SYMBOL = caseInsensitive<"CLOSE">
+COALESCE_SYMBOL = caseInsensitive<"COALESCE">
+CODE_SYMBOL = caseInsensitive<"CODE">
+COLLATE_SYMBOL = caseInsensitive<"Collate">
+COLLATION_SYMBOL = caseInsensitive<"COLLATION">
+COLUMNS_SYMBOL = caseInsensitive<"COLUMNS">
+COLUMN_SYMBOL = caseInsensitive<"COLUMN">
+COLUMN_NAME_SYMBOL = caseInsensitive<"COLUMN_NAME">
+COLUMN_FORMAT_SYMBOL = caseInsensitive<"COLUMN_FORMAT">
+COMMENT_SYMBOL = caseInsensitive<"COMMENT">
+COMMITTED_SYMBOL = caseInsensitive<"COMMITTED">
+COMMIT_SYMBOL = caseInsensitive<"COMMIT">
+COMPACT_SYMBOL = caseInsensitive<"COMPACT">
+COMPLETION_SYMBOL = caseInsensitive<"COMPLETION">
+COMPRESSED_SYMBOL = caseInsensitive<"COMPRESSED">
+COMPRESSION_SYMBOL = caseInsensitive<"COMPRESSION"> 
+CONCURRENT_SYMBOL = caseInsensitive<"CONCURRENT">
+CONDITION_SYMBOL = caseInsensitive<"CONDITION">
+CONNECTION_SYMBOL = caseInsensitive<"CONNECTION">
+CONSISTENT_SYMBOL = caseInsensitive<"CONSISTENT">
+CONSTRAINT_SYMBOL = caseInsensitive<"CONSTRAINT">
+CONSTRAINT_CATALOG_SYMBOL = caseInsensitive<"CONSTRAINT_CATALOG">
+CONSTRAINT_NAME_SYMBOL = caseInsensitive<"CONSTRAINT_NAME">
+CONSTRAINT_SCHEMA_SYMBOL = caseInsensitive<"CONSTRAINT_SCHEMA">
+CONTAINS_SYMBOL = caseInsensitive<"CONTAINS">
+CONTEXT_SYMBOL = caseInsensitive<"CONTEXT">
+CONTINUE_SYMBOL = caseInsensitive<"CONTINUE">
+CONVERT_SYMBOL = caseInsensitive<"CONVERT">
+COUNT_SYMBOL = caseInsensitive<"COUNT"> 
+CPU_SYMBOL = caseInsensitive<"CPU">
+CREATE_SYMBOL = caseInsensitive<"CREATE">
+CROSS_SYMBOL = caseInsensitive<"CROSS">
+CUBE_SYMBOL = caseInsensitive<"CUBE">
+CURDATE_SYMBOL = caseInsensitive<"CURDATE"> 
+CURRENT_SYMBOL = caseInsensitive<"CURRENT"> 
+CURRENT_USER_SYMBOL = caseInsensitive<"CURRENT_USER">
+CURSOR_SYMBOL = caseInsensitive<"CURSOR">
+CURSOR_NAME_SYMBOL = caseInsensitive<"CURSOR_NAME">
+CURTIME_SYMBOL = caseInsensitive<"CURTIME"> 
+DATABASE_SYMBOL = caseInsensitive<"DATABASE">
+DATABASES_SYMBOL = caseInsensitive<"DATABASES">
+DATAFILE_SYMBOL = caseInsensitive<"DATAFILE">
+DATA_SYMBOL = caseInsensitive<"DATA">
+DATETIME_SYMBOL = caseInsensitive<"DATETIME">
+DATE_ADD_SYMBOL = caseInsensitive<"DATE_ADD"> 
+DATE_SUB_SYMBOL = caseInsensitive<"DATE_SUB"> 
+DATE_SYMBOL = caseInsensitive<"DATE">
+DAY_HOUR_SYMBOL = caseInsensitive<"DAY_HOUR">
+DAY_MICROSECOND_SYMBOL = caseInsensitive<"DAY_MICROSECOND">
+DAY_MINUTE_SYMBOL = caseInsensitive<"DAY_MINUTE">
+DAY_SECOND_SYMBOL = caseInsensitive<"DAY_SECOND">
+DAY_SYMBOL = caseInsensitive<"DAY">
+DEALLOCATE_SYMBOL = caseInsensitive<"DEALLOCATE">
+DECIMAL_NUM_SYMBOL = caseInsensitive<"DECIMAL_NUM">
+DECIMAL_SYMBOL = caseInsensitive<"DECIMAL">
+DECLARE_SYMBOL = caseInsensitive<"DECLARE">
+DEFAULT_SYMBOL = caseInsensitive<"DEFAULT">
+DEFAULT_AUTH_SYMBOL = caseInsensitive<"DEFAULT_AUTH"> 
+DEFINER_SYMBOL = caseInsensitive<"DEFINER">
+DELAYED_SYMBOL = caseInsensitive<"DELAYED">
+DELAY_KEY_WRITE_SYMBOL = caseInsensitive<"DELAY_KEY_WRITE">
+DELETE_SYMBOL = caseInsensitive<"DELETE">
+DESC_SYMBOL = caseInsensitive<"DESC">
+DESCRIBE_SYMBOL = caseInsensitive<"DESCRIBE">
+DES_KEY_FILE_SYMBOL = caseInsensitive<"DES_KEY_FILE"> 
+DETERMINISTIC_SYMBOL = caseInsensitive<"DETERMINISTIC">
+DIAGNOSTICS_SYMBOL = caseInsensitive<"DIAGNOSTICS">
+DIRECTORY_SYMBOL = caseInsensitive<"DIRECTORY">
+DISABLE_SYMBOL = caseInsensitive<"DISABLE">
+DISCARD_SYMBOL = caseInsensitive<"DISCARD">
+DISK_SYMBOL = caseInsensitive<"DISK">
+DISTINCT_SYMBOL = caseInsensitive<"DISTINCT">
+DIV_SYMBOL = caseInsensitive<"DIV">
+DOUBLE_SYMBOL = caseInsensitive<"DOUBLE">
+DO_SYMBOL = caseInsensitive<"DO">
+DROP_SYMBOL = caseInsensitive<"DROP">
+DUAL_SYMBOL = caseInsensitive<"DUAL">
+DUMPFILE_SYMBOL = caseInsensitive<"DUMPFILE">
+DUPLICATE_SYMBOL = caseInsensitive<"DUPLICATE">
+DYNAMIC_SYMBOL = caseInsensitive<"DYNAMIC">
+EACH_SYMBOL = caseInsensitive<"EACH">
+ELSE_SYMBOL = caseInsensitive<"ELSE">
+ELSEIF_SYMBOL = caseInsensitive<"ELSEIF">
+ENABLE_SYMBOL = caseInsensitive<"ENABLE">
+ENCLOSED_SYMBOL = caseInsensitive<"ENCLOSED">
+ENCRYPTION_SYMBOL = caseInsensitive<"ENCRYPTION"> 
+END_SYMBOL = caseInsensitive<"END">
+ENDS_SYMBOL = caseInsensitive<"ENDS">
+END_OF_INPUT_SYMBOL = caseInsensitive<"END_OF_INPUT">
+ENGINES_SYMBOL = caseInsensitive<"ENGINES">
+ENGINE_SYMBOL = caseInsensitive<"ENGINE">
+ENUM_SYMBOL = caseInsensitive<"ENUM">
+ERROR_SYMBOL = caseInsensitive<"ERROR">
+ERRORS_SYMBOL = caseInsensitive<"ERRORS">
+ESCAPED_SYMBOL = caseInsensitive<"ESCAPED">
+ESCAPE_SYMBOL = caseInsensitive<"ESCAPE">
+EVENTS_SYMBOL = caseInsensitive<"EVENTS">
+EVENT_SYMBOL = caseInsensitive<"EVENT">
+EVERY_SYMBOL = caseInsensitive<"EVERY">
+EXCHANGE_SYMBOL = caseInsensitive<"EXCHANGE">
+EXECUTE_SYMBOL = caseInsensitive<"EXECUTE">
+EXISTS_SYMBOL = caseInsensitive<"EXISTS">
+EXIT_SYMBOL = caseInsensitive<"EXIT">
+EXPANSION_SYMBOL = caseInsensitive<"EXPANSION">
+EXPIRE_SYMBOL = caseInsensitive<"EXPIRE"> 
+EXPLAIN_SYMBOL = caseInsensitive<"EXPLAIN">
+EXPORT_SYMBOL = caseInsensitive<"EXPORT"> 
+EXTENDED_SYMBOL = caseInsensitive<"EXTENDED">
+EXTENT_SIZE_SYMBOL = caseInsensitive<"EXTENT_SIZE">
+
+// @TODO use 
+EXTRACT_SYMBOL = caseInsensitive<"EXTRACT"> 
+FALSE_SYMBOL = caseInsensitive<"FALSE">
+FAST_SYMBOL = caseInsensitive<"FAST">
+FAULTS_SYMBOL = caseInsensitive<"FAULTS">
+FETCH_SYMBOL = caseInsensitive<"FETCH">
+FILE_SYMBOL = caseInsensitive<"FILE">
+FILE_BLOCK_SIZE_SYMBOL = caseInsensitive<"FILE_BLOCK_SIZE"> 
+FILTER_SYMBOL = caseInsensitive<"FILTER"> 
+FIRST_SYMBOL = caseInsensitive<"FIRST">
+FIXED_SYMBOL = caseInsensitive<"FIXED">
+FLOAT_SYMBOL = caseInsensitive<"FLOAT">
+FLUSH_SYMBOL = caseInsensitive<"FLUSH">
+FOLLOWS_SYMBOL = caseInsensitive<"FOLLOWS"> 
+FORCE_SYMBOL = caseInsensitive<"FORCE">
+FOREIGN_SYMBOL = caseInsensitive<"FOREIGN">
+FOR_SYMBOL = caseInsensitive<"FOR">
+FORMAT_SYMBOL = caseInsensitive<"FORMAT">
+FOUND_SYMBOL = caseInsensitive<"FOUND">
+FROM_SYMBOL = caseInsensitive<"FROM">
+FULL_SYMBOL = caseInsensitive<"FULL">
+FULLTEXT_SYMBOL = caseInsensitive<"FULLTEXT">
+FUNCTION_SYMBOL = caseInsensitive<"FUNCTION">
+GET_SYMBOL = caseInsensitive<"GET"> 
+GENERAL_SYMBOL = caseInsensitive<"GENERAL">
+GENERATED_SYMBOL = caseInsensitive<"GENERATED"> 
+GROUP_REPLICATION_SYMBOL = caseInsensitive<"GROUP_REPLICATION"> 
+GEOMETRYCOLLECTION_SYMBOL = caseInsensitive<"GEOMETRYCOLLECTION">
+GEOMETRY_SYMBOL = caseInsensitive<"GEOMETRY">
+GET_FORMAT_SYMBOL = caseInsensitive<"GET_FORMAT">
+GLOBAL_SYMBOL = caseInsensitive<"GLOBAL">
+GRANT_SYMBOL = caseInsensitive<"GRANT">
+GRANTS_SYMBOL = caseInsensitive<"GRANTS">
+GROUP_SYMBOL = caseInsensitive<"GROUP">
+GROUP_CONCAT_SYMBOL = caseInsensitive<"GROUP_CONCAT"> 
+HANDLER_SYMBOL = caseInsensitive<"HANDLER">
+HASH_SYMBOL = caseInsensitive<"HASH">
+HAVING_SYMBOL = caseInsensitive<"HAVING">
+HELP_SYMBOL = caseInsensitive<"HELP">
+HIGH_PRIORITY_SYMBOL = caseInsensitive<"HIGH_PRIORITY">
+HOST_SYMBOL = caseInsensitive<"HOST">
+HOSTS_SYMBOL = caseInsensitive<"HOSTS">
+HOUR_MICROSECOND_SYMBOL = caseInsensitive<"HOUR_MICROSECOND">
+HOUR_MINUTE_SYMBOL = caseInsensitive<"HOUR_MINUTE">
+HOUR_SECOND_SYMBOL = caseInsensitive<"HOUR_SECOND">
+HOUR_SYMBOL = caseInsensitive<"HOUR">
+IDENTIFIED_SYMBOL = caseInsensitive<"IDENTIFIED">
+IF_SYMBOL = caseInsensitive<"IF">
+IGNORE_SYMBOL = caseInsensitive<"IGNORE">
+IGNORE_SERVER_IDS_SYMBOL = caseInsensitive<"IGNORE_SERVER_IDS">
+IMPORT_SYMBOL = caseInsensitive<"IMPORT">
+INDEXES_SYMBOL = caseInsensitive<"INDEXES">
+INDEX_SYMBOL = caseInsensitive<"INDEX">
+INFILE_SYMBOL = caseInsensitive<"INFILE">
+INITIAL_SIZE_SYMBOL = caseInsensitive<"INITIAL_SIZE">
+INNER_SYMBOL = caseInsensitive<"INNER">
+INOUT_SYMBOL = caseInsensitive<"INOUT">
+INSENSITIVE_SYMBOL = caseInsensitive<"INSENSITIVE">
+INSERT_SYMBOL = caseInsensitive<"INSERT">
+INSERT_METHOD_SYMBOL = caseInsensitive<"INSERT_METHOD">
+INSTANCE_SYMBOL = caseInsensitive<"INSTANCE"> 
+INSTALL_SYMBOL = caseInsensitive<"INSTALL">
+INTERVAL_SYMBOL = caseInsensitive<"Interval">
+INTO_SYMBOL = caseInsensitive<"INTO">
+INT_SYMBOL = caseInsensitive<"INT">
+INVOKER_SYMBOL = caseInsensitive<"INVOKER">
+IN_SYMBOL = caseInsensitive<"IN">
+IO_SYMBOL = caseInsensitive<"IO">
+IPC_SYMBOL = caseInsensitive<"IPC">
+IS_SYMBOL = caseInsensitive<"IS">
+ISOLATION_SYMBOL = caseInsensitive<"ISOLATION">
+ISSUER_SYMBOL = caseInsensitive<"ISSUER">
+ITERATE_SYMBOL = caseInsensitive<"ITERATE">
+JOIN_SYMBOL = caseInsensitive<"JOIN">
+JSON_SYMBOL = caseInsensitive<"JSON"> 
+KEYS_SYMBOL = caseInsensitive<"KEYS">
+KEY_BLOCK_SIZE_SYMBOL = caseInsensitive<"KEY_BLOCK_SIZE">
+KEY_SYMBOL = caseInsensitive<"KEY">
+KILL_SYMBOL = caseInsensitive<"KILL">
+LANGUAGE_SYMBOL = caseInsensitive<"LANGUAGE">
+LAST_SYMBOL = caseInsensitive<"LAST">
+LEADING_SYMBOL = caseInsensitive<"LEADING">
+LEAVES_SYMBOL = caseInsensitive<"LEAVES">
+LEAVE_SYMBOL = caseInsensitive<"LEAVE">
+LEFT_SYMBOL = caseInsensitive<"LEFT">
+LESS_SYMBOL = caseInsensitive<"LESS">
+LEVEL_SYMBOL = caseInsensitive<"LEVEL">
+LIKE_SYMBOL = caseInsensitive<"LIKE">
+LIMIT_SYMBOL = caseInsensitive<"LIMIT">
+LINEAR_SYMBOL = caseInsensitive<"LINEAR">
+LINES_SYMBOL = caseInsensitive<"LINES">
+LINESTRING_SYMBOL = caseInsensitive<"LINESTRING">
+LIST_SYMBOL = caseInsensitive<"LIST">
+LOAD_SYMBOL = caseInsensitive<"LOAD">
+LOCAL_SYMBOL = caseInsensitive<"LOCAL">
+LOCKS_SYMBOL = caseInsensitive<"LOCKS">
+LOCK_SYMBOL = caseInsensitive<"LOCK">
+LOGFILE_SYMBOL = caseInsensitive<"LOGFILE">
+LOGS_SYMBOL = caseInsensitive<"LOGS">
+LONGBLOB_SYMBOL = caseInsensitive<"LONGBLOB">
+LONGTEXT_SYMBOL = caseInsensitive<"LONGTEXT">
+LONG_NUM_SYMBOL = caseInsensitive<"LONG_NUM">
+LONG_SYMBOL = caseInsensitive<"LONG">
+LOOP_SYMBOL = caseInsensitive<"LOOP">
+LOW_PRIORITY_SYMBOL = caseInsensitive<"LOW_PRIORITY">
+MASTER_AUTO_POSITION_SYMBOL = caseInsensitive<"MASTER_AUTO_POSITION"> 
+MASTER_BIND_SYMBOL = caseInsensitive<"MASTER_BIND"> 
+MASTER_CONNECT_RETRY_SYMBOL = caseInsensitive<"MASTER_CONNECT_RETRY">
+MASTER_DELAY_SYMBOL = caseInsensitive<"MASTER_DELAY">
+MASTER_HOST_SYMBOL = caseInsensitive<"MASTER_HOST">
+MASTER_LOG_FILE_SYMBOL = caseInsensitive<"MASTER_LOG_FILE">
+MASTER_LOG_POS_SYMBOL = caseInsensitive<"MASTER_LOG_POS">
+MASTER_PASSWORD_SYMBOL = caseInsensitive<"MASTER_PASSWORD">
+MASTER_PORT_SYMBOL = caseInsensitive<"MASTER_PORT">
+MASTER_RETRY_COUNT_SYMBOL = caseInsensitive<"MASTER_RETRY_COUNT"> 
+MASTER_SERVER_ID_SYMBOL = caseInsensitive<"MASTER_SERVER_ID">
+MASTER_SSL_CAPATH_SYMBOL = caseInsensitive<"MASTER_SSL_CAPATH">
+MASTER_SSL_CA_SYMBOL = caseInsensitive<"MASTER_SSL_CA">
+MASTER_SSL_CERT_SYMBOL = caseInsensitive<"MASTER_SSL_CERT">
+MASTER_SSL_CIPHER_SYMBOL = caseInsensitive<"MASTER_SSL_CIPHER">
+MASTER_SSL_CRL_SYMBOL = caseInsensitive<"MASTER_SSL_CRL"> 
+MASTER_SSL_CRLPATH_SYMBOL = caseInsensitive<"MASTER_SSL_CRLPATH"> 
+MASTER_SSL_KEY_SYMBOL = caseInsensitive<"MASTER_SSL_KEY">
+MASTER_SSL_SYMBOL = caseInsensitive<"MASTER_SSL">
+MASTER_SSL_VERIFY_SERVER_CERT_SYMBOL = caseInsensitive<"MASTER_SSL_VERIFY_SERVER_CERT">
+MASTER_SYMBOL = caseInsensitive<"MASTER">
+MASTER_TLS_VERSION_SYMBOL = caseInsensitive<"MASTER_TLS_VERSION"> 
+MASTER_USER_SYMBOL = caseInsensitive<"MASTER_USER">
+MASTER_HEARTBEAT_PERIOD_SYMBOL = caseInsensitive<"MASTER_HEARTBEAT_PERIOD">
+MATCH_SYMBOL = caseInsensitive<"MATCH">
+MAX_CONNECTIONS_PER_HOUR_SYMBOL = caseInsensitive<"MAX_CONNECTIONS_PER_HOUR">
+MAX_QUERIES_PER_HOUR_SYMBOL = caseInsensitive<"MAX_QUERIES_PER_HOUR">
+MAX_ROWS_SYMBOL = caseInsensitive<"MAX_ROWS">
+MAX_SIZE_SYMBOL = caseInsensitive<"MAX_SIZE">
+MAX_STATEMENT_TIME_SYMBOL = caseInsensitive<"MAX_STATEMENT_TIME">
+MAX_SYMBOL = caseInsensitive<"MAX"> 
+MAX_UPDATES_PER_HOUR_SYMBOL = caseInsensitive<"MAX_UPDATES_PER_HOUR">
+MAX_USER_CONNECTIONS_SYMBOL = caseInsensitive<"MAX_USER_CONNECTIONS">
+MAXVALUE_SYMBOL = caseInsensitive<"MAXVALUE">
+MEDIUMBLOB_SYMBOL = caseInsensitive<"MEDIUMBLOB">
+MEDIUMINT_SYMBOL = caseInsensitive<"MEDIUMINT">
+MEDIUMTEXT_SYMBOL = caseInsensitive<"MEDIUMTEXT">
+MEDIUM_SYMBOL = caseInsensitive<"MEDIUM">
+MEMORY_SYMBOL = caseInsensitive<"MEMORY">
+MERGE_SYMBOL = caseInsensitive<"MERGE">
+MESSAGE_TEXT_SYMBOL = caseInsensitive<"MESSAGE_TEXT">
+MICROSECOND_SYMBOL = caseInsensitive<"MICROSECOND">
+MIGRATE_SYMBOL = caseInsensitive<"MIGRATE">
+MINUTE_MICROSECOND_SYMBOL = caseInsensitive<"MINUTE_MICROSECOND">
+MINUTE_SECOND_SYMBOL = caseInsensitive<"MINUTE_SECOND">
+MINUTE_SYMBOL = caseInsensitive<"MINUTE">
+MIN_ROWS_SYMBOL = caseInsensitive<"MIN_ROWS">
+MIN_SYMBOL = caseInsensitive<"MIN"> 
+MODE_SYMBOL = caseInsensitive<"MODE">
+MODIFIES_SYMBOL = caseInsensitive<"MODIFIES">
+MODIFY_SYMBOL = caseInsensitive<"MODIFY">
+MOD_SYMBOL = caseInsensitive<"MOD">
+MONTH_SYMBOL = caseInsensitive<"MONTH">
+MULTILINESTRING_SYMBOL = caseInsensitive<"MULTILINESTRING">
+MULTIPOINT_SYMBOL = caseInsensitive<"MULTIPOINT">
+MULTIPOLYGON_SYMBOL = caseInsensitive<"MULTIPOLYGON">
+MUTEX_SYMBOL = caseInsensitive<"MUTEX">
+MYSQL_ERRNO_SYMBOL = caseInsensitive<"MYSQL_ERRNO">
+NAMES_SYMBOL = caseInsensitive<"NAMES">
+NAME_SYMBOL = caseInsensitive<"NAME">
+NATIONAL_SYMBOL = caseInsensitive<"NATIONAL">
+NATURAL_SYMBOL = caseInsensitive<"NATURAL">
+NCHAR_STRING_SYMBOL = caseInsensitive<"NCHAR_STRING">
+NCHAR_SYMBOL = caseInsensitive<"NCHAR">
+NDBCLUSTER_SYMBOL = caseInsensitive<"NDBCLUSTER">
+NEG_SYMBOL = caseInsensitive<"NEG">
+NEVER_SYMBOL = caseInsensitive<"NEVER"> 
+NEW_SYMBOL = caseInsensitive<"NEW">
+NEXT_SYMBOL = caseInsensitive<"NEXT">
+NODEGROUP_SYMBOL = caseInsensitive<"NODEGROUP">
+NONE_SYMBOL = caseInsensitive<"NONE">
+NONBLOCKING_SYMBOL = caseInsensitive<"NONBLOCKING">
+NOT_SYMBOL = caseInsensitive<"NOT">
+NOW_SYMBOL = caseInsensitive<"NOW"> 
+NO_SYMBOL = caseInsensitive<"NO">
+NO_WAIT_SYMBOL = caseInsensitive<"NO_WAIT">
+NO_WRITE_TO_BINLOG_SYMBOL = caseInsensitive<"NO_WRITE_TO_BINLOG">
+NULL_SYMBOL = caseInsensitive<"NULL">
+NUMBER_SYMBOL = caseInsensitive<"NUMBER"> 
+NUMERIC_SYMBOL = caseInsensitive<"NUMERIC">
+NVARCHAR_SYMBOL = caseInsensitive<"NVARCHAR">
+OFFLINE_SYMBOL = caseInsensitive<"OFFLINE">
+OFFSET_SYMBOL = caseInsensitive<"OFFSET">
+OLD_PASSWORD_SYMBOL = caseInsensitive<"OLD_PASSWORD"> 
+ON_SYMBOL = caseInsensitive<"ON">
+ONE_SYMBOL = caseInsensitive<"ONE">
+ONLINE_SYMBOL = caseInsensitive<"ONLINE">
+ONLY_SYMBOL = caseInsensitive<"ONLY"> 
+OPEN_SYMBOL = caseInsensitive<"OPEN">
+OPTIMIZE_SYMBOL = caseInsensitive<"OPTIMIZE">
+OPTIMIZER_COSTS_SYMBOL = caseInsensitive<"OPTIMIZER_COSTS"> 
+OPTIONS_SYMBOL = caseInsensitive<"OPTIONS">
+OPTION_SYMBOL = caseInsensitive<"OPTION">
+OPTIONALLY_SYMBOL = caseInsensitive<"OPTIONALLY">
+ORDER_SYMBOL = caseInsensitive<"ORDER">
+OR_SYMBOL = caseInsensitive<"OR">
+OUTER_SYMBOL = caseInsensitive<"OUTER">
+OUTFILE_SYMBOL = caseInsensitive<"OUTFILE">
+OUT_SYMBOL = caseInsensitive<"OUT">
+OWNER_SYMBOL = caseInsensitive<"OWNER">
+PACK_KEYS_SYMBOL = caseInsensitive<"PACK_KEYS">
+PAGE_SYMBOL = caseInsensitive<"PAGE">
+PARSER_SYMBOL = caseInsensitive<"PARSER">
+PARTIAL_SYMBOL = caseInsensitive<"PARTIAL">
+PARTITIONING_SYMBOL = caseInsensitive<"PARTITIONING">
+PARTITIONS_SYMBOL = caseInsensitive<"PARTITIONS">
+PARTITION_SYMBOL = caseInsensitive<"PARTITION">
+PASSWORD_SYMBOL = caseInsensitive<"PASSWORD">
+PHASE_SYMBOL = caseInsensitive<"PHASE">
+PLUGINS_SYMBOL = caseInsensitive<"PLUGINS">
+PLUGIN_DIR_SYMBOL = caseInsensitive<"PLUGIN_DIR"> 
+PLUGIN_SYMBOL = caseInsensitive<"PLUGIN">
+POINT_SYMBOL = caseInsensitive<"POINT">
+POLYGON_SYMBOL = caseInsensitive<"POLYGON">
+PORT_SYMBOL = caseInsensitive<"PORT">
+POSITION_SYMBOL = caseInsensitive<"POSITION"> 
+PRECEDES_SYMBOL = caseInsensitive<"PRECEDES"> 
+PRECISION_SYMBOL = caseInsensitive<"Precision">
+PREPARE_SYMBOL = caseInsensitive<"PREPARE">
+PRESERVE_SYMBOL = caseInsensitive<"PRESERVE">
+PREV_SYMBOL = caseInsensitive<"PREV">
+PRIMARY_SYMBOL = caseInsensitive<"PRIMARY">
+PRIVILEGES_SYMBOL = caseInsensitive<"PRIVILEGES">
+PROCEDURE_SYMBOL = caseInsensitive<"PROCEDURE">
+PROCESS_SYMBOL = caseInsensitive<"PROCESS">
+PROCESSLIST_SYMBOL = caseInsensitive<"PROCESSLIST">
+PROFILE_SYMBOL = caseInsensitive<"PROFILE">
+PROFILES_SYMBOL = caseInsensitive<"PROFILES">
+PROXY_SYMBOL = caseInsensitive<"PROXY">
+PURGE_SYMBOL = caseInsensitive<"PURGE">
+QUARTER_SYMBOL = caseInsensitive<"QUARTER">
+QUERY_SYMBOL = caseInsensitive<"Query">
+QUICK_SYMBOL = caseInsensitive<"QUICK">
+RANGE_SYMBOL = caseInsensitive<"RANGE">
+READS_SYMBOL = caseInsensitive<"READS">
+READ_ONLY_SYMBOL = caseInsensitive<"READ_ONLY">
+READ_SYMBOL = caseInsensitive<"READ">
+READ_WRITE_SYMBOL = caseInsensitive<"READ_WRITE">
+REAL_SYMBOL = caseInsensitive<"REAL">
+REBUILD_SYMBOL = caseInsensitive<"REBUILD">
+RECOVER_SYMBOL = caseInsensitive<"RECOVER">
+REDOFILE_SYMBOL = caseInsensitive<"REDOFILE"> 
+REDO_BUFFER_SIZE_SYMBOL = caseInsensitive<"REDO_BUFFER_SIZE">
+REDUNDANT_SYMBOL = caseInsensitive<"REDUNDANT">
+REFERENCES_SYMBOL = caseInsensitive<"References">
+REGEXP_SYMBOL = caseInsensitive<"REGEXP">
+RELAY_SYMBOL = caseInsensitive<"RELAY">
+RELAYLOG_SYMBOL = caseInsensitive<"RELAYLOG">
+RELAY_LOG_FILE_SYMBOL = caseInsensitive<"RELAY_LOG_FILE">
+RELAY_LOG_POS_SYMBOL = caseInsensitive<"RELAY_LOG_POS">
+RELAY_THREAD_SYMBOL = caseInsensitive<"RELAY_THREAD">
+RELEASE_SYMBOL = caseInsensitive<"RELEASE">
+RELOAD_SYMBOL = caseInsensitive<"RELOAD">
+REMOVE_SYMBOL = caseInsensitive<"REMOVE">
+RENAME_SYMBOL = caseInsensitive<"RENAME">
+REORGANIZE_SYMBOL = caseInsensitive<"REORGANIZE">
+REPAIR_SYMBOL = caseInsensitive<"REPAIR">
+REPEATABLE_SYMBOL = caseInsensitive<"REPEATABLE">
+REPEAT_SYMBOL = caseInsensitive<"REPEAT">
+REPLACE_SYMBOL = caseInsensitive<"REPLACE">
+REPLICATION_SYMBOL = caseInsensitive<"REPLICATION">
+REPLICATE_DO_DB_SYMBOL = caseInsensitive<"REPLICATE_DO_DB"> 
+REPLICATE_IGNORE_DB_SYMBOL = caseInsensitive<"REPLICATE_IGNORE_DB"> 
+REPLICATE_DO_TABLE_SYMBOL = caseInsensitive<"REPLICATE_DO_TABLE"> 
+REPLICATE_IGNORE_TABLE_SYMBOL = caseInsensitive<"REPLICATE_IGNORE_TABLE"> 
+REPLICATE_WILD_DO_TABLE_SYMBOL = caseInsensitive<"REPLICATE_WILD_DO_TABLE"> 
+REPLICATE_WILD_IGNORE_TABLE_SYMBOL = caseInsensitive<"REPLICATE_WILD_IGNORE_TABLE"> 
+REPLICATE_REWRITE_DB_SYMBOL = caseInsensitive<"REPLICATE_REWRITE_DB"> 
+REQUIRE_SYMBOL = caseInsensitive<"REQUIRE">
+RESET_SYMBOL = caseInsensitive<"RESET">
+RESIGNAL_SYMBOL = caseInsensitive<"RESIGNAL">
+RESTORE_SYMBOL = caseInsensitive<"RESTORE">
+RESTRICT_SYMBOL = caseInsensitive<"Restrict">
+RESUME_SYMBOL = caseInsensitive<"RESUME">
+RETURNED_SQLSTATE_SYMBOL = caseInsensitive<"RETURNED_SQLSTATE">
+RETURNS_SYMBOL = caseInsensitive<"RETURNS">
+RETURN_SYMBOL = caseInsensitive<"RETURN">?
+REVERSE_SYMBOL = caseInsensitive<"REVERSE">
+REVOKE_SYMBOL = caseInsensitive<"REVOKE">
+RIGHT_SYMBOL = caseInsensitive<"RIGHT">
+ROLLBACK_SYMBOL = caseInsensitive<"ROLLBACK">
+ROLLUP_SYMBOL = caseInsensitive<"ROLLUP">
+ROTATE_SYMBOL = caseInsensitive<"ROTATE"> 
+ROUTINE_SYMBOL = caseInsensitive<"ROUTINE">
+ROWS_SYMBOL = caseInsensitive<"ROWS">
+ROW_COUNT_SYMBOL = caseInsensitive<"ROW_COUNT">
+ROW_FORMAT_SYMBOL = caseInsensitive<"ROW_FORMAT">
+ROW_SYMBOL = caseInsensitive<"ROW">
+RTREE_SYMBOL = caseInsensitive<"RTREE">
+SAVEPOINT_SYMBOL = caseInsensitive<"SAVEPOINT">
+SCHEDULE_SYMBOL = caseInsensitive<"Schedule">
+SCHEMA_NAME_SYMBOL = caseInsensitive<"SCHEMA_NAME">
+SECOND_MICROSECOND_SYMBOL = caseInsensitive<"SECOND_MICROSECOND">
+SECOND_SYMBOL = caseInsensitive<"SECOND">
+SECURITY_SYMBOL = caseInsensitive<"SECURITY">
+SELECT_SYMBOL = caseInsensitive<"SELECT">
+SENSITIVE_SYMBOL = caseInsensitive<"SENSITIVE">
+SEPARATOR_SYMBOL = caseInsensitive<"SEPARATOR">
+SERIALIZABLE_SYMBOL = caseInsensitive<"SERIALIZABLE">
+SERIAL_SYMBOL = caseInsensitive<"SERIAL">
+SESSION_SYMBOL = caseInsensitive<"SESSION">
+SERVER_SYMBOL = caseInsensitive<"SERVER">
+SERVER_OPTIONS_SYMBOL = caseInsensitive<"SERVER_OPTIONS">
+SET_SYMBOL = caseInsensitive<"SET">
+SET_VAR_SYMBOL = caseInsensitive<"SET_VAR">
+SHARE_SYMBOL = caseInsensitive<"SHARE">
+SHOW_SYMBOL = caseInsensitive<"SHOW">
+SHUTDOWN_SYMBOL = caseInsensitive<"SHUTDOWN">
+SIGNAL_SYMBOL = caseInsensitive<"SIGNAL">
+SIGNED_SYMBOL = caseInsensitive<"SIGNED">
+SIMPLE_SYMBOL = caseInsensitive<"SIMPLE">
+SLAVE_SYMBOL = caseInsensitive<"SLAVE">
+SLOW_SYMBOL = caseInsensitive<"SLOW">
+SMALLINT_SYMBOL = caseInsensitive<"SMALLINT">
+SNAPSHOT_SYMBOL = caseInsensitive<"SNAPSHOT">
+SOCKET_SYMBOL = caseInsensitive<"SOCKET">
+SONAME_SYMBOL = caseInsensitive<"SONAME">
+SOUNDS_SYMBOL = caseInsensitive<"SOUNDS">
+SOURCE_SYMBOL = caseInsensitive<"SOURCE">
+SPATIAL_SYMBOL = caseInsensitive<"SPATIAL">
+SPECIFIC_SYMBOL = caseInsensitive<"SPECIFIC">
+SQLEXCEPTION_SYMBOL = caseInsensitive<"SQLEXCEPTION">
+SQLSTATE_SYMBOL = caseInsensitive<"SQLSTATE">
+SQLWARNING_SYMBOL = caseInsensitive<"SQLWARNING">
+SQL_AFTER_GTIDS_SYMBOL = caseInsensitive<"SQL_AFTER_GTIDS">
+SQL_AFTER_MTS_GAPS_SYMBOL = caseInsensitive<"SQL_AFTER_MTS_GAPS"> 
+SQL_BEFORE_GTIDS_SYMBOL = caseInsensitive<"SQL_BEFORE_GTIDS">
+SQL_BIG_RESULT_SYMBOL = caseInsensitive<"SQL_BIG_RESULT">
+SQL_BUFFER_RESULT_SYMBOL = caseInsensitive<"SQL_BUFFER_RESULT">
+SQL_CACHE_SYMBOL = caseInsensitive<"SQL_CACHE"> 
+SQL_CALC_FOUND_ROWS_SYMBOL = caseInsensitive<"SQL_CALC_FOUND_ROWS">
+SQL_NO_CACHE_SYMBOL = caseInsensitive<"SQL_NO_CACHE">
+SQL_SMALL_RESULT_SYMBOL = caseInsensitive<"SQL_SMALL_RESULT">
+SQL_SYMBOL = caseInsensitive<"SQL">
+SQL_THREAD_SYMBOL = caseInsensitive<"SQL_THREAD">
+SSL_SYMBOL = caseInsensitive<"SSL">
+STACKED_SYMBOL = caseInsensitive<"STACKED"> 
+STARTING_SYMBOL = caseInsensitive<"STARTING">
+STARTS_SYMBOL = caseInsensitive<"STARTS">
+START_SYMBOL = caseInsensitive<"START">
+STATS_AUTO_RECALC_SYMBOL = caseInsensitive<"STATS_AUTO_RECALC">
+STATS_PERSISTENT_SYMBOL = caseInsensitive<"STATS_PERSISTENT">
+STATS_SAMPLE_PAGES_SYMBOL = caseInsensitive<"STATS_SAMPLE_PAGES">
+STATUS_SYMBOL = caseInsensitive<"STATUS">
+STDDEV_SAMP_SYMBOL = caseInsensitive<"STDDEV_SAMP"> 
+STDDEV_SYMBOL = caseInsensitive<"STDDEV"> 
+STDDEV_POP_SYMBOL = caseInsensitive<"STDDEV_POP"> 
+STD_SYMBOL = caseInsensitive<"STD"> 
+STOP_SYMBOL = caseInsensitive<"STOP">
+STORAGE_SYMBOL = caseInsensitive<"STORAGE">
+STORED_SYMBOL = caseInsensitive<"STORED"> 
+STRAIGHT_JOIN_SYMBOL = caseInsensitive<"STRAIGHT_JOIN">
+STRING_SYMBOL = caseInsensitive<"STRING">
+SUBCLASS_ORIGIN_SYMBOL = caseInsensitive<"SUBCLASS_ORIGIN">
+SUBDATE_SYMBOL = caseInsensitive<"SUBDATE"> 
+SUBJECT_SYMBOL = caseInsensitive<"SUBJECT">
+SUBPARTITIONS_SYMBOL = caseInsensitive<"SubPartitions">
+SUBPARTITION_SYMBOL = caseInsensitive<"SUBPARTITION">
+SUBSTR_SYMBOL = caseInsensitive<"SUBSTR"> 
+SUBSTRING_SYMBOL = caseInsensitive<"SUBSTRING"> 
+SUM_SYMBOL = caseInsensitive<"SUM"> 
+SUPER_SYMBOL = caseInsensitive<"SUPER">
+SUSPEND_SYMBOL = caseInsensitive<"SUSPEND">
+SWAPS_SYMBOL = caseInsensitive<"SWAPS">
+SWITCHES_SYMBOL = caseInsensitive<"SWITCHES">
+SYSDATE_SYMBOL = caseInsensitive<"SYSDATE"> 
+TABLES_SYMBOL = caseInsensitive<"TABLES">
+TABLESPACE_SYMBOL = caseInsensitive<"TABLESPACE">
+TABLE_REF_PRIORITY_SYMBOL = caseInsensitive<"TABLE_REF_PRIORITY"> 
+TABLE_SYMBOL = caseInsensitive<"TABLE">
+TABLE_CHECKSUM_SYMBOL = caseInsensitive<"TABLE_CHECKSUM">
+TABLE_NAME_SYMBOL = caseInsensitive<"TABLE_NAME">
+TEMPORARY_SYMBOL = caseInsensitive<"TEMPORARY">
+TEMPTABLE_SYMBOL = caseInsensitive<"TEMPTABLE">
+TERMINATED_SYMBOL = caseInsensitive<"TERMINATED">
+TEXT_SYMBOL = caseInsensitive<"TEXT">
+THAN_SYMBOL = caseInsensitive<"THAN">
+THEN_SYMBOL = caseInsensitive<"THEN">
+TIMESTAMP_SYMBOL = caseInsensitive<"TIMESTAMP">
+TIMESTAMP_ADD_SYMBOL = caseInsensitive<"TIMESTAMP_ADD">
+TIMESTAMP_DIFF_SYMBOL = caseInsensitive<"TIMESTAMP_DIFF">
+TIME_SYMBOL = caseInsensitive<"TIME">
+TINYBLOB_SYMBOL = caseInsensitive<"TINYBLOB">
+TINYINT_SYMBOL = caseInsensitive<"TINYINT">
+TINYTEXT_SYMBOL = caseInsensitive<"TINYTEXT">
+TO_SYMBOL = caseInsensitive<"TO">
+TRAILING_SYMBOL = caseInsensitive<"TRAILING">
+TRANSACTION_SYMBOL = caseInsensitive<"TRANSACTION">
+TRIGGERS_SYMBOL = caseInsensitive<"TRIGGERS">
+TRIGGER_SYMBOL = caseInsensitive<"TRIGGER">
+TRIM_SYMBOL = caseInsensitive<"TRIM"> 
+TRUE_SYMBOL = caseInsensitive<"TRUE">
+TRUNCATE_SYMBOL = caseInsensitive<"TRUNCATE">
+TYPES_SYMBOL = caseInsensitive<"TYPES">
+TYPE_SYMBOL = caseInsensitive<"TYPE">
+UDF_RETURNS_SYMBOL = caseInsensitive<"UDF_RETURNS">
+UNCOMMITTED_SYMBOL = caseInsensitive<"UNCOMMITTED">
+UNDEFINED_SYMBOL = caseInsensitive<"UNDEFINED">
+UNDOFILE_SYMBOL = caseInsensitive<"UNDOFILE">
+UNDO_BUFFER_SIZE_SYMBOL = caseInsensitive<"UNDO_BUFFER_SIZE">
+UNDO_SYMBOL = caseInsensitive<"UNDO">
+UNICODE_SYMBOL = caseInsensitive<"UNICODE">
+UNINSTALL_SYMBOL = caseInsensitive<"UNINSTALL">
+UNION_SYMBOL = caseInsensitive<"UNION">
+UNIQUE_SYMBOL = caseInsensitive<"UNIQUE">
+UNKNOWN_SYMBOL = caseInsensitive<"UNKNOWN">
+UNLOCK_SYMBOL = caseInsensitive<"UNLOCK">
+UNSIGNED_SYMBOL = caseInsensitive<"UNSIGNED">
+UNTIL_SYMBOL = caseInsensitive<"UNTIL">
+UPDATE_SYMBOL = caseInsensitive<"UPDATE">
+UPGRADE_SYMBOL = caseInsensitive<"UPGRADE">
+USAGE_SYMBOL = caseInsensitive<"USAGE">
+USER_RESOURCES_SYMBOL = caseInsensitive<"USER_RESOURCES">
+USER_SYMBOL = caseInsensitive<"User">
+USE_FRM_SYMBOL = caseInsensitive<"USE_FRM">
+USE_SYMBOL = caseInsensitive<"USE">
+USING_SYMBOL = caseInsensitive<"USING">
+UTC_DATE_SYMBOL = caseInsensitive<"UTC_DATE">
+UTC_TIMESTAMP_SYMBOL = caseInsensitive<"UTC_TIMESTAMP">
+UTC_TIME_SYMBOL = caseInsensitive<"UTC_TIME">
+VALIDATION_SYMBOL = caseInsensitive<"VALIDATION"> 
+VALUES_SYMBOL = caseInsensitive<"Values">
+VALUE_SYMBOL = caseInsensitive<"VALUE">
+VARBINARY_SYMBOL = caseInsensitive<"VARBINARY">
+VARCHAR_SYMBOL = caseInsensitive<"VARCHAR">
+VARIABLES_SYMBOL = caseInsensitive<"VARIABLES">
+VARIANCE_SYMBOL = caseInsensitive<"VARIANCE"> 
+VARYING_SYMBOL = caseInsensitive<"VARYING">
+VAR_POP_SYMBOL = caseInsensitive<"VAR_POP"> 
+VAR_SAMP_SYMBOL = caseInsensitive<"VAR_SAMP"> 
+VIEW_SYMBOL = caseInsensitive<"VIEW">
+VIRTUAL_SYMBOL = caseInsensitive<"VIRTUAL"> 
+WAIT_SYMBOL = caseInsensitive<"WAIT">
+WARNINGS_SYMBOL = caseInsensitive<"WARNINGS">
+WEEK_SYMBOL = caseInsensitive<"WEEK">
+WEIGHT_STRING_SYMBOL = caseInsensitive<"WEIGHT_STRING">
+WHEN_SYMBOL = caseInsensitive<"WHEN">
+WHERE_SYMBOL = caseInsensitive<"WHERE">
+WHILE_SYMBOL = caseInsensitive<"WHILE">
+WITH_SYMBOL = caseInsensitive<"WITH">
+WITHOUT_SYMBOL = caseInsensitive<"WITHOUT">
+WORK_SYMBOL = caseInsensitive<"WORK">
+WRAPPER_SYMBOL = caseInsensitive<"WRAPPER">
+WRITE_SYMBOL = caseInsensitive<"WRITE">
+X509_SYMBOL = caseInsensitive<"X509">
+XA_SYMBOL = caseInsensitive<"XA">
+XID_SYMBOL = caseInsensitive<"Xid"> 
+XML_SYMBOL = caseInsensitive<"XML">
+XOR_SYMBOL = caseInsensitive<"XOR">
+YEAR_MONTH_SYMBOL = caseInsensitive<"YEAR_MONTH">
+YEAR_SYMBOL = caseInsensitive<"YEAR">
+ZEROFILL_SYMBOL = caseInsensitive<"ZEROFILL">
+PERSIST_SYMBOL = caseInsensitive<"PERSIST"> 
+ROLE_SYMBOL = caseInsensitive<"Role"> 
+ADMIN_SYMBOL = caseInsensitive<"ADMIN"> 
+INVISIBLE_SYMBOL = caseInsensitive<"INVISIBLE"> 
+VISIBLE_SYMBOL = caseInsensitive<"VISIBLE"> 
+EXCEPT_SYMBOL = caseInsensitive<"EXCEPT"> 
+COMPONENT_SYMBOL = caseInsensitive<"COMPONENT"> 
+RECURSIVE_SYMBOL = caseInsensitive<"RECURSIVE"> 
+JSON_OBJECTAGG_SYMBOL = caseInsensitive<"JSON_OBJECTAGG"> 
+JSON_ARRAYAGG_SYMBOL = caseInsensitive<"JSON_ARRAYAGG"> 
+OF_SYMBOL = caseInsensitive<"OF"> 
+SKIP_SYMBOL = caseInsensitive<"SKIP"> 
+LOCKED_SYMBOL = caseInsensitive<"LOCKED"> 
+NOWAIT_SYMBOL = caseInsensitive<"NOWAIT"> 
+GROUPING_SYMBOL = caseInsensitive<"GROUPING"> 
+PERSIST_ONLY_SYMBOL = caseInsensitive<"PERSIST_ONLY"> 
+HISTOGRAM_SYMBOL = caseInsensitive<"HISTOGRAM"> 
+BUCKETS_SYMBOL = caseInsensitive<"BUCKETS"> 
+REMOTE_SYMBOL = caseInsensitive<"REMOTE"> 
+CLONE_SYMBOL = caseInsensitive<"CLONE"> 
+CUME_DIST_SYMBOL = caseInsensitive<"CUME_DIST"> 
+DENSE_RANK_SYMBOL = caseInsensitive<"DENSE_RANK"> 
+EXCLUDE_SYMBOL = caseInsensitive<"EXCLUDE"> 
+FIRST_VALUE_SYMBOL = caseInsensitive<"FIRST_VALUE"> 
+FOLLOWING_SYMBOL = caseInsensitive<"FOLLOWING"> 
+GROUPS_SYMBOL = caseInsensitive<"GROUPS"> 
+LAG_SYMBOL = caseInsensitive<"LAG"> 
+LAST_VALUE_SYMBOL = caseInsensitive<"LAST_VALUE"> 
+LEAD_SYMBOL = caseInsensitive<"LEAD"> 
+NTH_VALUE_SYMBOL = caseInsensitive<"NTH_VALUE"> 
+NTILE_SYMBOL = caseInsensitive<"NTILE"> 
+NULLS_SYMBOL = caseInsensitive<"NULLS"> 
+OTHERS_SYMBOL = caseInsensitive<"OTHERS"> 
+OVER_SYMBOL = caseInsensitive<"OVER"> 
+PERCENT_RANK_SYMBOL = caseInsensitive<"PERCENT_RANK"> 
+PRECEDING_SYMBOL = caseInsensitive<"PRECEDING"> 
+RANK_SYMBOL = caseInsensitive<"RANK"> 
+RESPECT_SYMBOL = caseInsensitive<"RESPECT"> 
+ROW_NUMBER_SYMBOL = caseInsensitive<"ROW_NUMBER"> 
+TIES_SYMBOL = caseInsensitive<"TIES"> 
+UNBOUNDED_SYMBOL = caseInsensitive<"UNBOUNDED"> 
+WINDOW_SYMBOL = caseInsensitive<"WINDOW"> 
+EMPTY_SYMBOL = caseInsensitive<"EMPTY"> 
+JSON_TABLE_SYMBOL = caseInsensitive<"JSON_TABLE"> 
+NESTED_SYMBOL = caseInsensitive<"NESTED"> 
+ORDINALITY_SYMBOL = caseInsensitive<"ORDINALITY"> 
+PATH_SYMBOL = caseInsensitive<"PATH"> 
+HISTORY_SYMBOL = caseInsensitive<"HISTORY"> 
+REUSE_SYMBOL = caseInsensitive<"REUSE"> 
+SRID_SYMBOL = caseInsensitive<"SRID"> 
+THREAD_PRIORITY_SYMBOL = caseInsensitive<"THREAD_PRIORITY"> 
+RESOURCE_SYMBOL = caseInsensitive<"RESOURCE"> 
+SYSTEM_SYMBOL = caseInsensitive<"SYSTEM"> 
+VCPU_SYMBOL = caseInsensitive<"VCPU"> 
+MASTER_PUBLIC_KEY_PATH_SYMBOL = caseInsensitive<"MASTER_PUBLIC_KEY_PATH"> 
+GET_MASTER_PUBLIC_KEY_SYMBOL = caseInsensitive<"GET_MASTER_PUBLIC_KEY_SYM"> 
+RESTART_SYMBOL = caseInsensitive<"RESTART"> 
+DEFINITION_SYMBOL = caseInsensitive<"DEFINITION"> 
+DESCRIPTION_SYMBOL = caseInsensitive<"DESCRIPTION"> 
+ORGANIZATION_SYMBOL = caseInsensitive<"ORGANIZATION"> 
+REFERENCE_SYMBOL = caseInsensitive<"REFERENCE"> 
+OPTIONAL_SYMBOL = caseInsensitive<"OPTIONAL"> 
+SECONDARY_SYMBOL = caseInsensitive<"SECONDARY"> 
+SECONDARY_ENGINE_SYMBOL = caseInsensitive<"SECONDARY_ENGINE"> 
+SECONDARY_LOAD_SYMBOL = caseInsensitive<"SECONDARY_LOAD"> 
+SECONDARY_UNLOAD_SYMBOL = caseInsensitive<"SECONDARY_UNLOAD"> 
+ACTIVE_SYMBOL = caseInsensitive<"ACTIVE"> 
+INACTIVE_SYMBOL = caseInsensitive<"INACTIVE"> 
+LATERAL_SYMBOL = caseInsensitive<"LATERAL"> 
+RETAIN_SYMBOL = caseInsensitive<"RETAIN"> 
+OLD_SYMBOL = caseInsensitive<"OLD"> 
+NETWORK_NAMESPACE_SYMBOL = caseInsensitive<"NETWORK_NAMESPACE"> 
+ENFORCED_SYMBOL = caseInsensitive<"ENFORCED"> 
+ARRAY_SYMBOL = caseInsensitive<"ARRAY"> 
+OJ_SYMBOL = caseInsensitive<"OJ"> 
+MEMBER_SYMBOL = caseInsensitive<"MEMBER"> 
+RANDOM_SYMBOL = caseInsensitive<"RANDOM"> 
+MASTER_COMPRESSION_ALGORITHM_SYMBOL = caseInsensitive<"MASTER_COMPRESSION_ALGORITHM"> 
+MASTER_ZSTD_COMPRESSION_LEVEL_SYMBOL = caseInsensitive<"MASTER_ZSTD_COMPRESSION_LEVEL"> 
+PRIVILEGE_CHECKS_USER_SYMBOL = caseInsensitive<"PRIVILEGE_CHECKS_USER"> 
+MASTER_TLS_CIPHERSUITES_SYMBOL = caseInsensitive<"MASTER_TLS_CIPHERSUITES"> 
+REQUIRE_ROW_FORMAT_SYMBOL = caseInsensitive<"REQUIRE_ROW_FORMAT"> 
+PASSWORD_LOCK_TIME_SYMBOL = caseInsensitive<"PASSWORD_LOCK_TIME"> 
+FAILED_LOGIN_ATTEMPTS_SYMBOL = caseInsensitive<"FAILED_LOGIN_ATTEMPTS"> 
+REQUIRE_TABLE_PRIMARY_KEY_CHECK_SYMBOL = caseInsensitive<"REQUIRE_TABLE_PRIMARY_KEY_CHECK"> 
+STREAM_SYMBOL = caseInsensitive<"STREAM"> 
+OFF_SYMBOL = caseInsensitive<"OFF"> 
+INT1_SYMBOL = "INT1"
+INT2_SYMBOL = "INT2"
+INT3_SYMBOL = "INT3"
+INT4_SYMBOL = "INT4"
+INT8_SYMBOL = "INT8"
+SQL_TSI_SECOND_SYMBOL = "SQL_TSI_SECOND"
+SQL_TSI_MINUTE_SYMBOL = "SQL_TSI_MINUTE"
+SQL_TSI_HOUR_SYMBOL = "SQL_TSI_HOUR" 
+SQL_TSI_DAY_SYMBOL = "SQL_TSI_DAY" 
+SQL_TSI_WEEK_SYMBOL = "SQL_TSI_WEEK" 
+SQL_TSI_MONTH_SYMBOL = "SQL_TSI_MONTH" 
+SQL_TSI_QUARTER_SYMBOL = "SQL_TSI_QUARTER"
+SQL_TSI_YEAR_SYMBOL = "SQL_TSI_YEAR" 
+WHITESPACE = " " | "\\f" | "\t" | "\n" | "\r"
+
+
+INVALID_INPUT
+= RangeInvalid | SpecificInvalid
+
+RangeInvalid
+= "\u0001" .. "\u0008"
+| "\u000E" .. "\u001F"
+
+SpecificInvalid
+= "\u000B"
+| "\u000C"
+| "["
+| "]"
+
+UNDERSCORE_CHARSET
+= "_" LetterOrDigit+
+
+
+NCHAR_TEXT
+= "n" SINGLE_QUOTED_TEXT
+
+BACK_TICK_QUOTED_ID
+= "`" (BacktickQuotedContent)* "`"
+
+BacktickQuotedContent
+= "\\" any
+| ~"`" any
+
+DOUBLE_QUOTED_TEXT
+= (DOUBLE_QUOTE (DoubleQuotedContent)* DOUBLE_QUOTE)+
+
+DoubleQuotedContent
+    = "\\" any --escapesequence
+    | ~DOUBLE_QUOTE any --nonquote
+
+SINGLE_QUOTED_TEXT
+    = (SINGLE_QUOTE (SingleQuotedContent)* SINGLE_QUOTE)+
+
+SingleQuotedContent
+= "\\" any
+| ~SINGLE_QUOTE any
+
+LOGICAL_OR_OPERATOR
+= "||"
+
+BITWISE_OR_OPERATOR
+= "|"
+
+JSON_SEPARATOR_SYMBOL
+= "->"
+
+JSON_UNQUOTED_SEPARATOR_SYMBOL
+= "->>"
+
+DOT_IDENTIFIER
+= "." LetterWhenUnquotedNoDigit LetterWhenUnquoted*
+
+NOT2_SYMBOL
+= "NOT"
+
+CONCAT_PIPES_SYMBOL
+= "||"
+
+LONG_NUMBER
+= Digits+
+
+// Define reusable components
+DOUBLE_QUOTE = "\""
+SINGLE_QUOTE = "'"
+Digits = digit+
+LetterOrDigit = "a" .. "z" | "0" .. "9"
+LetterWhenUnquoted = letter | digit
+LetterWhenUnquotedNoDigit = "a" .. "z" | "A" .. "Z"
+LetterWithoutFloatPart = "a" .. "d" | "f" .. "z" | "A" .. "D" | "F" .. "Z"
+
+AT_TEXT_SUFFIX = "@" SIMPLE_IDENTIFIER
+CHARACTER_SYMBOL = "CHARACTER"
+CURRENT_DATE_SYMBOL = "CURRENT_DATE" 
+CURRENT_TIME_SYMBOL = "CURRENT_TIME" 
+CURRENT_TIMESTAMP_SYMBOL = "CURRENT_TIMESTAMP"
+DAYOFMONTH_SYMBOL = "DAYOFMONTH" 
+DEC_SYMBOL = caseInsensitive<"DEC">
+DISTINCTROW_SYMBOL = caseInsensitive<"DISTINCTROW">
+FIELDS_SYMBOL = caseInsensitive<"Fields">
+FLOAT4_SYMBOL = caseInsensitive<"FLOAT4">
+FLOAT8_SYMBOL = caseInsensitive<"FLOAT8">
+INTEGER_SYMBOL = caseInsensitive<"INTEGER">
+IO_THREAD_SYMBOL = caseInsensitive<"IO_THREAD">
+LOCALTIME_SYMBOL = caseInsensitive<"LOCALTIME">
+LOCALTIMESTAMP_SYMBOL = caseInsensitive<"LOCALTIMESTAMP">
+MIDDLEINT_SYMBOL = caseInsensitive<"MIDDLEINT">
+MID_SYMBOL = "MID" 
+NDB_SYMBOL = "NDB"
+RLIKE_SYMBOL = "RLIKE"
+SCHEMA_SYMBOL = "SCHEMA"
+SCHEMAS_SYMBOL = "SCHEMAS"
+SESSION_USER_SYMBOL = "SESSION_USER" 
+SOME_SYMBOL = "SOME"
+SYSTEM_USER_SYMBOL = "SYSTEM_USER" 
+VARCHARACTER_SYMBOL = "VARCHARACTER"
+MYSQL_COMMENT_START = "/*!"
+VERSION_COMMENT_END = "*/" 
+
+VERSION_COMMENT_START
+= "/*!" Digits CommentContent "*/"
+
+CommentContent
+= (~"*/" any)*
+
+
+BLOCK_COMMENT
+= EmptyComment
+| NonEmptyBlockComment
+
+EmptyComment
+= "/**/"
+
+NonEmptyBlockComment
+= "/*" NotExclamationCommentContent "*/"
+
+NotExclamationCommentContent
+= (~"!" any)*
+
+POUND_COMMENT
+= "#" NotNewline*
+
+NotNewline
+= ~("\n" | "\r") any
+
+DASHDASH_COMMENT
+= "--" NotNewline* (LineBreak | end)
+
+
+DigitHex
+= "0" .. "9"
+| "a" .. "f"
+| "A" .. "F"
+
+
+LetterWithoutFloat
+= "a" .. "d"
+| "f" .. "z"
+| "A" .. "D"
+| "F" .. "Z"
+
+LineBreak
+= "\n"
+| "\r"
+
+SIMPLE_IDENTIFIER
+= SimpleIdentifierPart+
+
+SimpleIdentifierPart
+= digit
+| letter
+| "_"
+| "$"
+| "."
+
+UnicodeRange
+= "\u0080" .. "\uffff"
+
+/*
+* @TODOs:
+* * Token aliases (e.g. consume Fields as COLUMNS
+* * Skip comments sections
+* * Replace string literals with symbols
+*/
+}
