@@ -1,0 +1,14 @@
+{
+  "name": "ebnf-attempt",
+  "version": "1.0.0",
+  "description": "This is an attempt at generating a parser from EBNF grammar.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "peggy": "^4.0.3"
+  }
+}
