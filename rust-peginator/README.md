@@ -12,11 +12,13 @@ The README doesn't say that explicitly, but there's a `peginator-cli` binary tha
 ```sh
 cargo install peginator-cli
 peginator-cli ./src/test-grammar.peginator > src/test-parser.rs
+peginator-cli ./src/mysql.peginator > src/mysql_parser.rs
 ```
 
 To run the generated parser:
 
 ```sh
+cargo fmt
 cargo build
 cargo run
 ```

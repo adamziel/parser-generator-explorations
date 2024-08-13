@@ -1,11 +1,14 @@
-use test_parser::FunctionDef;
+use mysql_parser::query;
+use mysql_parser::querySpecification;
 use peginator::PegParser;
-mod test_parser;
-
+use peginator::PegParserAdvanced;
+mod mysql_parser;
 
 fn main() {
-    let input = "fn example(&self, input:&str, rectified:&mut Rect, rectified2:&mut Rect, rectified3:&mut Rect) -> ExampleResult;";
-    let result = FunctionDef::parse(input);
+    // let input = "ALTER TABLE `table` ADD COLUMN `column` INT";
+    // let result = query::parse(input);
+    let input = "SELECT 1, 2 FROM `my_table` WHERE `my_column` = 3";
+    let result = querySpecification::parse(input);
     // Do something with the result
     println!("{:#?}", result);
 }

@@ -42,9 +42,7 @@ export NODE_OPTIONS=--max_old_space_size=10096
 npx lezer-generator mysql.grammar -o mysql.js
 
 # Or via CLI options
-node --max-old-space-size=8192 index.js
+node --max-old-space-size=50000 index.js
 ```
 
-Problem: Parser generation takes 10+ minutes
-
-Solution: Just accept it. It's a one-time operation. Better to have a slow parser generator than a slow parser.
+Problem: Parser generation is going for 2 hours now with no sign it will ever finish
