@@ -10,19 +10,28 @@ Explorations so far:
 * [An AI-converted PEG.js grammar](https://github.com/adamziel/parser-generator-explorations/blob/71194eb0b1ac78fe3905b42662f19cdeac4adf42/pegjs/join-lexer-and-parser/). Unfortunately, [the PEG.js parser exploration failed](https://github.com/adamziel/parser-generator-explorations/blob/71194eb0b1ac78fe3905b42662f19cdeac4adf42/pegjs/join-lexer-and-parser/README.md#L2).
 * ❌ [Jison exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/jison/) – Jison doesn't output an AST, only a flat list.
 * ❌ [Canopy explorations](https://github.com/adamziel/parser-generator-explorations/blob/trunk/canopy/) exploration – the final parser is large, slow, and seems to be outputting multiple alternative branches instead of doing a lookahead and choosing the right one.
-* ❌ [Ohm exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/ohm-js/README.md#L11) – Ohn seems promising, but there's no clear way of generating a static parser and the grammar conversion is quite laborous.
+* ❌ [Ohm exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/ohm-js/README.md#L11) – Ohn seems promising, but there's no clear way of generating a static parser and the grammar conversion is quite laborous. Ohm is focused on being easy to use but [performance isn't that great](https://news.ycombinator.com/item?id=38083683).
 * ❌ [Pegen exploration](https://github.com/TheLartians/PEGParser) – Pegen failed to parse the MySQL grammar due to a recursion error.
 * ❌ [C PEG exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/peg/) 
 * ❌ [PHP PEG exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/php-peg/) – the parser doesn't produce AST and doesn't seem to correctly process the math expressions included as examples.
 * ❌ [Python Lark exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/python-lark/) – it seems to have trouble with ambiguity of the MySQL grammar and it also generates a state table that makes manual parser modifications challenging.
-* ❌ [LALRPOP exploration](https://lalrpop.github.io/lalrpop/) – it generates an AST, but requires a separate ast.rs file that explicitly declares possible AST nodes and maps all the grammar rules to them. I'm not saying no to that, but it's a lot of work so I'm putting it on hold for now.
 * [Rust Peginator exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/rust-peginator/)
 * ❌ [Node BNF parser exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/node-bnf-parser/) – it creates a WASM parser, which is interesting, but still it creates a node for each character, which is not what we want.
+* ❌ Racket and [Racketscript](https://github.com/racketscript/racketscript) – Racketscript parsers involve dependencies and are difficult to read. It smells like a large bundle size and a difficult JS -> PHP translation. Let's abandon this for now.
+* ❌ https://github.com/TheLartians/PEGParser – it builds its parsers at run time
+* ❌ https://github.com/chevrotain/chevrotain – it builds its parsers at run time
+* ❌ https://tree-sitter.github.io/tree-sitter/ – Tree-sitter creates parsers that are written in C. We may be able to use it in Playground as WASM and maybe also convert the code to PHP.
+   * It has a [general SQL parser](https://raw.githubusercontent.com/dhcmrlchtdj/tree-sitter-sqlite/main/src/parser.c)
+   * It [produces an AST](https://tree-sitter.github.io/tree-sitter/playground).
+   * The produced aprsers are huge (5.5MB for a general SQL, not even aware of MySQL nuances)
+   * It's not dependency-free. It needs libtree-sitter.a.
 
+Maybe:
+
+* [LALRPOP](https://lalrpop.github.io/lalrpop/) – it generates an AST, but requires a separate ast.rs file that explicitly declares possible AST nodes and maps all the grammar rules to them. We could generate a parser and then translate it to PHP with AI or another automated tool.
 
 Next steps:
 
 * Find a parser generator with great debugging tools.   
-   * Racket and [Racketscript](https://github.com/racketscript/racketscript) or [Whalesong](https://planet.racket-lang.org/package-source/dyoo/whalesong.plt/1/8/planet-docs/manual/index.html)?
-   * https://github.com/TheLartians/PEGParser
+   
 
