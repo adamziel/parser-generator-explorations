@@ -1,0 +1,19 @@
+
+// version_comment_content: /(?!\*\/)*/
+block_comment_content: (!"*/" .)*
+block_comment_content: .*
+
+VERSION_COMMENT_START: "/*!" DIGITS (
+      VERSION_COMMENT_CONTENT "*/"
+    ) 
+
+VERSION_COMMENT_CONTENT: (!"*/" .)*
+
+
+MYSQL_COMMENT_START: "/*!" 
+
+VERSION_COMMENT_END: "*/" 
+
+BLOCK_COMMENT: ("/**/" | "/*" BLOCK_COMMENT_CONTENT "*/") 
+
+BLOCK_COMMENT_CONTENT: (!"*/" .)*

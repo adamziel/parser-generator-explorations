@@ -13,13 +13,18 @@ Generate a static parser from a .lark file ([.lark file example](https://github.
 python -m lark.tools.standalone json.lark
 ```
 
+Resources:
+
+* Lark grammars library: https://github.com/ligurio/lark-grammars/tree/master/lark_grammars/grammars
+* SQLite .lark grammar: https://github.com/ligurio/lark-grammars/blob/master/lark_grammars/grammars/sqlite.lark
+
 On the plus:
 
 * Output code is dependency-free and GPT may potentially be able to convert it to PHP.
 * The resulting parser is fast!
+* There is a JavaScript port: https://pypi.org/project/lark-js/
 
 On the minus:
 
 * The standalone code is very dynamic and uses python features that may be difficult to convert to PHP, 
   especially using AI.
-  
