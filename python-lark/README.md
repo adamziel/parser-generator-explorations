@@ -28,3 +28,22 @@ On the minus:
 
 * The standalone code is very dynamic and uses python features that may be difficult to convert to PHP, 
   especially using AI.
+
+Lark doesn't seem to handle ambiguity very well, e.g. I got dozens of errors like
+this one when trying to parse the MySQL grammar:
+
+
+Reduce/Reduce collision in Terminal('SEMICOLON') between the following rules: 
+      - <identifier_keywords_ambiguous2_labels : >
+      - <identifier_keywords_ambiguous3_roles : >
+      - <role_or_identifier_keyword : >
+      - <identifier_keywords_ambiguous1_roles_and_labels : >
+      - <symbol_identifier : >
+      - <identifier_keyword : >
+      - <pure_identifier : >
+      - <identifier_keywords_ambiguous4_system_variables : >
+      - <identifier : >
+      - <label_keyword : >
+      - <role_or_label_keyword : >
+      - <identifier_keywords_unambiguous : >
+      - <symbol_master_heartbeat_period_symbol : >

@@ -1,0 +1,2343 @@
+query: | eof | ((simple_statement | begin_work) ((semicolon_symbol eof?) | eof))
+simple_statement: | alter_statement | create_statement | drop_statement | rename_table_statement | truncate_table_statement | import_statement | call_statement | delete_statement | do_statement | handler_statement | insert_statement | load_statement | replace_statement | select_statement | update_statement | transaction_or_locking_statement | replication_statement | prepared_statement | clone_statement | account_management_statement | table_administration_statement | install_uninstall_statment | set_statement | show_statement | resource_group_management | other_administrative_statement | utility_statement | get_diagnostics | signal_statement | resignal_statement
+alter_statement: alter_symbol (alter_table | alter_database | (procedure_symbol procedure_ref routine_alter_options?) | (function_symbol function_ref routine_alter_options?) | alter_view | alter_event | alter_tablespace | alter_undo_tablespace | alter_logfile_group | alter_server | (instance_symbol rotate_symbol text_or_identifier master_symbol key_symbol))
+alter_database: database_symbol schema_ref (create_database_option+ | (upgrade_symbol data_symbol directory_symbol name_symbol))
+alter_event: definer_clause? event_symbol event_ref (on_symbol schedule_symbol schedule)? (on_symbol completion_symbol not_symbol? preserve_symbol)? (rename_symbol to_symbol identifier)? (enable_symbol | (disable_symbol (on_symbol slave_symbol)?))? (comment_symbol text_literal)? (do_symbol compound_statement)?
+alter_logfile_group: logfile_symbol group_symbol logfile_group_ref add_symbol undofile_symbol text_literal alter_logfile_group_options?
+alter_logfile_group_options: alter_logfile_group_option (comma_symbol? alter_logfile_group_option)*
+alter_logfile_group_option: | ts_option_initial_size | ts_option_engine | ts_option_wait
+alter_server: server_symbol server_ref server_options
+alter_table: online_option? ignore_symbol? table_symbol table_ref alter_table_actions?
+alter_table_actions: | (alter_command_list (partition_clause | remove_partitioning)?) | partition_clause | remove_partitioning | ((alter_commands_modifier_list comma_symbol)? standalone_alter_commands)
+alter_command_list: | alter_commands_modifier_list | ((alter_commands_modifier_list comma_symbol)? alter_list)
+alter_commands_modifier_list: alter_commands_modifier (comma_symbol alter_commands_modifier)*
+standalone_alter_commands: | (discard_symbol tablespace_symbol) | (import_symbol tablespace_symbol) | alter_partition | (secondary_load_symbol | secondary_unload_symbol)
+alter_partition: | (add_symbol partition_symbol no_write_to_bin_log? (partition_definitions | (partitions_symbol real_ulong_number))) | (drop_symbol partition_symbol identifier_list) | (rebuild_symbol partition_symbol no_write_to_bin_log? all_or_partition_name_list) | (optimize_symbol partition_symbol no_write_to_bin_log? all_or_partition_name_list no_write_to_bin_log?) | (analyze_symbol partition_symbol no_write_to_bin_log? all_or_partition_name_list) | (check_symbol partition_symbol all_or_partition_name_list check_option*) | (repair_symbol partition_symbol no_write_to_bin_log? all_or_partition_name_list repair_type*) | (coalesce_symbol partition_symbol no_write_to_bin_log? real_ulong_number) | (truncate_symbol partition_symbol all_or_partition_name_list) | (reorganize_symbol partition_symbol no_write_to_bin_log? (identifier_list into_symbol partition_definitions)?) | (exchange_symbol partition_symbol identifier with_symbol table_symbol table_ref with_validation?) | (discard_symbol partition_symbol all_or_partition_name_list tablespace_symbol) | (import_symbol partition_symbol all_or_partition_name_list tablespace_symbol)
+alter_list: (alter_list_item | create_table_options_space_separated) (comma_symbol (alter_list_item | alter_commands_modifier | create_table_options_space_separated))*
+alter_commands_modifier: | alter_algorithm_option | alter_lock_option | with_validation
+alter_list_item: | (add_symbol column_symbol? ((identifier field_definition check_or_references? place?) | (open_par_symbol table_element_list close_par_symbol))) | (add_symbol table_constraint_def) | (change_symbol column_symbol? column_internal_ref identifier field_definition place?) | (modify_symbol column_symbol? column_internal_ref field_definition place?) | (drop_symbol ((column_symbol? column_internal_ref restrict?) | (foreign_symbol key_symbol (column_internal_ref | column_internal_ref?)) | (primary_symbol key_symbol) | (key_or_index index_ref) | (check_symbol identifier) | (constraint_symbol identifier))) | (disable_symbol keys_symbol) | (enable_symbol keys_symbol) | (alter_symbol column_symbol? column_internal_ref ((set_symbol default_symbol (expr_with_parentheses | signed_literal)) | (drop_symbol default_symbol))) | (alter_symbol index_symbol index_ref visibility) | (alter_symbol check_symbol identifier constraint_enforcement) | (alter_symbol constraint_symbol identifier constraint_enforcement) | (rename_symbol column_symbol column_internal_ref to_symbol identifier) | (rename_symbol (to_symbol | as_symbol)? table_name) | (rename_symbol key_or_index index_ref to_symbol index_name) | (convert_symbol to_symbol charset (default_symbol | charset_name) collate?) | force_symbol | (order_symbol by_symbol alter_order_list) | (upgrade_symbol partitioning_symbol)
+place: | (after_symbol identifier) | first_symbol
+restrict: | restrict_symbol | cascade_symbol
+alter_order_list: identifier direction? (comma_symbol identifier direction?)*
+alter_algorithm_option: algorithm_symbol equal_operator? (default_symbol | identifier)
+alter_lock_option: lock_symbol equal_operator? (default_symbol | identifier)
+index_lock_and_algorithm: | (alter_algorithm_option alter_lock_option?) | (alter_lock_option alter_algorithm_option?)
+with_validation: (with_symbol | without_symbol) validation_symbol
+remove_partitioning: remove_symbol partitioning_symbol
+all_or_partition_name_list: | all_symbol | identifier_list
+alter_tablespace: tablespace_symbol tablespace_ref (((add_symbol | drop_symbol) datafile_symbol text_literal alter_tablespace_options?) | ((change_symbol datafile_symbol text_literal (change_tablespace_option (comma_symbol? change_tablespace_option)*)?) | (read_only_symbol | read_write_symbol) | (not_symbol accessible_symbol)) | (rename_symbol to_symbol identifier) | alter_tablespace_options)
+alter_undo_tablespace: undo_symbol tablespace_symbol tablespace_ref set_symbol (active_symbol | inactive_symbol) undo_table_space_options?
+undo_table_space_options: undo_table_space_option (comma_symbol? undo_table_space_option)*
+undo_table_space_option: ts_option_engine
+alter_tablespace_options: alter_tablespace_option (comma_symbol? alter_tablespace_option)*
+alter_tablespace_option: | (initial_size_symbol equal_operator? size_number) | ts_option_autoextend_size | ts_option_max_size | ts_option_engine | ts_option_wait | ts_option_encryption
+change_tablespace_option: | (initial_size_symbol equal_operator? size_number) | ts_option_autoextend_size | ts_option_max_size
+alter_view: view_algorithm? definer_clause? view_suid? view_symbol view_ref view_tail
+view_tail: column_internal_ref_list? as_symbol view_select
+view_select: query_expression_or_parens view_check_option?
+view_check_option: with_symbol (cascaded_symbol | local_symbol)? check_symbol option_symbol
+create_statement: create_symbol (create_database | create_table | create_function | create_procedure | create_udf | create_logfile_group | create_view | create_trigger | create_index | create_server | create_tablespace | create_event | create_role | create_spatial_reference | create_undo_tablespace)
+create_database: database_symbol if_not_exists? schema_name create_database_option*
+create_database_option: | default_charset | default_collation | default_encryption
+create_table: temporary_symbol? table_symbol if_not_exists? table_name (((open_par_symbol table_element_list close_par_symbol)? create_table_options? partition_clause? duplicate_as_query_expression?) | (like_symbol table_ref) | (open_par_symbol like_symbol table_ref close_par_symbol))
+table_element_list: table_element (comma_symbol table_element)*
+table_element: | column_definition | table_constraint_def
+duplicate_as_query_expression: (replace_symbol | ignore_symbol)? as_symbol? query_expression_or_parens
+query_expression_or_parens: | query_expression | query_expression_parens
+create_routine: create_symbol (create_procedure | create_function | create_udf) semicolon_symbol? eof
+create_procedure: definer_clause? procedure_symbol procedure_name open_par_symbol (procedure_parameter (comma_symbol procedure_parameter)*)? close_par_symbol routine_create_option* compound_statement
+create_function: definer_clause? function_symbol function_name open_par_symbol (function_parameter (comma_symbol function_parameter)*)? close_par_symbol returns_symbol type_with_opt_collate routine_create_option* compound_statement
+create_udf: aggregate_symbol? function_symbol udf_name returns_symbol (string_symbol | int_symbol | real_symbol | decimal_symbol) soname_symbol text_literal
+routine_create_option: | routine_option | (not_symbol? deterministic_symbol)
+routine_alter_options: routine_create_option+
+routine_option: | (comment_symbol text_literal) | (language_symbol sql_symbol) | (no_symbol sql_symbol) | (contains_symbol sql_symbol) | (reads_symbol sql_symbol data_symbol) | (modifies_symbol sql_symbol data_symbol) | (sql_symbol security_symbol (definer_symbol | invoker_symbol))
+create_index: online_option? ((unique_symbol? index_symbol ((index_name index_type_clause?) | index_name_and_type?) create_index_target index_option*) | (fulltext_symbol index_symbol index_name create_index_target fulltext_index_option*) | (spatial_symbol index_symbol index_name create_index_target spatial_index_option*)) index_lock_and_algorithm?
+index_name_and_type: | (index_name (using_symbol index_type)?) | (index_name type_symbol index_type)
+create_index_target: on_symbol table_ref key_list_variants
+create_logfile_group: logfile_symbol group_symbol logfile_group_name add_symbol (undofile_symbol | redofile_symbol) text_literal logfile_group_options?
+logfile_group_options: logfile_group_option (comma_symbol? logfile_group_option)*
+logfile_group_option: | ts_option_initial_size | ts_option_undo_redo_buffer_size | ts_option_nodegroup | ts_option_engine | ts_option_wait | ts_option_comment
+create_server: server_symbol server_name foreign_symbol data_symbol wrapper_symbol text_or_identifier server_options
+server_options: options_symbol open_par_symbol server_option (comma_symbol server_option)* close_par_symbol
+server_option: | (host_symbol text_literal) | (database_symbol text_literal) | (user_symbol text_literal) | (password_symbol text_literal) | (socket_symbol text_literal) | (owner_symbol text_literal) | (port_symbol ulong_number)
+create_tablespace: tablespace_symbol tablespace_name ts_data_file_name (use_symbol logfile_symbol group_symbol logfile_group_ref)? tablespace_options?
+create_undo_tablespace: undo_symbol tablespace_symbol tablespace_name add_symbol ts_data_file undo_table_space_options?
+ts_data_file_name: | (add_symbol ts_data_file)? | (add_symbol ts_data_file)
+ts_data_file: datafile_symbol text_literal
+tablespace_options: tablespace_option (comma_symbol? tablespace_option)*
+tablespace_option: | ts_option_initial_size | ts_option_autoextend_size | ts_option_max_size | ts_option_extent_size | ts_option_nodegroup | ts_option_engine | ts_option_wait | ts_option_comment | ts_option_fileblock_size | ts_option_encryption
+ts_option_initial_size: initial_size_symbol equal_operator? size_number
+ts_option_undo_redo_buffer_size: (undo_buffer_size_symbol | redo_buffer_size_symbol) equal_operator? size_number
+ts_option_autoextend_size: autoextend_size_symbol equal_operator? size_number
+ts_option_max_size: max_size_symbol equal_operator? size_number
+ts_option_extent_size: extent_size_symbol equal_operator? size_number
+ts_option_nodegroup: nodegroup_symbol equal_operator? real_ulong_number
+ts_option_engine: storage_symbol? engine_symbol equal_operator? engine_ref
+ts_option_wait: | wait_symbol | no_wait_symbol
+ts_option_comment: comment_symbol equal_operator? text_literal
+ts_option_fileblock_size: file_block_size_symbol equal_operator? size_number
+ts_option_encryption: encryption_symbol equal_operator? text_string_literal
+create_view: view_replace_or_algorithm? definer_clause? view_suid? view_symbol view_name view_tail
+view_replace_or_algorithm: | (or_symbol replace_symbol view_algorithm?) | view_algorithm
+view_algorithm: algorithm_symbol equal_operator (undefined_symbol | merge_symbol | temptable_symbol)
+view_suid: sql_symbol security_symbol (definer_symbol | invoker_symbol)
+create_trigger: definer_clause? trigger_symbol trigger_name (before_symbol | after_symbol) (insert_symbol | update_symbol | delete_symbol) on_symbol table_ref for_symbol each_symbol row_symbol trigger_follows_precedes_clause? compound_statement
+trigger_follows_precedes_clause: (follows_symbol | precedes_symbol) text_or_identifier
+create_event: definer_clause? event_symbol if_not_exists? event_name on_symbol schedule_symbol schedule (on_symbol completion_symbol not_symbol? preserve_symbol)? (enable_symbol | (disable_symbol (on_symbol slave_symbol)?))? (comment_symbol text_literal)? do_symbol compound_statement
+create_role: role_symbol if_not_exists? role_list
+create_spatial_reference: | (or_symbol replace_symbol spatial_symbol reference_symbol system_symbol real_ulonglong_number srs_attribute*) | (spatial_symbol reference_symbol system_symbol if_not_exists? real_ulonglong_number srs_attribute*)
+srs_attribute: | (name_symbol text_symbol text_string_no_linebreak) | (definition_symbol text_symbol text_string_no_linebreak) | (organization_symbol text_string_no_linebreak identified_symbol by_symbol real_ulonglong_number) | (description_symbol text_symbol text_string_no_linebreak)
+drop_statement: drop_symbol (drop_database | drop_event | drop_function | drop_procedure | drop_index | drop_logfile_group | drop_server | drop_table | drop_table_space | drop_trigger | drop_view | drop_role | drop_spatial_reference | drop_undo_tablespace)
+drop_database: database_symbol if_exists? schema_ref
+drop_event: event_symbol if_exists? event_ref
+drop_function: function_symbol if_exists? function_ref
+drop_procedure: procedure_symbol if_exists? procedure_ref
+drop_index: online_option? index_symbol index_ref on_symbol table_ref index_lock_and_algorithm?
+drop_logfile_group: logfile_symbol group_symbol logfile_group_ref (drop_logfile_group_option (comma_symbol? drop_logfile_group_option)*)?
+drop_logfile_group_option: | ts_option_wait | ts_option_engine
+drop_server: server_symbol if_exists? server_ref
+drop_table: temporary_symbol? (table_symbol | tables_symbol) if_exists? table_ref_list (restrict_symbol | cascade_symbol)?
+drop_table_space: tablespace_symbol tablespace_ref (drop_logfile_group_option (comma_symbol? drop_logfile_group_option)*)?
+drop_trigger: trigger_symbol if_exists? trigger_ref
+drop_view: view_symbol if_exists? view_ref_list (restrict_symbol | cascade_symbol)?
+drop_role: role_symbol if_exists? role_list
+drop_spatial_reference: spatial_symbol reference_symbol system_symbol if_exists? real_ulonglong_number
+drop_undo_tablespace: undo_symbol tablespace_symbol tablespace_ref undo_table_space_options?
+rename_table_statement: rename_symbol (table_symbol | tables_symbol) rename_pair (comma_symbol rename_pair)*
+rename_pair: table_ref to_symbol table_name
+truncate_table_statement: truncate_symbol table_symbol? table_ref
+import_statement: import_symbol table_symbol from_symbol text_string_literal_list
+call_statement: call_symbol procedure_ref (open_par_symbol expr_list? close_par_symbol)?
+delete_statement: with_clause? delete_symbol delete_statement_option* ((from_symbol ((table_alias_ref_list using_symbol table_reference_list where_clause?) | (table_ref table_alias? partition_delete? where_clause? order_clause? simple_limit_clause?))) | (table_alias_ref_list from_symbol table_reference_list where_clause?))
+partition_delete: partition_symbol open_par_symbol identifier_list close_par_symbol
+delete_statement_option: | quick_symbol | low_priority_symbol | quick_symbol | ignore_symbol
+do_statement: do_symbol (expr_list | select_item_list)
+handler_statement: handler_symbol ((table_ref open_symbol table_alias?) | (identifier (close_symbol | (read_symbol handler_read_or_scan where_clause? limit_clause?))))
+handler_read_or_scan: | (first_symbol | next_symbol) | (identifier ((first_symbol | next_symbol | prev_symbol | last_symbol) | ((equal_operator | less_than_operator | greater_than_operator | less_or_equal_operator | greater_or_equal_operator) open_par_symbol values close_par_symbol)))
+insert_statement: insert_symbol insert_lock_option? ignore_symbol? into_symbol? table_ref use_partition? ((insert_from_constructor values_reference?) | (set_symbol update_list values_reference?) | insert_query_expression) insert_update_list?
+insert_lock_option: | low_priority_symbol | delayed_symbol | high_priority_symbol
+insert_from_constructor: (open_par_symbol fields? close_par_symbol)? insert_values
+fields: insert_identifier (comma_symbol insert_identifier)*
+insert_values: (values_symbol | value_symbol) value_list
+insert_query_expression: | query_expression_or_parens | (open_par_symbol fields? close_par_symbol query_expression_or_parens)
+value_list: open_par_symbol values? close_par_symbol (comma_symbol open_par_symbol values? close_par_symbol)*
+values: (expr | default_symbol) (comma_symbol (expr | default_symbol))*
+values_reference: as_symbol identifier column_internal_ref_list?
+insert_update_list: on_symbol duplicate_symbol key_symbol update_symbol update_list
+load_statement: load_symbol data_or_xml (low_priority_symbol | concurrent_symbol)? local_symbol? infile_symbol text_literal (replace_symbol | ignore_symbol)? into_symbol table_symbol table_ref use_partition? charset_clause? xml_rows_identified_by? fields_clause? lines_clause? load_data_file_tail
+data_or_xml: | data_symbol | xml_symbol
+xml_rows_identified_by: rows_symbol identified_symbol by_symbol text_string
+load_data_file_tail: (ignore_symbol int_number (lines_symbol | rows_symbol))? load_data_file_target_list? (set_symbol update_list)?
+load_data_file_target_list: open_par_symbol field_or_variable_list? close_par_symbol
+field_or_variable_list: (column_ref | user_variable) (comma_symbol (column_ref | user_variable))*
+replace_statement: replace_symbol (low_priority_symbol | delayed_symbol)? into_symbol? table_ref use_partition? (insert_from_constructor | (set_symbol update_list) | insert_query_expression)
+select_statement: | (query_expression locking_clause_list?) | query_expression_parens | select_statement_with_into
+select_statement_with_into: | (open_par_symbol select_statement_with_into close_par_symbol) | (query_expression into_clause locking_clause_list?) | (locking_clause_list into_clause)
+query_expression: with_clause? ((query_expression_body order_clause? limit_clause?) | (query_expression_parens order_clause? limit_clause?)) procedure_analyse_clause?
+query_expression_body: (query_primary | (query_expression_parens union_symbol union_option? (query_primary | query_expression_parens))) (union_symbol union_option? (query_primary | query_expression_parens))*
+query_expression_parens: open_par_symbol (query_expression_parens | (query_expression locking_clause_list?)) close_par_symbol
+query_primary: | query_specification | table_value_constructor | explicit_table
+query_specification: select_symbol select_option* select_item_list into_clause? from_clause? where_clause? group_by_clause? having_clause? window_clause?
+subquery: query_expression_parens
+query_spec_option: | all_symbol | distinct_symbol | straight_join_symbol | high_priority_symbol | sql_small_result_symbol | sql_big_result_symbol | sql_buffer_result_symbol | sql_calc_found_rows_symbol
+limit_clause: limit_symbol limit_options
+simple_limit_clause: limit_symbol limit_option
+limit_options: limit_option ((comma_symbol | offset_symbol) limit_option)?
+limit_option: | identifier | (param_marker | ulonglong_number | long_number | int_number)
+into_clause: into_symbol ((outfile_symbol text_string_literal charset_clause? fields_clause? lines_clause?) | (dumpfile_symbol text_string_literal) | ((text_or_identifier | user_variable) (comma_symbol (text_or_identifier | user_variable))*))
+procedure_analyse_clause: procedure_symbol analyse_symbol open_par_symbol (int_number (comma_symbol int_number)?)? close_par_symbol
+having_clause: having_symbol expr
+window_clause: window_symbol window_definition (comma_symbol window_definition)*
+window_definition: window_name as_symbol window_spec
+window_spec: open_par_symbol window_spec_details close_par_symbol
+window_spec_details: window_name? (partition_symbol by_symbol order_list)? order_clause? window_frame_clause?
+window_frame_clause: window_frame_units window_frame_extent window_frame_exclusion?
+window_frame_units: | rows_symbol | range_symbol | groups_symbol
+window_frame_extent: | window_frame_start | window_frame_between
+window_frame_start: | (unbounded_symbol preceding_symbol) | (ulonglong_number preceding_symbol) | (param_marker preceding_symbol) | (interval_symbol expr interval preceding_symbol) | (current_symbol row_symbol)
+window_frame_between: between_symbol window_frame_bound and_symbol window_frame_bound
+window_frame_bound: | window_frame_start | (unbounded_symbol following_symbol) | (ulonglong_number following_symbol) | (param_marker following_symbol) | (interval_symbol expr interval following_symbol)
+window_frame_exclusion: exclude_symbol ((current_symbol row_symbol) | group_symbol | ties_symbol | (no_symbol others_symbol))
+with_clause: with_symbol recursive_symbol? common_table_expression (comma_symbol common_table_expression)*
+common_table_expression: identifier column_internal_ref_list? as_symbol subquery
+group_by_clause: group_symbol by_symbol order_list olap_option?
+olap_option: | (with_symbol rollup_symbol) | (with_symbol cube_symbol)
+order_clause: order_symbol by_symbol order_list
+direction: | asc_symbol | desc_symbol
+from_clause: from_symbol (dual_symbol | table_reference_list)
+table_reference_list: table_reference (comma_symbol table_reference)*
+table_value_constructor: values_symbol row_value_explicit (comma_symbol row_value_explicit)*
+explicit_table: table_symbol table_ref
+row_value_explicit: row_symbol open_par_symbol values? close_par_symbol
+select_option: | query_spec_option | sql_no_cache_symbol | sql_cache_symbol | (max_statement_time_symbol equal_operator real_ulong_number)
+locking_clause_list: locking_clause+
+locking_clause: | (for_symbol lock_strengh (of_symbol table_alias_ref_list)? locked_row_action?) | (lock_symbol in_symbol share_symbol mode_symbol)
+lock_strengh: | update_symbol | share_symbol
+locked_row_action: | (skip_symbol locked_symbol) | nowait_symbol
+select_item_list: (select_item | mult_operator) (comma_symbol select_item)*
+select_item: | table_wild | (expr select_alias?)
+select_alias: as_symbol? (identifier | text_string_literal)
+where_clause: where_symbol expr
+table_reference: (table_factor | (open_curly_symbol (identifier | oj_symbol) escaped_table_reference close_curly_symbol)) joined_table*
+escaped_table_reference: table_factor joined_table*
+joined_table: | (inner_join_type table_reference ((on_symbol expr) | (using_symbol identifier_list_with_parentheses))?) | (outer_join_type table_reference ((on_symbol expr) | (using_symbol identifier_list_with_parentheses))) | (natural_join_type table_factor)
+natural_join_type: | (natural_symbol inner_symbol? join_symbol) | (natural_symbol (left_symbol | right_symbol) outer_symbol? join_symbol)
+inner_join_type: | ((inner_symbol | cross_symbol)? join_symbol) | straight_join_symbol
+outer_join_type: (left_symbol | right_symbol) outer_symbol? join_symbol
+table_factor: | single_table | single_table_parens | derived_table | table_reference_list_parens | table_function
+single_table: table_ref use_partition? table_alias? index_hint_list?
+single_table_parens: open_par_symbol (single_table | single_table_parens) close_par_symbol
+derived_table: | (subquery table_alias? column_internal_ref_list?) | (lateral_symbol subquery table_alias? column_internal_ref_list?)
+table_reference_list_parens: open_par_symbol (table_reference_list | table_reference_list_parens) close_par_symbol
+table_function: json_table_symbol open_par_symbol expr comma_symbol text_string_literal columns_clause close_par_symbol table_alias?
+columns_clause: columns_symbol open_par_symbol jt_column (comma_symbol jt_column)* close_par_symbol
+jt_column: | (identifier for_symbol ordinality_symbol) | (identifier data_type collate? exists_symbol? path_symbol text_string_literal on_empty_or_error?) | (nested_symbol path_symbol text_string_literal columns_clause)
+on_empty_or_error: | (on_empty on_error?) | (on_error on_empty?)
+on_empty: jt_on_response on_symbol empty_symbol
+on_error: jt_on_response on_symbol error_symbol
+jt_on_response: | error_symbol | null_symbol | (default_symbol text_string_literal)
+union_option: | distinct_symbol | all_symbol
+table_alias: (as_symbol | equal_operator)? identifier
+index_hint_list: index_hint (comma_symbol index_hint)*
+index_hint: | (index_hint_type key_or_index index_hint_clause? open_par_symbol index_list close_par_symbol) | (use_symbol key_or_index index_hint_clause? open_par_symbol index_list? close_par_symbol)
+index_hint_type: | force_symbol | ignore_symbol
+key_or_index: | key_symbol | index_symbol
+constraint_key_type: | (primary_symbol key_symbol) | (unique_symbol key_or_index?)
+index_hint_clause: for_symbol (join_symbol | (order_symbol by_symbol) | (group_symbol by_symbol))
+index_list: index_list_element (comma_symbol index_list_element)*
+index_list_element: | identifier | primary_symbol
+update_statement: with_clause? update_symbol low_priority_symbol? ignore_symbol? table_reference_list set_symbol update_list where_clause? order_clause? simple_limit_clause?
+transaction_or_locking_statement: | transaction_statement | savepoint_statement | lock_statement | xa_statement
+transaction_statement: | (start_symbol transaction_symbol transaction_characteristic*) | (commit_symbol work_symbol? (and_symbol no_symbol? chain_symbol)? (no_symbol? release_symbol)?)
+begin_work: begin_symbol work_symbol?
+transaction_characteristic: | (with_symbol consistent_symbol snapshot_symbol) | (read_symbol (write_symbol | only_symbol))
+savepoint_statement: | (savepoint_symbol identifier) | (rollback_symbol work_symbol? ((to_symbol savepoint_symbol? identifier) | ((and_symbol no_symbol? chain_symbol)? (no_symbol? release_symbol)?))) | (release_symbol savepoint_symbol identifier)
+lock_statement: | (lock_symbol (tables_symbol | table_symbol) lock_item (comma_symbol lock_item)*) | (lock_symbol instance_symbol for_symbol backup_symbol) | (unlock_symbol (tables_symbol | table_symbol | instance_symbol))
+lock_item: table_ref table_alias? lock_option
+lock_option: | (read_symbol local_symbol?) | (low_priority_symbol? write_symbol)
+xa_statement: xa_symbol (((start_symbol | begin_symbol) xid (join_symbol | resume_symbol)?) | (end_symbol xid (suspend_symbol (for_symbol migrate_symbol)?)?) | (prepare_symbol xid) | (commit_symbol xid (one_symbol phase_symbol)?) | (rollback_symbol xid) | (recover_symbol xa_convert))
+xa_convert: (convert_symbol xid_symbol)?
+xid: text_string (comma_symbol text_string (comma_symbol ulong_number)?)?
+replication_statement: | (purge_symbol (binary_symbol | master_symbol) logs_symbol ((to_symbol text_literal) | (before_symbol expr))) | change_master | (reset_symbol reset_option (comma_symbol reset_option)*) | (reset_symbol persist_symbol (if_exists identifier)?) | slave | change_replication | replication_load | group_replication
+reset_option: | (master_symbol master_reset_options?) | (query_symbol cache_symbol) | (slave_symbol all_symbol? channel?)
+master_reset_options: to_symbol (real_ulong_number | real_ulonglong_number)
+replication_load: load_symbol (data_symbol | (table_symbol table_ref)) from_symbol master_symbol
+change_master: change_symbol master_symbol to_symbol change_master_options channel?
+change_master_options: master_option (comma_symbol master_option)*
+master_option: | (master_host_symbol equal_operator text_string_no_linebreak) | (network_namespace_symbol equal_operator text_string_no_linebreak) | (master_bind_symbol equal_operator text_string_no_linebreak) | (master_user_symbol equal_operator text_string_no_linebreak) | (master_password_symbol equal_operator text_string_no_linebreak) | (master_port_symbol equal_operator ulong_number) | (master_connect_retry_symbol equal_operator ulong_number) | (master_retry_count_symbol equal_operator ulong_number) | (master_delay_symbol equal_operator ulong_number) | (master_ssl_symbol equal_operator ulong_number) | (master_ssl_ca_symbol equal_operator text_string_no_linebreak) | (master_ssl_capath_symbol equal_operator text_string_no_linebreak) | (master_tls_version_symbol equal_operator text_string_no_linebreak) | (master_ssl_cert_symbol equal_operator text_string_no_linebreak) | (master_tls_ciphersuites_symbol equal_operator master_tls_ciphersuites_def) | (master_ssl_cipher_symbol equal_operator text_string_no_linebreak) | (master_ssl_key_symbol equal_operator text_string_no_linebreak) | (master_ssl_verify_server_cert_symbol equal_operator ulong_number) | (master_ssl_crl_symbol equal_operator text_literal) | (master_ssl_crlpath_symbol equal_operator text_string_no_linebreak) | (master_public_key_path_symbol equal_operator text_string_no_linebreak) | (get_master_public_key_symbol equal_operator ulong_number) | (master_heartbeat_period_symbol equal_operator ulong_number) | (ignore_server_ids_symbol equal_operator server_id_list) | (master_compression_algorithm_symbol equal_operator text_string_literal) | (master_zstd_compression_level_symbol equal_operator ulong_number) | (master_auto_position_symbol equal_operator ulong_number) | (privilege_checks_user_symbol equal_operator privilege_check_def) | (require_row_format_symbol equal_operator ulong_number) | (require_table_primary_key_check_symbol equal_operator table_primary_key_check_def) | master_file_def
+privilege_check_def: | user_identifier_or_text | null_symbol
+table_primary_key_check_def: | stream_symbol | on_symbol | off_symbol
+master_tls_ciphersuites_def: | text_string_no_linebreak | null_symbol
+master_file_def: | (master_log_file_symbol equal_operator text_string_no_linebreak) | (master_log_pos_symbol equal_operator ulonglong_number) | (relay_log_file_symbol equal_operator text_string_no_linebreak) | (relay_log_pos_symbol equal_operator ulong_number)
+server_id_list: open_par_symbol (ulong_number (comma_symbol ulong_number)*)? close_par_symbol
+change_replication: change_symbol replication_symbol filter_symbol filter_definition (comma_symbol filter_definition)* channel?
+filter_definition: | (replicate_do_db_symbol equal_operator open_par_symbol filter_db_list? close_par_symbol) | (replicate_ignore_db_symbol equal_operator open_par_symbol filter_db_list? close_par_symbol) | (replicate_do_table_symbol equal_operator open_par_symbol filter_table_list? close_par_symbol) | (replicate_ignore_table_symbol equal_operator open_par_symbol filter_table_list? close_par_symbol) | (replicate_wild_do_table_symbol equal_operator open_par_symbol filter_string_list? close_par_symbol) | (replicate_wild_ignore_table_symbol equal_operator open_par_symbol filter_string_list? close_par_symbol) | (replicate_rewrite_db_symbol equal_operator open_par_symbol filter_db_pair_list? close_par_symbol)
+filter_db_list: schema_ref (comma_symbol schema_ref)*
+filter_table_list: filter_table_ref (comma_symbol filter_table_ref)*
+filter_string_list: filter_wild_db_table_string (comma_symbol filter_wild_db_table_string)*
+filter_wild_db_table_string: text_string_no_linebreak
+filter_db_pair_list: schema_identifier_pair (comma_symbol schema_identifier_pair)*
+slave: | (start_symbol slave_symbol slave_thread_options? (until_symbol slave_until_options)? slave_connection_options channel?) | (stop_symbol slave_symbol slave_thread_options? channel?)
+slave_until_options: (master_file_def | ((sql_before_gtids_symbol | sql_after_gtids_symbol) equal_operator text_string) | sql_after_mts_gaps_symbol) (comma_symbol master_file_def)*
+slave_connection_options: ((user_symbol equal_operator text_string)? (password_symbol equal_operator text_string)? (default_auth_symbol equal_operator text_string)? (plugin_dir_symbol equal_operator text_string)?) 
+slave_thread_options: slave_thread_option (comma_symbol slave_thread_option)*
+slave_thread_option: | relay_thread_symbol | sql_thread_symbol
+group_replication: (start_symbol | stop_symbol) group_replication_symbol
+prepared_statement: | (prepare_symbol identifier from_symbol (text_literal | user_variable)) | execute_statement | ((deallocate_symbol | drop_symbol) prepare_symbol identifier)
+execute_statement: execute_symbol identifier (using_symbol execute_var_list)?
+execute_var_list: user_variable (comma_symbol user_variable)*
+clone_statement: clone_symbol ((local_symbol data_symbol directory_symbol equal? text_string_literal) | (remote_symbol (for_symbol replication_symbol)?) | (instance_symbol from_symbol user colon_symbol ulong_number identified_symbol by_symbol text_string_literal data_dir_ssl?))
+data_dir_ssl: | ssl | (data_symbol directory_symbol equal? text_string_literal ssl?)
+ssl: require_symbol no_symbol? ssl_symbol
+account_management_statement: | alter_user | create_user | drop_user | grant | rename_user | revoke | set_role
+alter_user: alter_symbol user_symbol if_exists? alter_user_tail
+alter_user_tail: | ((create_user_list | alter_user_list) create_user_tail) | (user identified_symbol by_symbol text_string replace_password? retain_current_password?) | (user discard_old_password) | (user default_symbol role_symbol (all_symbol | none_symbol | role_list)) | (user identified_symbol (with_symbol text_or_identifier)? by_symbol random_symbol password_symbol retain_current_password?) | (failed_login_attempts_symbol real_ulong_number) | (password_lock_time_symbol (real_ulong_number | unbounded_symbol))
+user_function: user_symbol parentheses
+create_user: create_symbol user_symbol (if_not_exists ) create_user_list default_role_clause create_user_tail
+create_user_tail: (require_clause? connect_options? account_lock_password_expire_options*) 
+default_role_clause: (default_symbol role_symbol role_list)? 
+require_clause: require_symbol (require_list | (ssl_symbol | x509_symbol | none_symbol))
+connect_options: with_symbol ((max_queries_per_hour_symbol ulong_number) | (max_updates_per_hour_symbol ulong_number) | (max_connections_per_hour_symbol ulong_number) | (max_user_connections_symbol ulong_number))+
+account_lock_password_expire_options: | (account_symbol (lock_symbol | unlock_symbol)) | (password_symbol ((expire_symbol ((interval_symbol real_ulong_number day_symbol) | never_symbol | default_symbol)?) | (history_symbol (real_ulong_number | default_symbol)) | (reuse_symbol interval_symbol ((real_ulong_number day_symbol) | default_symbol)) | (require_symbol current_symbol (default_symbol | optional_symbol)?)))
+drop_user: drop_symbol user_symbol if_exists? user_list
+grant: grant_symbol ((role_or_privileges_list to_symbol user_list (with_symbol admin_symbol option_symbol)?) | ((role_or_privileges_list | (all_symbol privileges_symbol?)) on_symbol acl_type? grant_identifier to_symbol grant_target_list versioned_require_clause? grant_options? grant_as?) | (proxy_symbol on_symbol user to_symbol grant_target_list (with_symbol grant_symbol option_symbol)?))
+grant_target_list: | create_user_list | user_list
+grant_options: | (with_symbol grant_option+) | (with_symbol grant_symbol option_symbol)
+except_role_list: except_symbol role_list
+with_roles: with_symbol role_symbol (role_list | (all_symbol except_role_list?) | none_symbol | default_symbol)
+grant_as: as_symbol user_symbol with_roles?
+versioned_require_clause: require_clause
+rename_user: rename_symbol user_symbol user to_symbol user (comma_symbol user to_symbol user)*
+revoke: revoke_symbol ((role_or_privileges_list from_symbol user_list) | (role_or_privileges_list on_type_to from_symbol user_list) | (all_symbol privileges_symbol? ((on_symbol acl_type? grant_identifier) | (comma_symbol grant_symbol option_symbol from_symbol user_list))) | (proxy_symbol on_symbol user from_symbol user_list))
+on_type_to: | (on_symbol acl_type? grant_identifier) | (on_symbol acl_type? grant_identifier)?
+acl_type: | table_symbol | function_symbol | procedure_symbol
+role_or_privileges_list: role_or_privilege (comma_symbol role_or_privilege)*
+role_or_privilege: | ((role_identifier_or_text column_internal_ref_list?) | (role_identifier_or_text (at_text_suffix | (at_sign_symbol text_or_identifier)))) | ((select_symbol | insert_symbol | update_symbol | references_symbol) column_internal_ref_list?) | (delete_symbol | usage_symbol | index_symbol | drop_symbol | execute_symbol | reload_symbol | shutdown_symbol | process_symbol | file_symbol | proxy_symbol | super_symbol | event_symbol | trigger_symbol) | (grant_symbol option_symbol) | (show_symbol databases_symbol) | (create_symbol ((temporary_symbol tables_symbol) | (routine_symbol | tablespace_symbol | user_symbol | view_symbol))?) | (lock_symbol tables_symbol) | (replication_symbol (client_symbol | slave_symbol)) | (show_symbol view_symbol) | (alter_symbol routine_symbol?) | ((create_symbol | drop_symbol) role_symbol)
+grant_identifier: | (mult_operator (dot_symbol mult_operator)?) | (schema_ref (dot_symbol mult_operator)?) | table_ref | (schema_ref dot_symbol table_ref)
+require_list: require_list_element (and_symbol? require_list_element)*
+require_list_element: | (cipher_symbol text_string) | (issuer_symbol text_string) | (subject_symbol text_string)
+grant_option: | (grant_symbol option_symbol) | (max_queries_per_hour_symbol ulong_number) | (max_updates_per_hour_symbol ulong_number) | (max_connections_per_hour_symbol ulong_number) | (max_user_connections_symbol ulong_number)
+set_role: | (set_symbol role_symbol role_list) | (set_symbol role_symbol (none_symbol | default_symbol)) | (set_symbol default_symbol role_symbol (role_list | none_symbol | all_symbol) to_symbol role_list) | (set_symbol role_symbol all_symbol (except_symbol role_list)?)
+role_list: role (comma_symbol role)*
+role: role_identifier_or_text ((at_sign_symbol text_or_identifier) | at_text_suffix)?
+table_administration_statement: | (analyze_symbol no_write_to_bin_log? table_symbol table_ref_list histogram?) | (check_symbol table_symbol table_ref_list check_option*) | (checksum_symbol table_symbol table_ref_list (quick_symbol | extended_symbol)?) | (optimize_symbol no_write_to_bin_log? table_symbol table_ref_list) | (repair_symbol no_write_to_bin_log? table_symbol table_ref_list repair_type*)
+histogram: | (update_symbol histogram_symbol on_symbol identifier_list (with_symbol int_number buckets_symbol)?) | (drop_symbol histogram_symbol on_symbol identifier_list)
+check_option: | (for_symbol upgrade_symbol) | (quick_symbol | fast_symbol | medium_symbol | extended_symbol | changed_symbol)
+repair_type: | quick_symbol | extended_symbol | use_frm_symbol
+install_uninstall_statment: | (install_symbol plugin_symbol identifier soname_symbol text_string_literal) | (install_symbol component_symbol text_string_literal_list) | (uninstall_symbol plugin_symbol plugin_ref) | (uninstall_symbol component_symbol component_ref (comma_symbol component_ref)*)
+set_statement: set_symbol start_option_value_list
+start_option_value_list: | (option_value_no_option_type option_value_list_continued) | (transaction_symbol transaction_characteristics) | (option_type start_option_value_list_following_option_type) | (password_symbol (for_symbol user)? equal ((text_string replace_password? retain_current_password?) | (text_string replace_password? retain_current_password?) | (old_password_symbol open_par_symbol text_string close_par_symbol) | (password_symbol open_par_symbol text_string close_par_symbol))) | (password_symbol (for_symbol user)? to_symbol random_symbol replace_password? retain_current_password?)
+transaction_characteristics: | (transaction_access_mode isolation_level?) | (isolation_level (comma_symbol transaction_access_mode)?)
+transaction_access_mode: read_symbol (write_symbol | only_symbol)
+isolation_level: isolation_symbol level_symbol ((repeatable_symbol read_symbol) | (read_symbol (committed_symbol | uncommitted_symbol)) | serializable_symbol)
+option_value_list_continued: (comma_symbol option_value)*
+option_value_no_option_type: | (internal_variable_name equal set_expr_or_default) | charset_clause | (user_variable equal expr) | (set_system_variable equal set_expr_or_default) | (names_symbol ((equal expr) | (charset_name collate?) | default_symbol))
+option_value: | (option_type internal_variable_name equal set_expr_or_default) | option_value_no_option_type
+set_system_variable: at_at_sign_symbol set_var_ident_type? internal_variable_name
+start_option_value_list_following_option_type: | (option_value_following_option_type option_value_list_continued) | (transaction_symbol transaction_characteristics)
+option_value_following_option_type: internal_variable_name equal set_expr_or_default
+set_expr_or_default: | expr | (default_symbol | on_symbol | all_symbol | binary_symbol) | (row_symbol | system_symbol)
+show_statement: show_symbol (authors_symbol | (databases_symbol like_or_where?) | (show_command_type? tables_symbol in_db? like_or_where?) | (full_symbol? triggers_symbol in_db? like_or_where?) | (events_symbol in_db? like_or_where?) | (table_symbol status_symbol in_db? like_or_where?) | (open_symbol tables_symbol in_db? like_or_where?) | plugins_symbol | (engine_symbol (engine_ref | all_symbol) (status_symbol | mutex_symbol | logs_symbol)) | (show_command_type? columns_symbol (from_symbol | in_symbol) table_ref in_db? like_or_where?) | ((binary_symbol | master_symbol) logs_symbol) | (slave_symbol (hosts_symbol | (status_symbol non_blocking channel?))) | ((binlog_symbol | relaylog_symbol) events_symbol (in_symbol text_string)? (from_symbol ulonglong_number)? limit_clause? channel?) | (extended_symbol? (index_symbol | indexes_symbol | keys_symbol) from_or_in table_ref in_db? where_clause?) | (storage_symbol? engines_symbol) | (count_symbol open_par_symbol mult_operator close_par_symbol (warnings_symbol | errors_symbol)) | (warnings_symbol limit_clause?) | (errors_symbol limit_clause?) | profiles_symbol | (profile_symbol (profile_type (comma_symbol profile_type)*)? (for_symbol query_symbol int_number)? limit_clause?) | (option_type? (status_symbol | variables_symbol) like_or_where?) | (full_symbol? processlist_symbol) | (charset like_or_where?) | (collation_symbol like_or_where?) | contributors_symbol | privileges_symbol | (grants_symbol (for_symbol user)?) | (grants_symbol for_symbol user using_symbol user_list) | (master_symbol status_symbol) | (create_symbol ((database_symbol if_not_exists? schema_ref) | (event_symbol event_ref) | (function_symbol function_ref) | (procedure_symbol procedure_ref) | (table_symbol table_ref) | (trigger_symbol trigger_ref) | (view_symbol view_ref) | (user_symbol user))) | (procedure_symbol status_symbol like_or_where?) | (function_symbol status_symbol like_or_where?) | (procedure_symbol code_symbol procedure_ref) | (function_symbol code_symbol function_ref))
+show_command_type: | full_symbol | (extended_symbol full_symbol?)
+non_blocking: nonblocking_symbol? 
+from_or_in: | from_symbol | in_symbol
+in_db: from_or_in identifier
+profile_type: | (block_symbol io_symbol) | (context_symbol switches_symbol) | (page_symbol faults_symbol) | (all_symbol | cpu_symbol | ipc_symbol | memory_symbol | source_symbol | swaps_symbol)
+other_administrative_statement: | (binlog_symbol text_literal) | (cache_symbol index_symbol key_cache_list_or_parts in_symbol (identifier | default_symbol)) | (flush_symbol no_write_to_bin_log? (flush_tables | (flush_option (comma_symbol flush_option)*))) | (kill_symbol (connection_symbol | query_symbol)? expr) | (load_symbol index_symbol into_symbol cache_symbol preload_tail) | shutdown_symbol
+key_cache_list_or_parts: | key_cache_list | assign_to_keycache_partition
+key_cache_list: assign_to_keycache (comma_symbol assign_to_keycache)*
+assign_to_keycache: table_ref cache_key_list?
+assign_to_keycache_partition: table_ref partition_symbol open_par_symbol all_or_partition_name_list close_par_symbol cache_key_list?
+cache_key_list: key_or_index open_par_symbol key_usage_list? close_par_symbol
+key_usage_element: | identifier | primary_symbol
+key_usage_list: key_usage_element (comma_symbol key_usage_element)*
+flush_option: | (des_key_file_symbol | hosts_symbol | privileges_symbol | status_symbol | user_resources_symbol) | (log_type? logs_symbol) | (relay_symbol logs_symbol channel?) | (query_symbol cache_symbol) | optimizer_costs_symbol
+log_type: | binary_symbol | engine_symbol | error_symbol | general_symbol | slow_symbol
+flush_tables: (tables_symbol | table_symbol) ((with_symbol read_symbol lock_symbol) | (identifier_list flush_tables_options?))?
+flush_tables_options: | (for_symbol export_symbol) | (with_symbol read_symbol lock_symbol)
+preload_tail: | (table_ref admin_partition cache_key_list? (ignore_symbol leaves_symbol)?) | preload_list
+preload_list: preload_keys (comma_symbol preload_keys)*
+preload_keys: table_ref cache_key_list? (ignore_symbol leaves_symbol)?
+admin_partition: partition_symbol open_par_symbol all_or_partition_name_list close_par_symbol
+resource_group_management: | create_resource_group | alter_resource_group | set_resource_group | drop_resource_group
+create_resource_group: create_symbol resource_symbol group_symbol identifier type_symbol equal? (user_symbol | system_symbol) resource_group_vcpu_list? resource_group_priority? resource_group_enable_disable?
+resource_group_vcpu_list: vcpu_symbol equal? vcpu_num_or_range (comma_symbol? vcpu_num_or_range)*
+vcpu_num_or_range: int_number (minus_operator int_number)?
+resource_group_priority: thread_priority_symbol equal? int_number
+resource_group_enable_disable: | enable_symbol | disable_symbol
+alter_resource_group: alter_symbol resource_symbol group_symbol resource_group_ref resource_group_vcpu_list? resource_group_priority? resource_group_enable_disable? force_symbol?
+set_resource_group: set_symbol resource_symbol group_symbol identifier (for_symbol thread_id_list)?
+thread_id_list: real_ulong_number (comma_symbol? real_ulong_number)*
+drop_resource_group: drop_symbol resource_symbol group_symbol resource_group_ref force_symbol?
+utility_statement: | describe_statement | explain_statement | help_command | use_command | restart_server
+describe_statement: (explain_symbol | describe_symbol | desc_symbol) table_ref (text_string | column_ref)?
+explain_statement: (explain_symbol | describe_symbol | desc_symbol) (extended_symbol | partitions_symbol | (format_symbol equal_operator text_or_identifier) | analyze_symbol | (analyze_symbol format_symbol equal_operator text_or_identifier))? explainable_statement
+explainable_statement: | select_statement | (delete_statement | insert_statement | replace_statement | update_statement) | (for_symbol connection_symbol real_ulong_number)
+help_command: help_symbol text_or_identifier
+use_command: use_symbol identifier
+restart_server: restart_symbol
+expr: | (bool_pri (is_symbol not_rule? (true_symbol | false_symbol | unknown_symbol))?) | (not_symbol expr) | (expr (and_symbol | logical_and_operator) expr) | (expr xor_symbol expr) | (expr (or_symbol | logical_or_operator) expr)
+bool_pri: | predicate | (bool_pri is_symbol not_rule? null_symbol) | (bool_pri comp_op predicate) | (bool_pri comp_op (all_symbol | any_symbol) subquery)
+comp_op: | equal_operator | null_safe_equal_operator | greater_or_equal_operator | greater_than_operator | less_or_equal_operator | less_than_operator | not_equal_operator
+predicate: bit_expr ((not_rule? predicate_operations) | (member_symbol of_symbol? simple_expr_with_parentheses) | (sounds_symbol like_symbol bit_expr))?
+predicate_operations: | (in_symbol (subquery | (open_par_symbol expr_list close_par_symbol))) | (between_symbol bit_expr and_symbol predicate) | (like_symbol simple_expr (escape_symbol simple_expr)?) | (regexp_symbol bit_expr)
+bit_expr: | simple_expr | (bit_expr bitwise_xor_operator bit_expr) | (bit_expr (mult_operator | div_operator | mod_operator | div_symbol | mod_symbol) bit_expr) | (bit_expr (plus_operator | minus_operator) bit_expr) | (bit_expr (plus_operator | minus_operator) interval_symbol expr interval) | (bit_expr (shift_left_operator | shift_right_operator) bit_expr) | (bit_expr bitwise_and_operator bit_expr) | (bit_expr bitwise_or_operator bit_expr)
+simple_expr: | (variable (equal expr)?) | (column_ref json_operator?) | runtime_function_call | function_call | (simple_expr collate_symbol text_or_identifier) | literal | param_marker | sum_expr | grouping_operation | window_function_call | (simple_expr concat_pipes_symbol simple_expr) | ((plus_operator | minus_operator | bitwise_not_operator) simple_expr) | (not2_rule simple_expr) | (row_symbol? open_par_symbol expr_list close_par_symbol) | (exists_symbol? subquery) | (open_curly_symbol identifier expr close_curly_symbol) | (match_symbol ident_list_arg against_symbol open_par_symbol bit_expr fulltext_options? close_par_symbol) | (binary_symbol simple_expr) | (cast_symbol open_par_symbol expr as_symbol cast_type array_cast? close_par_symbol) | (case_symbol expr? (when_expression then_expression)+ else_expression? end_symbol) | (convert_symbol open_par_symbol expr comma_symbol cast_type close_par_symbol) | (convert_symbol open_par_symbol expr using_symbol charset_name close_par_symbol) | (default_symbol open_par_symbol simple_identifier close_par_symbol) | (values_symbol open_par_symbol simple_identifier close_par_symbol) | (interval_symbol expr interval plus_operator expr)
+array_cast: array_symbol
+json_operator: | (json_separator_symbol text_string_literal) | (json_unquoted_separator_symbol text_string_literal)
+sum_expr: | (avg_symbol open_par_symbol distinct_symbol? in_sum_expr close_par_symbol windowing_clause?) | ((bit_and_symbol | bit_or_symbol | bit_xor_symbol) open_par_symbol in_sum_expr close_par_symbol windowing_clause?) | json_function | (count_symbol open_par_symbol all_symbol? mult_operator close_par_symbol windowing_clause?) | (count_symbol open_par_symbol ((all_symbol? mult_operator) | in_sum_expr | (distinct_symbol expr_list)) close_par_symbol windowing_clause?) | (min_symbol open_par_symbol distinct_symbol? in_sum_expr close_par_symbol windowing_clause?) | (max_symbol open_par_symbol distinct_symbol? in_sum_expr close_par_symbol windowing_clause?) | (std_symbol open_par_symbol in_sum_expr close_par_symbol windowing_clause?) | (variance_symbol open_par_symbol in_sum_expr close_par_symbol windowing_clause?) | (stddev_samp_symbol open_par_symbol in_sum_expr close_par_symbol windowing_clause?) | (var_samp_symbol open_par_symbol in_sum_expr close_par_symbol windowing_clause?) | (sum_symbol open_par_symbol distinct_symbol? in_sum_expr close_par_symbol windowing_clause?) | (group_concat_symbol open_par_symbol distinct_symbol? expr_list order_clause? (separator_symbol text_string)? close_par_symbol windowing_clause?)
+grouping_operation: grouping_symbol open_par_symbol expr_list close_par_symbol
+window_function_call: | ((row_number_symbol | rank_symbol | dense_rank_symbol | cume_dist_symbol | percent_rank_symbol) parentheses windowing_clause) | (ntile_symbol simple_expr_with_parentheses windowing_clause) | ((lead_symbol | lag_symbol) open_par_symbol expr lead_lag_info? close_par_symbol null_treatment? windowing_clause) | ((first_value_symbol | last_value_symbol) expr_with_parentheses null_treatment? windowing_clause) | (nth_value_symbol open_par_symbol expr comma_symbol simple_expr close_par_symbol (from_symbol (first_symbol | last_symbol))? null_treatment? windowing_clause)
+windowing_clause: over_symbol (window_name | window_spec)
+lead_lag_info: comma_symbol (ulonglong_number | param_marker) (comma_symbol expr)?
+null_treatment: (respect_symbol | ignore_symbol) nulls_symbol
+json_function: | (json_arrayagg_symbol open_par_symbol in_sum_expr close_par_symbol windowing_clause?) | (json_objectagg_symbol open_par_symbol in_sum_expr comma_symbol in_sum_expr close_par_symbol windowing_clause?)
+in_sum_expr: all_symbol? expr
+ident_list_arg: | ident_list | (open_par_symbol ident_list close_par_symbol)
+ident_list: simple_identifier (comma_symbol simple_identifier)*
+fulltext_options: | (in_symbol boolean_symbol mode_symbol) | (in_symbol natural_symbol language_symbol mode_symbol (with_symbol query_symbol expansion_symbol)?) | (with_symbol query_symbol expansion_symbol)
+runtime_function_call: | (char_symbol open_par_symbol expr_list (using_symbol charset_name)? close_par_symbol) | (current_user_symbol parentheses?) | (date_symbol expr_with_parentheses) | (day_symbol expr_with_parentheses) | (hour_symbol expr_with_parentheses) | (insert_symbol open_par_symbol expr comma_symbol expr comma_symbol expr comma_symbol expr close_par_symbol) | (interval_symbol open_par_symbol expr (comma_symbol expr)+ close_par_symbol) | (left_symbol open_par_symbol expr comma_symbol expr close_par_symbol) | (minute_symbol expr_with_parentheses) | (month_symbol expr_with_parentheses) | (right_symbol open_par_symbol expr comma_symbol expr close_par_symbol) | (second_symbol expr_with_parentheses) | (time_symbol expr_with_parentheses) | (timestamp_symbol open_par_symbol expr (comma_symbol expr)? close_par_symbol) | trim_function | (user_symbol parentheses) | (values_symbol expr_with_parentheses) | (year_symbol expr_with_parentheses) | ((adddate_symbol | subdate_symbol) open_par_symbol expr comma_symbol (expr | (interval_symbol expr interval)) close_par_symbol) | (curdate_symbol parentheses?) | (curtime_symbol time_function_parameters?) | ((date_add_symbol | date_sub_symbol) open_par_symbol expr comma_symbol interval_symbol expr interval close_par_symbol) | (extract_symbol open_par_symbol interval from_symbol expr close_par_symbol) | (get_format_symbol open_par_symbol date_time_ttype comma_symbol expr close_par_symbol) | (now_symbol time_function_parameters?) | (position_symbol open_par_symbol bit_expr in_symbol expr close_par_symbol) | substring_function | (sysdate_symbol time_function_parameters?) | ((timestamp_add_symbol | timestamp_diff_symbol) open_par_symbol interval_time_stamp comma_symbol expr comma_symbol expr close_par_symbol) | (utc_date_symbol parentheses?) | (utc_time_symbol time_function_parameters?) | (utc_timestamp_symbol time_function_parameters?) | (ascii_symbol expr_with_parentheses) | (charset_symbol expr_with_parentheses) | (coalesce_symbol expr_list_with_parentheses) | (collation_symbol expr_with_parentheses) | (database_symbol parentheses) | (if_symbol open_par_symbol expr comma_symbol expr comma_symbol expr close_par_symbol) | (format_symbol open_par_symbol expr comma_symbol expr (comma_symbol expr)? close_par_symbol) | (microsecond_symbol expr_with_parentheses) | (mod_symbol open_par_symbol expr comma_symbol expr close_par_symbol) | (old_password_symbol open_par_symbol text_literal close_par_symbol) | (password_symbol expr_with_parentheses) | (quarter_symbol expr_with_parentheses) | (repeat_symbol open_par_symbol expr comma_symbol expr close_par_symbol) | (replace_symbol open_par_symbol expr comma_symbol expr comma_symbol expr close_par_symbol) | (reverse_symbol expr_with_parentheses) | (row_count_symbol parentheses) | (truncate_symbol open_par_symbol expr comma_symbol expr close_par_symbol) | (week_symbol open_par_symbol expr (comma_symbol expr)? close_par_symbol) | (weight_string_symbol open_par_symbol expr (((as_symbol char_symbol ws_num_codepoints)? weight_string_levels?) | (as_symbol binary_symbol ws_num_codepoints) | (comma_symbol ulong_number comma_symbol ulong_number comma_symbol ulong_number)) close_par_symbol) | geometry_function
+geometry_function: | (contains_symbol open_par_symbol expr comma_symbol expr close_par_symbol) | (geometrycollection_symbol open_par_symbol expr_list? close_par_symbol) | (linestring_symbol expr_list_with_parentheses) | (multilinestring_symbol expr_list_with_parentheses) | (multipoint_symbol expr_list_with_parentheses) | (multipolygon_symbol expr_list_with_parentheses) | (point_symbol open_par_symbol expr comma_symbol expr close_par_symbol) | (polygon_symbol expr_list_with_parentheses)
+time_function_parameters: open_par_symbol fractional_precision? close_par_symbol
+fractional_precision: int_number
+weight_string_levels: level_symbol ((real_ulong_number minus_operator real_ulong_number) | (weight_string_level_list_item (comma_symbol weight_string_level_list_item)*))
+weight_string_level_list_item: real_ulong_number (((asc_symbol | desc_symbol) reverse_symbol?) | reverse_symbol)?
+date_time_ttype: | date_symbol | time_symbol | datetime_symbol | timestamp_symbol
+trim_function: trim_symbol open_par_symbol ((expr (from_symbol expr)?) | (leading_symbol expr? from_symbol expr) | (trailing_symbol expr? from_symbol expr) | (both_symbol expr? from_symbol expr)) close_par_symbol
+substring_function: substring_symbol open_par_symbol expr ((comma_symbol expr (comma_symbol expr)?) | (from_symbol expr (for_symbol expr)?)) close_par_symbol
+function_call: | (pure_identifier open_par_symbol udf_expr_list? close_par_symbol) | (qualified_identifier open_par_symbol expr_list? close_par_symbol)
+udf_expr_list: udf_expr (comma_symbol udf_expr)*
+udf_expr: expr select_alias?
+variable: | user_variable | system_variable
+user_variable: | (at_sign_symbol text_or_identifier) | at_text_suffix
+system_variable: at_at_sign_symbol var_ident_type? text_or_identifier dot_identifier?
+internal_variable_name: | ((identifier dot_identifier?) | (l_value_identifier dot_identifier?)) | (default_symbol dot_identifier)
+when_expression: when_symbol expr
+then_expression: then_symbol expr
+else_expression: else_symbol expr
+cast_type: | (binary_symbol field_length?) | (char_symbol field_length? charset_with_opt_binary?) | (nchar field_length?) | (signed_symbol int_symbol?) | (unsigned_symbol int_symbol?) | date_symbol | (time_symbol type_datetime_precision?) | (datetime_symbol type_datetime_precision?) | (decimal_symbol float_options?) | json_symbol | real_type | (float_symbol standard_float_options?)
+expr_list: expr (comma_symbol expr)*
+charset: | (char_symbol set_symbol) | charset_symbol
+not_rule: | not_symbol | not2_symbol
+not2_rule: | logical_not_operator | not2_symbol
+interval: | interval_time_stamp | (second_microsecond_symbol | minute_microsecond_symbol | minute_second_symbol | hour_microsecond_symbol | hour_second_symbol | hour_minute_symbol | day_microsecond_symbol | day_second_symbol | day_minute_symbol | day_hour_symbol | year_month_symbol)
+interval_time_stamp: | microsecond_symbol | second_symbol | minute_symbol | hour_symbol | day_symbol | week_symbol | month_symbol | quarter_symbol | year_symbol
+expr_list_with_parentheses: open_par_symbol expr_list close_par_symbol
+expr_with_parentheses: open_par_symbol expr close_par_symbol
+simple_expr_with_parentheses: open_par_symbol simple_expr close_par_symbol
+order_list: order_expression (comma_symbol order_expression)*
+order_expression: expr direction?
+group_list: grouping_expression (comma_symbol grouping_expression)*
+grouping_expression: expr
+channel: for_symbol channel_symbol text_string_no_linebreak
+compound_statement: | simple_statement | return_statement | if_statement | case_statement | labeled_block | unlabeled_block | labeled_control | unlabeled_control | leave_statement | iterate_statement | cursor_open | cursor_fetch | cursor_close
+return_statement: return_symbol expr
+if_statement: if_symbol if_body end_symbol if_symbol
+if_body: expr then_statement ((elseif_symbol if_body) | (else_symbol compound_statement_list))?
+then_statement: then_symbol compound_statement_list
+compound_statement_list: (compound_statement semicolon_symbol)+
+case_statement: case_symbol expr? (when_expression then_statement)+ else_statement? end_symbol case_symbol
+else_statement: else_symbol compound_statement_list
+labeled_block: label begin_end_block label_ref?
+unlabeled_block: begin_end_block
+label: label_identifier colon_symbol
+begin_end_block: begin_symbol sp_declarations? compound_statement_list? end_symbol
+labeled_control: label unlabeled_control label_ref?
+unlabeled_control: | loop_block | while_do_block | repeat_until_block
+loop_block: loop_symbol compound_statement_list end_symbol loop_symbol
+while_do_block: while_symbol expr do_symbol compound_statement_list end_symbol while_symbol
+repeat_until_block: repeat_symbol compound_statement_list until_symbol expr end_symbol repeat_symbol
+sp_declarations: (sp_declaration semicolon_symbol)+
+sp_declaration: | variable_declaration | condition_declaration | handler_declaration | cursor_declaration
+variable_declaration: declare_symbol identifier_list data_type collate? (default_symbol expr)?
+condition_declaration: declare_symbol identifier condition_symbol for_symbol sp_condition
+sp_condition: | ulong_number | sqlstate
+sqlstate: sqlstate_symbol value_symbol? text_literal
+handler_declaration: declare_symbol (continue_symbol | exit_symbol | undo_symbol) handler_symbol for_symbol handler_condition (comma_symbol handler_condition)* compound_statement
+handler_condition: | sp_condition | identifier | sqlwarning_symbol | (not_rule found_symbol) | sqlexception_symbol
+cursor_declaration: declare_symbol identifier cursor_symbol for_symbol select_statement
+iterate_statement: iterate_symbol label_ref
+leave_statement: leave_symbol label_ref
+get_diagnostics: get_symbol (current_symbol | stacked_symbol)? diagnostics_symbol ((statement_information_item (comma_symbol statement_information_item)*) | (condition_symbol signal_allowed_expr condition_information_item (comma_symbol condition_information_item)*))
+signal_allowed_expr: | literal | variable | qualified_identifier
+statement_information_item: (variable | identifier) equal_operator (number_symbol | row_count_symbol)
+condition_information_item: (variable | identifier) equal_operator (signal_information_item_name | returned_sqlstate_symbol)
+signal_information_item_name: | class_origin_symbol | subclass_origin_symbol | constraint_catalog_symbol | constraint_schema_symbol | constraint_name_symbol | catalog_name_symbol | schema_name_symbol | table_name_symbol | column_name_symbol | cursor_name_symbol | message_text_symbol | mysql_errno_symbol
+signal_statement: signal_symbol (identifier | sqlstate) (set_symbol signal_information_item (comma_symbol signal_information_item)*)?
+resignal_statement: resignal_symbol (identifier | sqlstate)? (set_symbol signal_information_item (comma_symbol signal_information_item)*)?
+signal_information_item: signal_information_item_name equal_operator signal_allowed_expr
+cursor_open: open_symbol identifier
+cursor_close: close_symbol identifier
+cursor_fetch: fetch_symbol (next_symbol? from_symbol)? identifier into_symbol identifier_list
+schedule: | (at_symbol expr) | (every_symbol expr interval (starts_symbol expr)? (ends_symbol expr)?)
+column_definition: column_name field_definition check_or_references?
+check_or_references: | check_constraint | references
+check_constraint: check_symbol expr_with_parentheses
+constraint_enforcement: not_symbol? enforced_symbol
+table_constraint_def: | ((key_symbol | index_symbol) index_name_and_type? key_list_variants index_option*) | (fulltext_symbol key_or_index? index_name? key_list_variants fulltext_index_option*) | (spatial_symbol key_or_index? index_name? key_list_variants spatial_index_option*) | (constraint_name? ((((primary_symbol key_symbol) | (unique_symbol key_or_index?)) index_name_and_type? key_list_variants index_option*) | (foreign_symbol key_symbol index_name? key_list references) | (check_constraint constraint_enforcement?)))
+constraint_name: constraint_symbol identifier?
+field_definition: data_type (column_attribute* | (collate? (generated_symbol always_symbol)? as_symbol expr_with_parentheses (virtual_symbol | stored_symbol)? (gcol_attribute* | column_attribute*)))
+column_attribute: | (not_symbol? null_literal) | (not_symbol secondary_symbol) | (default_symbol (signed_literal | (now_symbol time_function_parameters?) | expr_with_parentheses)) | (on_symbol update_symbol now_symbol time_function_parameters?) | auto_increment_symbol | (serial_symbol default_symbol value_symbol) | (primary_symbol? key_symbol) | (unique_symbol key_symbol?) | (comment_symbol text_literal) | collate | (column_format_symbol column_format) | (storage_symbol storage_media) | (srid_symbol real_ulonglong_number) | (constraint_name? check_constraint) | constraint_enforcement
+column_format: | fixed_symbol | dynamic_symbol | default_symbol
+storage_media: | disk_symbol | memory_symbol | default_symbol
+gcol_attribute: | (unique_symbol key_symbol?) | (comment_symbol text_string) | (not_rule? null_symbol) | (primary_symbol? key_symbol)
+references: references_symbol table_ref identifier_list_with_parentheses? (match_symbol (full_symbol | partial_symbol | simple_symbol))? ((on_symbol update_symbol delete_option (on_symbol delete_symbol delete_option)?) | (on_symbol delete_symbol delete_option (on_symbol update_symbol delete_option)?))?
+delete_option: | (restrict_symbol | cascade_symbol) | (set_symbol null_literal) | (no_symbol action_symbol)
+key_list: open_par_symbol key_part (comma_symbol key_part)* close_par_symbol
+key_part: identifier field_length? direction?
+key_list_with_expression: open_par_symbol key_part_or_expression (comma_symbol key_part_or_expression)* close_par_symbol
+key_part_or_expression: | key_part | (expr_with_parentheses direction?)
+key_list_variants: | key_list_with_expression | key_list
+index_type: | btree_symbol | rtree_symbol | hash_symbol
+index_option: | common_index_option | index_type_clause
+common_index_option: | (key_block_size_symbol equal_operator? ulong_number) | (comment_symbol text_literal) | visibility
+visibility: | visible_symbol | invisible_symbol
+index_type_clause: (using_symbol | type_symbol) index_type
+fulltext_index_option: | common_index_option | (with_symbol parser_symbol identifier)
+spatial_index_option: common_index_option
+data_type_definition: data_type eof
+data_type: | ((int_symbol | tinyint_symbol | smallint_symbol | mediumint_symbol | bigint_symbol) field_length? field_options?) | ((real_symbol | (double_symbol precision_symbol?)) precision? field_options?) | ((float_symbol | decimal_symbol | numeric_symbol | fixed_symbol) float_options? field_options?) | (bit_symbol field_length?) | (bool_symbol | boolean_symbol) | (char_symbol field_length? charset_with_opt_binary?) | (nchar field_length? binary_symbol?) | (binary_symbol field_length?) | (((char_symbol varying_symbol) | varchar_symbol) field_length charset_with_opt_binary?) | (((national_symbol varchar_symbol) | nvarchar_symbol | (nchar_symbol varchar_symbol) | (national_symbol char_symbol varying_symbol) | (nchar_symbol varying_symbol)) field_length binary_symbol?) | (varbinary_symbol field_length) | (year_symbol field_length? field_options?) | date_symbol | (time_symbol type_datetime_precision?) | (timestamp_symbol type_datetime_precision?) | (datetime_symbol type_datetime_precision?) | tinyblob_symbol | (blob_symbol field_length?) | (mediumblob_symbol | longblob_symbol) | (long_symbol varbinary_symbol) | (long_symbol ((char_symbol varying_symbol) | varchar_symbol)? charset_with_opt_binary?) | (tinytext_symbol charset_with_opt_binary?) | (text_symbol field_length? charset_with_opt_binary?) | (mediumtext_symbol charset_with_opt_binary?) | (longtext_symbol charset_with_opt_binary?) | (enum_symbol string_list charset_with_opt_binary?) | (set_symbol string_list charset_with_opt_binary?) | serial_symbol | json_symbol | (geometry_symbol | geometrycollection_symbol | point_symbol | multipoint_symbol | linestring_symbol | multilinestring_symbol | polygon_symbol | multipolygon_symbol)
+nchar: | nchar_symbol | (national_symbol char_symbol)
+real_type: | real_symbol | (double_symbol precision_symbol?)
+field_length: open_par_symbol (real_ulonglong_number | decimal_number) close_par_symbol
+field_options: (signed_symbol | unsigned_symbol | zerofill_symbol)+
+charset_with_opt_binary: | ascii | unicode | byte_symbol | (charset charset_name binary_symbol?) | (binary_symbol (charset charset_name)?)
+ascii: | (ascii_symbol binary_symbol?) | (binary_symbol ascii_symbol)
+unicode: | (unicode_symbol binary_symbol?) | (binary_symbol unicode_symbol)
+ws_num_codepoints: open_par_symbol real_ulong_number close_par_symbol
+type_datetime_precision: open_par_symbol int_number close_par_symbol
+charset_name: | text_or_identifier | binary_symbol | default_symbol
+collation_name: | text_or_identifier | default_symbol | binary_symbol
+create_table_options: create_table_option (comma_symbol? create_table_option)*
+create_table_options_space_separated: create_table_option+
+create_table_option: | (engine_symbol equal_operator? engine_ref) | (secondary_engine_symbol equal? (null_symbol | text_or_identifier)) | (max_rows_symbol equal_operator? ulonglong_number) | (min_rows_symbol equal_operator? ulonglong_number) | (avg_row_length_symbol equal_operator? ulong_number) | (password_symbol equal_operator? text_string_literal) | (comment_symbol equal_operator? text_string_literal) | (compression_symbol equal_operator? text_string) | (encryption_symbol equal_operator? text_string) | (auto_increment_symbol equal_operator? ulonglong_number) | (pack_keys_symbol equal_operator? ternary_option) | ((stats_auto_recalc_symbol | stats_persistent_symbol | stats_sample_pages_symbol) equal_operator? ternary_option) | ((checksum_symbol | table_checksum_symbol) equal_operator? ulong_number) | (delay_key_write_symbol equal_operator? ulong_number) | (row_format_symbol equal_operator? (default_symbol | dynamic_symbol | fixed_symbol | compressed_symbol | redundant_symbol | compact_symbol)) | (union_symbol equal_operator? open_par_symbol table_ref_list close_par_symbol) | default_charset | default_collation | (insert_method_symbol equal_operator? (no_symbol | first_symbol | last_symbol)) | (data_symbol directory_symbol equal_operator? text_string) | (index_symbol directory_symbol equal_operator? text_string) | (tablespace_symbol (equal_operator? ) identifier) | (storage_symbol (disk_symbol | memory_symbol)) | (connection_symbol equal_operator? text_string) | (key_block_size_symbol equal_operator? ulong_number)
+ternary_option: | ulong_number | default_symbol
+default_collation: default_symbol? collate_symbol equal_operator? collation_name
+default_encryption: default_symbol? encryption_symbol equal_operator? text_string_literal
+default_charset: default_symbol? charset equal_operator? charset_name
+partition_clause: partition_symbol by_symbol partition_type_def (partitions_symbol real_ulong_number)? sub_partitions? partition_definitions?
+partition_type_def: | (linear_symbol? key_symbol partition_key_algorithm? open_par_symbol identifier_list? close_par_symbol) | (linear_symbol? hash_symbol open_par_symbol bit_expr close_par_symbol) | ((range_symbol | list_symbol) ((open_par_symbol bit_expr close_par_symbol) | (columns_symbol open_par_symbol identifier_list? close_par_symbol)))
+sub_partitions: subpartition_symbol by_symbol linear_symbol? ((hash_symbol open_par_symbol bit_expr close_par_symbol) | (key_symbol partition_key_algorithm? identifier_list_with_parentheses)) (subpartitions_symbol real_ulong_number)?
+partition_key_algorithm: algorithm_symbol equal_operator real_ulong_number
+partition_definitions: open_par_symbol partition_definition (comma_symbol partition_definition)* close_par_symbol
+partition_definition: partition_symbol identifier ((values_symbol less_symbol than_symbol (partition_value_item_list_paren | maxvalue_symbol)) | (values_symbol in_symbol partition_values_in))? partition_option* (open_par_symbol subpartition_definition (comma_symbol subpartition_definition)* close_par_symbol)?
+partition_values_in: | partition_value_item_list_paren | (open_par_symbol partition_value_item_list_paren (comma_symbol partition_value_item_list_paren)* close_par_symbol)
+partition_option: | (tablespace_symbol equal_operator? identifier) | (storage_symbol? engine_symbol equal_operator? engine_ref) | (nodegroup_symbol equal_operator? real_ulong_number) | ((max_rows_symbol | min_rows_symbol) equal_operator? real_ulong_number) | ((data_symbol | index_symbol) directory_symbol equal_operator? text_literal) | (comment_symbol equal_operator? text_literal)
+subpartition_definition: subpartition_symbol text_or_identifier partition_option*
+partition_value_item_list_paren: open_par_symbol partition_value_item (comma_symbol partition_value_item)* close_par_symbol
+partition_value_item: | bit_expr | maxvalue_symbol
+definer_clause: definer_symbol equal_operator user
+if_exists: if_symbol exists_symbol
+if_not_exists: if_symbol not_rule exists_symbol
+procedure_parameter: (in_symbol | out_symbol | inout_symbol)? function_parameter
+function_parameter: parameter_name type_with_opt_collate
+collate: collate_symbol collation_name
+type_with_opt_collate: data_type collate?
+schema_identifier_pair: open_par_symbol schema_ref comma_symbol schema_ref close_par_symbol
+view_ref_list: view_ref (comma_symbol view_ref)*
+update_list: update_element (comma_symbol update_element)*
+update_element: column_ref equal_operator (expr | default_symbol)
+charset_clause: charset charset_name
+fields_clause: columns_symbol field_term+
+field_term: | (terminated_symbol by_symbol text_string) | (optionally_symbol? enclosed_symbol by_symbol text_string) | (escaped_symbol by_symbol text_string)
+lines_clause: lines_symbol line_term+
+line_term: (terminated_symbol | starting_symbol) by_symbol text_string
+user_list: user (comma_symbol user)*
+create_user_list: create_user_entry (comma_symbol create_user_entry)*
+alter_user_list: alter_user_entry (comma_symbol alter_user_entry)*
+create_user_entry: user (identified_symbol ((by_symbol password_symbol? text_string) | (with_symbol text_or_identifier ((as_symbol text_string_hash) | (by_symbol text_string))?) | ((with_symbol text_or_identifier)? by_symbol random_symbol password_symbol)))?
+alter_user_entry: user ((identified_symbol (((with_symbol text_or_identifier)? by_symbol text_string (replace_symbol text_string)? retain_current_password?) | (with_symbol text_or_identifier (as_symbol text_string_hash retain_current_password?)?))?) | discard_old_password?)
+retain_current_password: retain_symbol current_symbol password_symbol
+discard_old_password: discard_symbol old_symbol password_symbol
+replace_password: replace_symbol text_string
+user_identifier_or_text: text_or_identifier ((at_sign_symbol text_or_identifier) | at_text_suffix)?
+user: | user_identifier_or_text | (current_user_symbol parentheses?)
+like_clause: like_symbol text_string_literal
+like_or_where: | like_clause | where_clause
+online_option: | online_symbol | offline_symbol
+no_write_to_bin_log: | local_symbol | no_write_to_binlog_symbol
+use_partition: partition_symbol identifier_list_with_parentheses
+field_identifier: | dot_identifier | (qualified_identifier dot_identifier?)
+column_name: | identifier | field_identifier
+column_internal_ref: identifier
+column_internal_ref_list: open_par_symbol column_internal_ref (comma_symbol column_internal_ref)* close_par_symbol
+column_ref: field_identifier
+insert_identifier: | column_ref | table_wild
+index_name: identifier
+index_ref: field_identifier
+table_wild: identifier dot_symbol (identifier dot_symbol)? mult_operator
+schema_name: identifier
+schema_ref: identifier
+procedure_name: qualified_identifier
+procedure_ref: qualified_identifier
+function_name: qualified_identifier
+function_ref: qualified_identifier
+trigger_name: qualified_identifier
+trigger_ref: qualified_identifier
+view_name: | qualified_identifier | dot_identifier
+view_ref: | qualified_identifier | dot_identifier
+tablespace_name: identifier
+tablespace_ref: identifier
+logfile_group_name: identifier
+logfile_group_ref: identifier
+event_name: qualified_identifier
+event_ref: qualified_identifier
+udf_name: identifier
+server_name: text_or_identifier
+server_ref: text_or_identifier
+engine_ref: text_or_identifier
+table_name: | qualified_identifier | dot_identifier
+filter_table_ref: schema_ref dot_identifier
+table_ref_with_wildcard: identifier ((dot_symbol mult_operator) | (dot_identifier (dot_symbol mult_operator)?))?
+table_ref: | qualified_identifier | dot_identifier
+table_ref_list: table_ref (comma_symbol table_ref)*
+table_alias_ref_list: table_ref_with_wildcard (comma_symbol table_ref_with_wildcard)*
+parameter_name: identifier
+label_identifier: | pure_identifier | label_keyword
+label_ref: label_identifier
+role_identifier: | pure_identifier | role_keyword
+role_ref: role_identifier
+plugin_ref: identifier
+component_ref: text_string_literal
+resource_group_ref: identifier
+window_name: identifier
+pure_identifier: | (identifier | back_tick_quoted_id) | double_quoted_text
+identifier: | pure_identifier | identifier_keyword
+identifier_list: identifier (comma_symbol identifier)*
+identifier_list_with_parentheses: open_par_symbol identifier_list close_par_symbol
+qualified_identifier: identifier dot_identifier?
+simple_identifier: | (identifier (dot_identifier dot_identifier?)?) | (dot_identifier dot_identifier)
+dot_identifier: dot_symbol identifier
+ulong_number: | int_number | hex_number | long_number | ulonglong_number | decimal_number | float_number
+real_ulong_number: | int_number | hex_number | long_number | ulonglong_number
+ulonglong_number: | int_number | long_number | ulonglong_number | decimal_number | float_number
+real_ulonglong_number: | int_number | hex_number | ulonglong_number | long_number
+literal: | text_literal | num_literal | temporal_literal | null_literal | bool_literal | (underscore_charset? (hex_number | bin_number))
+signed_literal: | literal | (plus_operator ulong_number) | (minus_operator ulong_number)
+string_list: open_par_symbol text_string (comma_symbol text_string)* close_par_symbol
+text_string_literal: | single_quoted_text | double_quoted_text
+text_string: | text_string_literal | hex_number | bin_number
+text_string_hash: | text_string_literal | hex_number
+text_literal: ((underscore_charset? text_string_literal) | nchar_text) text_string_literal*
+text_string_no_linebreak: text_string_literal
+text_string_literal_list: text_string_literal (comma_symbol text_string_literal)*
+num_literal: | int_number | long_number | ulonglong_number | decimal_number | float_number
+bool_literal: | true_symbol | false_symbol
+null_literal: | null_symbol | null2_symbol
+temporal_literal: | (date_symbol single_quoted_text) | (time_symbol single_quoted_text) | (timestamp_symbol single_quoted_text)
+float_options: | field_length | precision
+standard_float_options: precision
+precision: open_par_symbol int_number comma_symbol int_number close_par_symbol
+text_or_identifier: | identifier | text_string_literal
+l_value_identifier: | pure_identifier | l_value_keyword
+role_identifier_or_text: | role_identifier | text_string_literal
+size_number: | real_ulonglong_number | pure_identifier
+parentheses: open_par_symbol close_par_symbol
+equal: | equal_operator | assign_operator
+option_type: | persist_symbol | persist_only_symbol | global_symbol | local_symbol | session_symbol
+var_ident_type: | (global_symbol dot_symbol) | (local_symbol dot_symbol) | (session_symbol dot_symbol)
+set_var_ident_type: | (persist_symbol dot_symbol) | (persist_only_symbol dot_symbol) | (global_symbol dot_symbol) | (local_symbol dot_symbol) | (session_symbol dot_symbol)
+identifier_keyword: | (label_keyword | role_or_identifier_keyword | execute_symbol | shutdown_symbol | restart_symbol) | (identifier_keywords_unambiguous | identifier_keywords_ambiguous1_roles_and_labels | identifier_keywords_ambiguous2_labels | identifier_keywords_ambiguous3_roles | identifier_keywords_ambiguous4_system_variables)
+identifier_keywords_ambiguous1_roles_and_labels: | execute_symbol | restart_symbol | shutdown_symbol
+identifier_keywords_ambiguous2_labels: | ascii_symbol | begin_symbol | byte_symbol | cache_symbol | charset_symbol | checksum_symbol | clone_symbol | comment_symbol | commit_symbol | contains_symbol | deallocate_symbol | do_symbol | end_symbol | flush_symbol | follows_symbol | handler_symbol | help_symbol | import_symbol | install_symbol | language_symbol | no_symbol | precedes_symbol | prepare_symbol | repair_symbol | reset_symbol | rollback_symbol | savepoint_symbol | signed_symbol | slave_symbol | start_symbol | stop_symbol | truncate_symbol | unicode_symbol | uninstall_symbol | xa_symbol
+label_keyword: | (role_or_label_keyword | event_symbol | file_symbol | none_symbol | process_symbol | proxy_symbol | reload_symbol | replication_symbol | resource_symbol | super_symbol) | (identifier_keywords_unambiguous | identifier_keywords_ambiguous3_roles | identifier_keywords_ambiguous4_system_variables)
+identifier_keywords_ambiguous3_roles: | event_symbol | file_symbol | none_symbol | process_symbol | proxy_symbol | reload_symbol | replication_symbol | resource_symbol | super_symbol
+identifier_keywords_unambiguous: | (action_symbol | account_symbol | active_symbol | adddate_symbol | admin_symbol | after_symbol | against_symbol | aggregate_symbol | algorithm_symbol | always_symbol | any_symbol | at_symbol | autoextend_size_symbol | auto_increment_symbol | avg_row_length_symbol | avg_symbol | backup_symbol | binlog_symbol | bit_symbol | block_symbol | boolean_symbol | bool_symbol | btree_symbol | buckets_symbol | cascaded_symbol | catalog_name_symbol | chain_symbol | changed_symbol | channel_symbol | cipher_symbol | class_origin_symbol | client_symbol | close_symbol | coalesce_symbol | code_symbol | collation_symbol | columns_symbol | column_format_symbol | column_name_symbol | committed_symbol | compact_symbol | completion_symbol | component_symbol | compressed_symbol | compression_symbol | concurrent_symbol | connection_symbol | consistent_symbol | constraint_catalog_symbol | constraint_name_symbol | constraint_schema_symbol | context_symbol | cpu_symbol | current_symbol | cursor_name_symbol | datafile_symbol | data_symbol | datetime_symbol | date_symbol | day_symbol | default_auth_symbol | definer_symbol | definition_symbol | delay_key_write_symbol | description_symbol | diagnostics_symbol | directory_symbol | disable_symbol | discard_symbol | disk_symbol | dumpfile_symbol | duplicate_symbol | dynamic_symbol | enable_symbol | encryption_symbol | ends_symbol | enforced_symbol | engines_symbol | engine_symbol | enum_symbol | errors_symbol | error_symbol | escape_symbol | events_symbol | every_symbol | exchange_symbol | exclude_symbol | expansion_symbol | expire_symbol | export_symbol | extended_symbol | extent_size_symbol | fast_symbol | faults_symbol | file_block_size_symbol | filter_symbol | first_symbol | fixed_symbol | following_symbol | format_symbol | found_symbol | full_symbol | general_symbol | geometrycollection_symbol | geometry_symbol | get_format_symbol | get_master_public_key_symbol | grants_symbol | group_replication_symbol | hash_symbol | histogram_symbol | history_symbol | hosts_symbol | host_symbol | hour_symbol | identified_symbol | ignore_server_ids_symbol | inactive_symbol | indexes_symbol | initial_size_symbol | insert_method_symbol | instance_symbol | invisible_symbol | invoker_symbol | io_symbol | ipc_symbol | isolation_symbol | issuer_symbol | json_symbol | key_block_size_symbol | last_symbol | leaves_symbol | less_symbol | level_symbol | linestring_symbol | list_symbol | locked_symbol | locks_symbol | logfile_symbol | logs_symbol | master_auto_position_symbol | master_compression_algorithm_symbol | master_connect_retry_symbol | master_delay_symbol | master_heartbeat_period_symbol | master_host_symbol | network_namespace_symbol | master_log_file_symbol | master_log_pos_symbol | master_password_symbol | master_port_symbol | master_public_key_path_symbol | master_retry_count_symbol | master_server_id_symbol | master_ssl_capath_symbol | master_ssl_ca_symbol | master_ssl_cert_symbol | master_ssl_cipher_symbol | master_ssl_crlpath_symbol | master_ssl_crl_symbol | master_ssl_key_symbol | master_ssl_symbol | master_symbol | master_tls_ciphersuites_symbol | master_tls_version_symbol | master_user_symbol | master_zstd_compression_level_symbol | max_connections_per_hour_symbol | max_queries_per_hour_symbol | max_rows_symbol | max_size_symbol | max_updates_per_hour_symbol | max_user_connections_symbol | medium_symbol | memory_symbol | merge_symbol | message_text_symbol | microsecond_symbol | migrate_symbol | minute_symbol | min_rows_symbol | mode_symbol | modify_symbol | month_symbol | multilinestring_symbol | multipoint_symbol | multipolygon_symbol | mutex_symbol | mysql_errno_symbol | names_symbol | name_symbol | national_symbol | nchar_symbol | ndbcluster_symbol | nested_symbol | never_symbol | new_symbol | next_symbol | nodegroup_symbol | nowait_symbol | no_wait_symbol | nulls_symbol | number_symbol | nvarchar_symbol | offset_symbol | oj_symbol | old_symbol | one_symbol | only_symbol | open_symbol | optional_symbol | options_symbol | ordinality_symbol | organization_symbol | others_symbol | owner_symbol | pack_keys_symbol | page_symbol | parser_symbol | partial_symbol | partitioning_symbol | partitions_symbol | password_symbol | path_symbol | phase_symbol | plugins_symbol | plugin_dir_symbol | plugin_symbol | point_symbol | polygon_symbol | port_symbol | preceding_symbol | preserve_symbol | prev_symbol | privileges_symbol | privilege_checks_user_symbol | processlist_symbol | profiles_symbol | profile_symbol | quarter_symbol | query_symbol | quick_symbol | read_only_symbol | rebuild_symbol | recover_symbol | redo_buffer_size_symbol | redundant_symbol | reference_symbol | relay_symbol | relaylog_symbol | relay_log_file_symbol | relay_log_pos_symbol | relay_thread_symbol | remove_symbol | reorganize_symbol | repeatable_symbol | replicate_do_db_symbol | replicate_do_table_symbol | replicate_ignore_db_symbol | replicate_ignore_table_symbol | replicate_rewrite_db_symbol | replicate_wild_do_table_symbol | replicate_wild_ignore_table_symbol | user_resources_symbol | respect_symbol | restore_symbol | resume_symbol | retain_symbol | returned_sqlstate_symbol | returns_symbol | reuse_symbol | reverse_symbol | role_symbol | rollup_symbol | rotate_symbol | routine_symbol | row_count_symbol | row_format_symbol | rtree_symbol | schedule_symbol | schema_name_symbol | secondary_engine_symbol | secondary_load_symbol | secondary_symbol | secondary_unload_symbol | second_symbol | security_symbol | serializable_symbol | serial_symbol | server_symbol | share_symbol | simple_symbol | skip_symbol | slow_symbol | snapshot_symbol | socket_symbol | soname_symbol | sounds_symbol | source_symbol | sql_after_gtids_symbol | sql_after_mts_gaps_symbol | sql_before_gtids_symbol | sql_buffer_result_symbol | sql_no_cache_symbol | sql_thread_symbol | srid_symbol | stacked_symbol | starts_symbol | stats_auto_recalc_symbol | stats_persistent_symbol | stats_sample_pages_symbol | status_symbol | storage_symbol | string_symbol | subclass_origin_symbol | subdate_symbol | subject_symbol | subpartitions_symbol | subpartition_symbol | suspend_symbol | swaps_symbol | switches_symbol | tables_symbol | tablespace_symbol | table_checksum_symbol | table_name_symbol | temporary_symbol | temptable_symbol | text_symbol | than_symbol | thread_priority_symbol | ties_symbol | timestamp_add_symbol | timestamp_diff_symbol | timestamp_symbol | time_symbol | transaction_symbol | triggers_symbol | types_symbol | type_symbol | unbounded_symbol | uncommitted_symbol | undefined_symbol | undofile_symbol | undo_buffer_size_symbol | unknown_symbol | until_symbol | upgrade_symbol | user_symbol | use_frm_symbol | validation_symbol | value_symbol | variables_symbol | vcpu_symbol | view_symbol | visible_symbol | wait_symbol | warnings_symbol | week_symbol | weight_string_symbol | without_symbol | work_symbol | wrapper_symbol | x509_symbol | xid_symbol | xml_symbol | year_symbol) | (array_symbol | failed_login_attempts_symbol | master_compression_algorithm_symbol | master_tls_ciphersuites_symbol | master_zstd_compression_level_symbol | member_symbol | off_symbol | password_lock_time_symbol | privilege_checks_user_symbol | random_symbol | require_row_format_symbol | require_table_primary_key_check_symbol | stream_symbol | timestamp_symbol | time_symbol)
+role_keyword: | (role_or_label_keyword | role_or_identifier_keyword) | (identifier_keywords_unambiguous | identifier_keywords_ambiguous2_labels | identifier_keywords_ambiguous4_system_variables)
+l_value_keyword: | identifier_keywords_unambiguous | identifier_keywords_ambiguous1_roles_and_labels | identifier_keywords_ambiguous2_labels | identifier_keywords_ambiguous3_roles
+identifier_keywords_ambiguous4_system_variables: | global_symbol | local_symbol | persist_symbol | persist_only_symbol | session_symbol
+role_or_identifier_keyword: | (account_symbol | ascii_symbol | always_symbol | backup_symbol | begin_symbol | byte_symbol | cache_symbol | charset_symbol | checksum_symbol | clone_symbol | close_symbol | comment_symbol | commit_symbol | contains_symbol | deallocate_symbol | do_symbol | end_symbol | flush_symbol | follows_symbol | format_symbol | group_replication_symbol | handler_symbol | help_symbol | host_symbol | install_symbol | invisible_symbol | language_symbol | no_symbol | open_symbol | options_symbol | owner_symbol | parser_symbol | partition_symbol | port_symbol | precedes_symbol | prepare_symbol | remove_symbol | repair_symbol | reset_symbol | restore_symbol | role_symbol | rollback_symbol | savepoint_symbol | secondary_symbol | secondary_engine_symbol | secondary_load_symbol | secondary_unload_symbol | security_symbol | server_symbol | signed_symbol | socket_symbol | slave_symbol | soname_symbol | start_symbol | stop_symbol | truncate_symbol | unicode_symbol | uninstall_symbol | upgrade_symbol | visible_symbol | wrapper_symbol | xa_symbol) | shutdown_symbol | import_symbol
+role_or_label_keyword: | (action_symbol | active_symbol | adddate_symbol | after_symbol | against_symbol | aggregate_symbol | algorithm_symbol | analyse_symbol | any_symbol | at_symbol | authors_symbol | auto_increment_symbol | autoextend_size_symbol | avg_row_length_symbol | avg_symbol | binlog_symbol | bit_symbol | block_symbol | bool_symbol | boolean_symbol | btree_symbol | buckets_symbol | cascaded_symbol | catalog_name_symbol | chain_symbol | changed_symbol | channel_symbol | cipher_symbol | client_symbol | class_origin_symbol | coalesce_symbol | code_symbol | collation_symbol | column_name_symbol | column_format_symbol | columns_symbol | committed_symbol | compact_symbol | completion_symbol | component_symbol | compressed_symbol | compression_symbol | concurrent_symbol | connection_symbol | consistent_symbol | constraint_catalog_symbol | constraint_schema_symbol | constraint_name_symbol | context_symbol | contributors_symbol | cpu_symbol | current_symbol | cursor_name_symbol | data_symbol | datafile_symbol | datetime_symbol | date_symbol | day_symbol | default_auth_symbol | definer_symbol | delay_key_write_symbol | des_key_file_symbol | description_symbol | diagnostics_symbol | directory_symbol | disable_symbol | discard_symbol | disk_symbol | dumpfile_symbol | duplicate_symbol | dynamic_symbol | encryption_symbol | ends_symbol | enum_symbol | engine_symbol | engines_symbol | error_symbol | errors_symbol | escape_symbol | events_symbol | every_symbol | exclude_symbol | expansion_symbol | export_symbol | extended_symbol | extent_size_symbol | faults_symbol | fast_symbol | following_symbol | found_symbol | enable_symbol | full_symbol | file_block_size_symbol | filter_symbol | first_symbol | fixed_symbol | general_symbol | geometry_symbol | geometrycollection_symbol | get_format_symbol | grants_symbol | global_symbol | hash_symbol | histogram_symbol | history_symbol | hosts_symbol | hour_symbol | identified_symbol | ignore_server_ids_symbol | invoker_symbol | indexes_symbol | initial_size_symbol | instance_symbol | inactive_symbol | io_symbol | ipc_symbol | isolation_symbol | issuer_symbol | insert_method_symbol | json_symbol | key_block_size_symbol | last_symbol | leaves_symbol | less_symbol | level_symbol | linestring_symbol | list_symbol | local_symbol | locked_symbol | locks_symbol | logfile_symbol | logs_symbol | max_rows_symbol | master_symbol | master_heartbeat_period_symbol | master_host_symbol | master_port_symbol | master_log_file_symbol | master_log_pos_symbol | master_user_symbol | master_password_symbol | master_public_key_path_symbol | master_server_id_symbol | master_connect_retry_symbol | master_retry_count_symbol | master_delay_symbol | master_ssl_symbol | master_ssl_ca_symbol | master_ssl_capath_symbol | master_tls_version_symbol | master_ssl_cert_symbol | master_ssl_cipher_symbol | master_ssl_crl_symbol | master_ssl_crlpath_symbol | master_ssl_key_symbol | master_auto_position_symbol | max_connections_per_hour_symbol | max_queries_per_hour_symbol | max_statement_time_symbol | max_size_symbol | max_updates_per_hour_symbol | max_user_connections_symbol | medium_symbol | memory_symbol | merge_symbol | message_text_symbol | microsecond_symbol | migrate_symbol | minute_symbol | min_rows_symbol | modify_symbol | mode_symbol | month_symbol | multilinestring_symbol | multipoint_symbol | multipolygon_symbol | mutex_symbol | mysql_errno_symbol | name_symbol | names_symbol | national_symbol | nchar_symbol | ndbcluster_symbol | nested_symbol | never_symbol | next_symbol | new_symbol | no_wait_symbol | nodegroup_symbol | nulls_symbol | nowait_symbol | number_symbol | nvarchar_symbol | offset_symbol | old_symbol | old_password_symbol | one_symbol | optional_symbol | ordinality_symbol | organization_symbol | others_symbol | pack_keys_symbol | page_symbol | partial_symbol | partitioning_symbol | partitions_symbol | password_symbol | path_symbol | phase_symbol | plugin_dir_symbol | plugin_symbol | plugins_symbol | point_symbol | polygon_symbol | preceding_symbol | preserve_symbol | prev_symbol | thread_priority_symbol | privileges_symbol | processlist_symbol | profile_symbol | profiles_symbol | quarter_symbol | query_symbol | quick_symbol | read_only_symbol | rebuild_symbol | recover_symbol | redo_buffer_size_symbol | redofile_symbol | redundant_symbol | relay_symbol | relaylog_symbol | relay_log_file_symbol | relay_log_pos_symbol | relay_thread_symbol | remote_symbol | reorganize_symbol | repeatable_symbol | replicate_do_db_symbol | replicate_ignore_db_symbol | replicate_do_table_symbol | replicate_ignore_table_symbol | replicate_wild_do_table_symbol | replicate_wild_ignore_table_symbol | replicate_rewrite_db_symbol | user_resources_symbol | respect_symbol | resume_symbol | retain_symbol | returned_sqlstate_symbol | returns_symbol | reuse_symbol | reverse_symbol | rollup_symbol | rotate_symbol | routine_symbol | row_count_symbol | row_format_symbol | rtree_symbol | schedule_symbol | schema_name_symbol | second_symbol | serial_symbol | serializable_symbol | session_symbol | share_symbol | simple_symbol | skip_symbol | slow_symbol | snapshot_symbol | sounds_symbol | source_symbol | sql_after_gtids_symbol | sql_after_mts_gaps_symbol | sql_before_gtids_symbol | sql_cache_symbol | sql_buffer_result_symbol | sql_no_cache_symbol | sql_thread_symbol | srid_symbol | stacked_symbol | starts_symbol | stats_auto_recalc_symbol | stats_persistent_symbol | stats_sample_pages_symbol | status_symbol | storage_symbol | string_symbol | subclass_origin_symbol | subdate_symbol | subject_symbol | subpartition_symbol | subpartitions_symbol | super_symbol | suspend_symbol | swaps_symbol | switches_symbol | table_name_symbol | tables_symbol | table_checksum_symbol | tablespace_symbol | temporary_symbol | temptable_symbol | text_symbol | than_symbol | ties_symbol | transaction_symbol | triggers_symbol | timestamp_symbol | timestamp_add_symbol | timestamp_diff_symbol | time_symbol | types_symbol | type_symbol | udf_returns_symbol | unbounded_symbol | uncommitted_symbol | undefined_symbol | undo_buffer_size_symbol | undofile_symbol | unknown_symbol | until_symbol | user_symbol | use_frm_symbol | variables_symbol | vcpu_symbol | view_symbol | value_symbol | warnings_symbol | wait_symbol | week_symbol | work_symbol | weight_string_symbol | x509_symbol | xid_symbol | xml_symbol | year_symbol) | shutdown_symbol | (cube_symbol | import_symbol | function_symbol | rows_symbol | row_symbol) | (exchange_symbol | expire_symbol | only_symbol | super_symbol | validation_symbol | without_symbol) | admin_symbol
+
+
+
+
+
+equal_operator: "="
+
+assign_operator: ":="
+
+null_safe_equal_operator: "<=>"
+
+greater_or_equal_operator: ">="
+
+greater_than_operator: ">"
+
+less_or_equal_operator: "<="
+
+less_than_operator: "<"
+
+not_equal_operator: "!=" | "<>"
+
+plus_operator: "+"
+
+minus_operator: "-"
+
+mult_operator: "*"
+
+div_operator: "/"
+
+mod_operator: "%"
+
+logical_not_operator: "!"
+
+bitwise_not_operator: "~"
+
+shift_left_operator: "<<"
+
+shift_right_operator: ">>"
+
+logical_and_operator: "&&"
+
+bitwise_and_operator: "&"
+
+bitwise_xor_operator: "^"
+
+logical_or_operator: | "||" 
+# @TODO: Support PipesAsConcat
+
+
+bitwise_or_operator: | "|"
+
+dot_symbol: "."
+
+comma_symbol: ","
+
+semicolon_symbol: ";"
+
+colon_symbol: ":"
+
+open_par_symbol: "("
+
+close_par_symbol: ")"
+
+open_curly_symbol: "{"
+
+close_curly_symbol: "}"
+
+underline_symbol: "_"
+
+json_separator_symbol: "->" 
+
+
+json_unquoted_separator_symbol: "->>" 
+
+
+at_sign_symbol: "@"
+
+at_text_suffix: "@" simple_identifier
+
+at_at_sign_symbol: "@@"
+
+null2_symbol: "\\N"
+
+param_marker: "?"
+
+A: "a" | "A"
+
+B: "b" | "B"
+
+C: "c" | "C"
+
+D: "d" | "D"
+
+E: "e" | "E"
+
+F: "f" | "F"
+
+G: "g" | "G"
+
+H: "h" | "H"
+
+I: "i" | "I"
+
+J: "j" | "J"
+
+K: "k" | "K"
+
+L: "l" | "L"
+
+M: "m" | "M"
+
+N: "n" | "N"
+
+O: "o" | "O"
+
+P: "p" | "P"
+
+Q: "q" | "Q"
+
+R: "r" | "R"
+
+S: "s" | "S"
+
+T: "t" | "T"
+
+U: "u" | "U"
+
+V: "v" | "V"
+
+W: "w" | "W"
+
+X: "x" | "X"
+
+Y: "y" | "Y"
+
+Z: "z" | "Z"
+
+digit: /[0-9]/
+
+digits: digit+
+
+hexdigit: /[0-9a-fA-F]/
+
+hex_number: | "0x" hexdigit+ | "x"" hexdigit+ """
+
+bin_number: | "0b" /[01]+/ | "b'" /[01]+/ "'"
+
+int_number: digits 
+
+long_number: int_number
+
+decimal_number: digits? "." digits
+
+float_number: (digits? ".")? digits [eE] (minus_operator | plus_operator)? digits
+
+dot_identifier: "." letter_when_unquoted_no_digit letter_when_unquoted*
+
+underscore_charset: "_" /[a-z0-9]+/ 
+
+identifier: 
+  | digits+ /[eE]/ (letter_when_unquoted_no_digit letter_when_unquoted*)?
+  | digits+ letter_without_float_part letter_when_unquoted*
+  | letter_when_unquoted_no_digit letter_when_unquoted*
+
+nchar_text: /[nN]/ single_quoted_text
+
+back_tick: "`"
+
+single_quote: "'"
+
+double_quote: "\""
+
+back_tick_quoted_id: | /\\/ /./ | /[^`]/ /./
+
+double_quoted_text: (double_quote (/\\/ /./ | /[^"]/)* double_quote)+
+single_quoted_text: (single_quote (/\\/ /./ | /[^']/)* single_quote)+
+
+
+
+linebreak: /[\n\r]/
+
+simple_identifier: (digit | /[a-zA-Z_$]/ | ".")+
+
+ml_comment_head: "/*"
+
+ml_comment_end: "*/"
+
+letter_when_unquoted: digit | letter_when_unquoted_no_digit
+
+letter_when_unquoted_no_digit: /[a-zA-Z_$\u0080-\uffff]/
+
+letter_without_float_part: /[a-df-zA-DF-Z_$\u0080-\uffff]/
+
+accessible_symbol: "ACCESSIBLE"
+
+account_symbol: "ACCOUNT" #&{ return options.serverVersion >= 50707; }
+
+action_symbol: "ACTION"
+
+add_symbol: "ADD"
+
+adddate_symbol: "ADDDATE" 
+
+after_symbol: "AFTER"
+
+against_symbol: "AGAINST"
+
+aggregate_symbol: "AGGREGATE"
+
+algorithm_symbol: "ALGORITHM"
+
+all_symbol: "ALL"
+
+alter_symbol: "ALTER"
+
+always_symbol: "ALWAYS"
+
+analyse_symbol: "ANALYSE"
+
+analyze_symbol: "ANALYZE"
+
+and_symbol: "AND"
+
+any_symbol: "ANY"
+
+as_symbol: "AS"
+
+asc_symbol: "ASC"
+
+ascii_symbol: "ascii" 
+
+asensitive_symbol: "ASENSITIVE" 
+
+at_symbol: "AT"
+
+authors_symbol: "AUTHORS"
+
+autoextend_size_symbol: "AUTOEXTEND_SIZE"
+
+auto_increment_symbol: "AUTO_INCREMENT"
+
+avg_row_length_symbol: "AVG_ROW_LENGTH"
+
+avg_symbol: "AVG" 
+
+backup_symbol: "BACKUP"
+
+before_symbol: "BEFORE"
+
+begin_symbol: "BEGIN"
+
+between_symbol: "BETWEEN"
+
+bigint_symbol: "BIGINT"
+
+binary_symbol: "BINARY"
+
+binlog_symbol: "BINLOG"
+
+bin_num_symbol: "BIN_NUM"
+
+bit_and_symbol: "BIT_AND" 
+
+bit_or_symbol: "BIT_OR" 
+
+bit_symbol: "BIT" 
+
+bit_xor_symbol: "BIT_XOR" 
+
+blob_symbol: "BLOB"
+
+block_symbol: "BLOCK"
+
+boolean_symbol: "BOOLEAN"
+
+bool_symbol: "BOOL"
+
+both_symbol: "BOTH"
+
+btree_symbol: "BTREE"
+
+by_symbol: "BY"
+
+byte_symbol: "BYTE"
+
+cache_symbol: "CACHE"
+
+call_symbol: "CALL"
+
+cascade_symbol: "CASCADE"
+
+cascaded_symbol: "CASCADED"
+
+case_symbol: "CASE"
+
+cast_symbol: "CAST" 
+
+catalog_name_symbol: "CATALOG_NAME"
+
+chain_symbol: "CHAIN"
+
+change_symbol: "CHANGE"
+
+changed_symbol: "CHANGED"
+
+channel_symbol: "channel"
+
+charset_symbol: "charset"
+
+character_symbol: "CHARACTER" 
+
+char_symbol: "CHAR"
+
+checksum_symbol: "CHECKSUM"
+
+check_symbol: "CHECK"
+
+cipher_symbol: "CIPHER"
+
+class_origin_symbol: "CLASS_ORIGIN"
+
+client_symbol: "CLIENT"
+
+close_symbol: "CLOSE"
+
+coalesce_symbol: "COALESCE"
+
+code_symbol: "CODE"
+
+collate_symbol: "collate"
+
+collation_symbol: "COLLATION"
+
+columns_symbol: "COLUMNS"
+
+column_symbol: "COLUMN"
+
+column_name_symbol: "COLUMN_NAME"
+
+column_format_symbol: "COLUMN_FORMAT"
+
+comment_symbol: "COMMENT"
+
+committed_symbol: "COMMITTED"
+
+commit_symbol: "COMMIT"
+
+compact_symbol: "COMPACT"
+
+completion_symbol: "COMPLETION"
+
+compressed_symbol: "COMPRESSED"
+
+compression_symbol: "COMPRESSION"
+
+concurrent_symbol: "CONCURRENT"
+
+condition_symbol: "CONDITION"
+
+connection_symbol: "CONNECTION"
+
+consistent_symbol: "CONSISTENT"
+
+constraint_symbol: "CONSTRAINT"
+
+constraint_catalog_symbol: "CONSTRAINT_CATALOG"
+
+constraint_name_symbol: "CONSTRAINT_NAME"
+
+constraint_schema_symbol: "CONSTRAINT_SCHEMA"
+
+contains_symbol: "CONTAINS"
+
+context_symbol: "CONTEXT"
+
+continue_symbol: "CONTINUE"
+
+contributors_symbol: "CONTRIBUTORS"
+
+convert_symbol: "CONVERT"
+
+count_symbol: "COUNT" 
+
+cpu_symbol: "CPU"
+
+create_symbol: "CREATE"
+
+cross_symbol: "CROSS"
+
+cube_symbol: "CUBE"
+
+curdate_symbol: "CURDATE" 
+
+current_symbol: "CURRENT"
+
+current_date_symbol: "CURRENT_DATE" 
+
+current_time_symbol: "CURRENT_TIME" 
+
+current_timestamp_symbol: "CURRENT_TIMESTAMP" 
+
+current_user_symbol: "CURRENT_USER"
+
+cursor_symbol: "CURSOR"
+
+cursor_name_symbol: "CURSOR_NAME"
+
+curtime_symbol: "CURTIME" 
+
+database_symbol: "DATABASE"
+
+databases_symbol: "DATABASES"
+
+datafile_symbol: "DATAFILE"
+
+data_symbol: "DATA"
+
+datetime_symbol: "DATETIME"
+
+date_add_symbol: "DATE_ADD" 
+
+date_sub_symbol: "DATE_SUB" 
+
+date_symbol: "DATE"
+
+dayofmonth_symbol: "DAYOFMONTH" 
+
+day_hour_symbol: "DAY_HOUR"
+
+day_microsecond_symbol: "DAY_MICROSECOND"
+
+day_minute_symbol: "DAY_MINUTE"
+
+day_second_symbol: "DAY_SECOND"
+
+day_symbol: "DAY"
+
+deallocate_symbol: "DEALLOCATE"
+
+dec_symbol: "DEC" 
+
+decimal_num_symbol: "DECIMAL_NUM"
+
+decimal_symbol: "DECIMAL"
+
+declare_symbol: "DECLARE"
+
+default_symbol: "DEFAULT"
+
+default_auth_symbol: "DEFAULT_AUTH"
+
+definer_symbol: "DEFINER"
+
+delayed_symbol: "DELAYED"
+
+delay_key_write_symbol: "DELAY_KEY_WRITE"
+
+delete_symbol: "DELETE"
+
+desc_symbol: "DESC"
+
+describe_symbol: "DESCRIBE"
+
+des_key_file_symbol: "DES_KEY_FILE"
+
+deterministic_symbol: "DETERMINISTIC"
+
+diagnostics_symbol: "DIAGNOSTICS"
+
+directory_symbol: "DIRECTORY"
+
+disable_symbol: "DISABLE"
+
+discard_symbol: "DISCARD"
+
+disk_symbol: "DISK"
+
+distinct_symbol: "DISTINCT"
+
+distinctrow_symbol: "DISTINCTROW" 
+
+div_symbol: "DIV"
+
+double_symbol: "DOUBLE"
+
+do_symbol: "DO"
+
+drop_symbol: "DROP"
+
+dual_symbol: "DUAL"
+
+dumpfile_symbol: "DUMPFILE"
+
+duplicate_symbol: "DUPLICATE"
+
+dynamic_symbol: "DYNAMIC"
+
+each_symbol: "EACH"
+
+else_symbol: "ELSE"
+
+elseif_symbol: "ELSEIF"
+
+enable_symbol: "ENABLE"
+
+enclosed_symbol: "ENCLOSED"
+
+encryption_symbol: "ENCRYPTION"
+
+end_symbol: "END"
+
+ends_symbol: "ENDS"
+
+end_of_input_symbol: "END_OF_INPUT"
+
+engines_symbol: "ENGINES"
+
+engine_symbol: "ENGINE"
+
+enum_symbol: "ENUM"
+
+error_symbol: "ERROR"
+
+errors_symbol: "ERRORS"
+
+escaped_symbol: "ESCAPED"
+
+escape_symbol: "ESCAPE"
+
+events_symbol: "EVENTS"
+
+event_symbol: "EVENT"
+
+every_symbol: "EVERY"
+
+exchange_symbol: "EXCHANGE"
+
+execute_symbol: "EXECUTE"
+
+exists_symbol: "EXISTS"
+
+exit_symbol: "EXIT"
+
+expansion_symbol: "EXPANSION"
+
+expire_symbol: "EXPIRE"
+
+explain_symbol: "EXPLAIN"
+
+export_symbol: "EXPORT"
+
+extended_symbol: "EXTENDED"
+
+extent_size_symbol: "EXTENT_SIZE"
+
+extract_symbol: "EXTRACT" 
+
+false_symbol: "FALSE"
+
+fast_symbol: "FAST"
+
+faults_symbol: "FAULTS"
+
+fetch_symbol: "FETCH"
+
+fields_symbol: "fields" 
+
+file_symbol: "FILE"
+
+file_block_size_symbol: "FILE_BLOCK_SIZE"
+
+filter_symbol: "FILTER"
+
+first_symbol: "FIRST"
+
+fixed_symbol: "FIXED"
+
+float4_symbol: "FLOAT4" 
+
+float8_symbol: "FLOAT8" 
+
+float_symbol: "FLOAT"
+
+flush_symbol: "FLUSH"
+
+follows_symbol: "FOLLOWS"
+
+force_symbol: "FORCE"
+
+foreign_symbol: "FOREIGN"
+
+for_symbol: "FOR"
+
+format_symbol: "FORMAT"
+
+found_symbol: "FOUND"
+
+from_symbol: "FROM"
+
+full_symbol: "FULL"
+
+fulltext_symbol: "FULLTEXT"
+
+function_symbol: "FUNCTION"
+
+get_symbol: "GET"
+
+general_symbol: "GENERAL"
+
+generated_symbol: "GENERATED"
+
+group_replication_symbol: "GROUP_REPLICATION"
+
+geometrycollection_symbol: "GEOMETRYCOLLECTION"
+
+geometry_symbol: "GEOMETRY"
+
+get_format_symbol: "GET_FORMAT" 
+
+global_symbol: "GLOBAL"
+
+grant_symbol: "grant"
+
+grants_symbol: "GRANTS"
+
+group_symbol: "GROUP"
+
+group_concat_symbol: "GROUP_CONCAT" 
+
+handler_symbol: "HANDLER"
+
+hash_symbol: "HASH"
+
+having_symbol: "HAVING"
+
+help_symbol: "HELP"
+
+high_priority_symbol: "HIGH_PRIORITY"
+
+host_symbol: "HOST"
+
+hosts_symbol: "HOSTS"
+
+hour_microsecond_symbol: "HOUR_MICROSECOND"
+
+hour_minute_symbol: "HOUR_MINUTE"
+
+hour_second_symbol: "HOUR_SECOND"
+
+hour_symbol: "HOUR"
+
+identified_symbol: "IDENTIFIED"
+
+if_symbol: "IF"
+
+ignore_symbol: "IGNORE"
+
+ignore_server_ids_symbol: "IGNORE_SERVER_IDS"
+
+import_symbol: "IMPORT"
+
+indexes_symbol: "INDEXES"
+
+index_symbol: "INDEX"
+
+infile_symbol: "INFILE"
+
+initial_size_symbol: "INITIAL_SIZE"
+
+inner_symbol: "INNER"
+
+inout_symbol: "INOUT"
+
+insensitive_symbol: "INSENSITIVE"
+
+insert_symbol: "INSERT"
+
+insert_method_symbol: "INSERT_METHOD"
+
+instance_symbol: "INSTANCE"
+
+install_symbol: "INSTALL"
+
+integer_symbol: "INTEGER" 
+
+interval_symbol: "interval"
+
+into_symbol: "INTO"
+
+int_symbol: "INT"
+
+invoker_symbol: "INVOKER"
+
+in_symbol: "IN"
+
+io_after_gtids_symbol: "IO_AFTER_GTIDS" 
+
+io_before_gtids_symbol: "IO_BEFORE_GTIDS" 
+
+io_thread_symbol: "IO_THREAD" 
+
+io_symbol: "IO"
+
+ipc_symbol: "IPC"
+
+is_symbol: "IS"
+
+isolation_symbol: "ISOLATION"
+
+issuer_symbol: "ISSUER"
+
+iterate_symbol: "ITERATE"
+
+join_symbol: "JOIN"
+
+json_symbol: "JSON"
+
+keys_symbol: "KEYS"
+
+key_block_size_symbol: "KEY_BLOCK_SIZE"
+
+key_symbol: "KEY"
+
+kill_symbol: "KILL"
+
+language_symbol: "LANGUAGE"
+
+last_symbol: "LAST"
+
+leading_symbol: "LEADING"
+
+leaves_symbol: "LEAVES"
+
+leave_symbol: "LEAVE"
+
+left_symbol: "LEFT"
+
+less_symbol: "LESS"
+
+level_symbol: "LEVEL"
+
+like_symbol: "LIKE"
+
+limit_symbol: "LIMIT"
+
+linear_symbol: "LINEAR"
+
+lines_symbol: "LINES"
+
+linestring_symbol: "LINESTRING"
+
+list_symbol: "LIST"
+
+load_symbol: "LOAD"
+
+localtime_symbol: "LOCALTIME" 
+
+localtimestamp_symbol: "LOCALTIMESTAMP" 
+
+local_symbol: "LOCAL"
+
+locator_symbol: "LOCATOR"
+
+locks_symbol: "LOCKS"
+
+lock_symbol: "LOCK"
+
+logfile_symbol: "LOGFILE"
+
+logs_symbol: "LOGS"
+
+longblob_symbol: "LONGBLOB"
+
+longtext_symbol: "LONGTEXT"
+
+long_num_symbol: "LONG_NUM"
+
+long_symbol: "LONG"
+
+loop_symbol: "LOOP"
+
+low_priority_symbol: "LOW_PRIORITY"
+
+master_auto_position_symbol: "MASTER_AUTO_POSITION"
+
+master_bind_symbol: "MASTER_BIND"
+
+master_connect_retry_symbol: "MASTER_CONNECT_RETRY"
+
+master_delay_symbol: "MASTER_DELAY"
+
+master_host_symbol: "MASTER_HOST"
+
+master_log_file_symbol: "MASTER_LOG_FILE"
+
+master_log_pos_symbol: "MASTER_LOG_POS"
+
+master_password_symbol: "MASTER_PASSWORD"
+
+master_port_symbol: "MASTER_PORT"
+
+master_retry_count_symbol: "MASTER_RETRY_COUNT"
+
+master_server_id_symbol: "MASTER_SERVER_ID"
+
+master_ssl_capath_symbol: "MASTER_SSL_CAPATH"
+
+master_ssl_ca_symbol: "MASTER_SSL_CA"
+
+master_ssl_cert_symbol: "MASTER_SSL_CERT"
+
+master_ssl_cipher_symbol: "MASTER_SSL_CIPHER"
+
+master_ssl_crl_symbol: "MASTER_SSL_CRL"
+
+master_ssl_crlpath_symbol: "MASTER_SSL_CRLPATH"
+
+master_ssl_key_symbol: "MASTER_SSL_KEY"
+
+master_ssl_symbol: "MASTER_SSL"
+
+master_ssl_verify_server_cert_symbol: "MASTER_SSL_VERIFY_SERVER_CERT"?
+
+master_symbol: "MASTER"
+
+master_tls_version_symbol: "MASTER_TLS_VERSION"
+
+master_user_symbol: "MASTER_USER"
+
+master_heartbeat_period_symbol: "MASTER_HEARTBEAT_PERIOD"?
+
+match_symbol: "MATCH"
+
+max_connections_per_hour_symbol: "MAX_CONNECTIONS_PER_HOUR"
+
+max_queries_per_hour_symbol: "MAX_QUERIES_PER_HOUR"
+
+max_rows_symbol: "MAX_ROWS"
+
+max_size_symbol: "MAX_SIZE"
+
+max_statement_time_symbol: "MAX_STATEMENT_TIME"
+
+max_symbol: "MAX" 
+
+max_updates_per_hour_symbol: "MAX_UPDATES_PER_HOUR"
+
+max_user_connections_symbol: "MAX_USER_CONNECTIONS"
+
+maxvalue_symbol: "MAXVALUE"
+
+mediumblob_symbol: "MEDIUMBLOB"
+
+mediumint_symbol: "MEDIUMINT"
+
+mediumtext_symbol: "MEDIUMTEXT"
+
+medium_symbol: "MEDIUM"
+
+memory_symbol: "MEMORY"
+
+merge_symbol: "MERGE"
+
+message_text_symbol: "MESSAGE_TEXT"
+
+microsecond_symbol: "MICROSECOND" 
+
+mid_symbol: "MID" 
+
+middleint_symbol: "MIDDLEINT" 
+
+migrate_symbol: "MIGRATE"
+
+minute_microsecond_symbol: "MINUTE_MICROSECOND"
+
+minute_second_symbol: "MINUTE_SECOND"
+
+minute_symbol: "MINUTE"
+
+min_rows_symbol: "MIN_ROWS"
+
+min_symbol: "MIN" 
+
+mode_symbol: "MODE"
+
+modifies_symbol: "MODIFIES"
+
+modify_symbol: "MODIFY"
+
+mod_symbol: "MOD"
+
+month_symbol: "MONTH"
+
+multilinestring_symbol: "MULTILINESTRING"
+
+multipoint_symbol: "MULTIPOINT"
+
+multipolygon_symbol: "MULTIPOLYGON"
+
+mutex_symbol: "MUTEX"
+
+mysql_errno_symbol: "MYSQL_ERRNO"
+
+names_symbol: "NAMES"
+
+name_symbol: "NAME"
+
+national_symbol: "NATIONAL"
+
+natural_symbol: "NATURAL"
+
+nchar_string_symbol: "NCHAR_STRING"
+
+nchar_symbol: "nchar"
+
+ndb_symbol: "NDB" 
+
+ndbcluster_symbol: "NDBCLUSTER"
+
+neg_symbol: "NEG"
+
+never_symbol: "NEVER"
+
+new_symbol: "NEW"
+
+next_symbol: "NEXT"
+
+nodegroup_symbol: "NODEGROUP"
+
+none_symbol: "NONE"
+
+nonblocking_symbol: "non_blocking"
+
+not_symbol: "NOT" 
+
+not2_symbol: not_symbol
+
+concat_pipes_symbol: logical_or_operator
+  
+now_symbol: "NOW" 
+
+no_symbol: "NO"
+
+no_wait_symbol: "NO_WAIT"
+
+no_write_to_binlog_symbol: "NO_WRITE_TO_BINLOG"
+
+null_symbol: "NULL"
+
+number_symbol: "NUMBER"
+
+numeric_symbol: "NUMERIC"
+
+nvarchar_symbol: "NVARCHAR"
+
+offline_symbol: "OFFLINE"
+
+offset_symbol: "OFFSET"
+
+old_password_symbol: "OLD_PASSWORD"
+
+on_symbol: "ON"
+
+one_symbol: "ONE"
+
+online_symbol: "ONLINE"
+
+only_symbol: "ONLY"
+
+open_symbol: "OPEN"
+
+optimize_symbol: "OPTIMIZE"
+
+optimizer_costs_symbol: "OPTIMIZER_COSTS"
+
+options_symbol: "OPTIONS"
+
+option_symbol: "OPTION"
+
+optionally_symbol: "OPTIONALLY"
+
+order_symbol: "ORDER"
+
+or_symbol: "OR"
+
+outer_symbol: "OUTER"
+
+outfile_symbol: "OUTFILE"
+
+out_symbol: "OUT"
+
+owner_symbol: "OWNER"
+
+pack_keys_symbol: "PACK_KEYS"
+
+page_symbol: "PAGE"
+
+parser_symbol: "PARSER"
+
+partial_symbol: "PARTIAL"
+
+partitioning_symbol: "PARTITIONING"
+
+partitions_symbol: "PARTITIONS"
+
+partition_symbol: "PARTITION"
+
+password_symbol: "PASSWORD"
+
+phase_symbol: "PHASE"
+
+plugins_symbol: "PLUGINS"
+
+plugin_dir_symbol: "PLUGIN_DIR"
+
+plugin_symbol: "PLUGIN"
+
+point_symbol: "POINT"
+
+polygon_symbol: "POLYGON"
+
+port_symbol: "PORT"
+
+position_symbol: "POSITION" 
+
+precedes_symbol: "PRECEDES"
+
+precision_symbol: "precision"
+
+prepare_symbol: "PREPARE"
+
+preserve_symbol: "PRESERVE"
+
+prev_symbol: "PREV"
+
+primary_symbol: "PRIMARY"
+
+privileges_symbol: "PRIVILEGES"
+
+procedure_symbol: "PROCEDURE"
+
+process_symbol: "PROCESS"
+
+processlist_symbol: "PROCESSLIST"
+
+profile_symbol: "PROFILE"
+
+profiles_symbol: "PROFILES"
+
+proxy_symbol: "PROXY"
+
+purge_symbol: "PURGE"
+
+quarter_symbol: "QUARTER"
+
+query_symbol: "query"
+
+quick_symbol: "QUICK"
+
+range_symbol: "RANGE"
+
+reads_symbol: "READS"
+
+read_only_symbol: "READ_ONLY"
+
+read_symbol: "READ"
+
+read_write_symbol: "READ_WRITE"
+
+real_symbol: "REAL"
+
+rebuild_symbol: "REBUILD"
+
+recover_symbol: "RECOVER"
+
+redofile_symbol: "REDOFILE"
+
+redo_buffer_size_symbol: "REDO_BUFFER_SIZE"
+
+redundant_symbol: "REDUNDANT"
+
+references_symbol: "references"
+
+regexp_symbol: "REGEXP"
+
+relay_symbol: "RELAY"
+
+relaylog_symbol: "RELAYLOG"
+
+relay_log_file_symbol: "RELAY_LOG_FILE"
+
+relay_log_pos_symbol: "RELAY_LOG_POS"
+
+relay_thread_symbol: "RELAY_THREAD"
+
+release_symbol: "RELEASE"
+
+reload_symbol: "RELOAD"
+
+remove_symbol: "REMOVE"
+
+rename_symbol: "RENAME"
+
+reorganize_symbol: "REORGANIZE"
+
+repair_symbol: "REPAIR"
+
+repeatable_symbol: "REPEATABLE"
+
+repeat_symbol: "REPEAT" 
+
+replace_symbol: "REPLACE" 
+
+replication_symbol: "REPLICATION"
+
+replicate_do_db_symbol: "REPLICATE_DO_DB"
+
+replicate_ignore_db_symbol: "REPLICATE_IGNORE_DB"
+
+replicate_do_table_symbol: "REPLICATE_DO_TABLE"
+
+replicate_ignore_table_symbol: "REPLICATE_IGNORE_TABLE"
+
+replicate_wild_do_table_symbol: "REPLICATE_WILD_DO_TABLE"
+
+replicate_wild_ignore_table_symbol: "REPLICATE_WILD_IGNORE_TABLE"
+
+replicate_rewrite_db_symbol: "REPLICATE_REWRITE_DB"
+
+require_symbol: "REQUIRE"
+
+reset_symbol: "RESET"
+
+resignal_symbol: "RESIGNAL"
+
+restore_symbol: "RESTORE"
+
+restrict_symbol: "restrict"
+
+resume_symbol: "RESUME"
+
+returned_sqlstate_symbol: "RETURNED_SQLSTATE"
+
+returns_symbol: "RETURNS"
+
+return_symbol: "RETURN"?
+
+reverse_symbol: "REVERSE"
+
+revoke_symbol: "revoke"
+
+right_symbol: "RIGHT"
+
+rlike_symbol: "RLIKE" 
+
+rollback_symbol: "ROLLBACK"
+
+rollup_symbol: "ROLLUP"
+
+rotate_symbol: "ROTATE"
+
+routine_symbol: "ROUTINE"
+
+rows_symbol: "ROWS"
+
+row_count_symbol: "ROW_COUNT"
+
+row_format_symbol: "ROW_FORMAT"
+
+row_symbol: "ROW"
+
+rtree_symbol: "RTREE"
+
+savepoint_symbol: "SAVEPOINT"
+
+schedule_symbol: "schedule"
+
+schema_symbol: "SCHEMA" 
+
+schema_name_symbol: "SCHEMA_NAME"
+
+schemas_symbol: "SCHEMAS" 
+
+second_microsecond_symbol: "SECOND_MICROSECOND"
+
+second_symbol: "SECOND"
+
+security_symbol: "SECURITY"
+
+select_symbol: "SELECT"
+
+sensitive_symbol: "SENSITIVE" 
+
+separator_symbol: "SEPARATOR"
+
+serializable_symbol: "SERIALIZABLE"
+
+serial_symbol: "SERIAL"
+
+session_symbol: "SESSION"
+
+server_symbol: "SERVER"
+
+server_options_symbol: "SERVER_OPTIONS"
+
+session_user_symbol: "SESSION_USER" 
+
+set_symbol: "SET"
+
+set_var_symbol: "SET_VAR"
+
+share_symbol: "SHARE"
+
+show_symbol: "SHOW"
+
+shutdown_symbol: "SHUTDOWN"
+
+signal_symbol: "SIGNAL"
+
+signed_symbol: "SIGNED"
+
+simple_symbol: "SIMPLE"
+
+slave_symbol: "slave"
+
+slow_symbol: "SLOW"
+
+smallint_symbol: "SMALLINT"
+
+snapshot_symbol: "SNAPSHOT"
+
+some_symbol: "SOME" 
+
+socket_symbol: "SOCKET"
+
+soname_symbol: "SONAME"
+
+sounds_symbol: "SOUNDS"
+
+source_symbol: "SOURCE"
+
+spatial_symbol: "SPATIAL"
+
+specific_symbol: "SPECIFIC"
+
+sqlexception_symbol: "SQLEXCEPTION"
+
+sqlstate_symbol: "sqlstate"
+
+sqlwarning_symbol: "SQLWARNING"
+
+sql_after_gtids_symbol: "SQL_AFTER_GTIDS"
+
+sql_after_mts_gaps_symbol: "SQL_AFTER_MTS_GAPS"
+
+sql_before_gtids_symbol: "SQL_BEFORE_GTIDS"
+
+sql_big_result_symbol: "SQL_BIG_RESULT"
+
+sql_buffer_result_symbol: "SQL_BUFFER_RESULT"
+
+sql_cache_symbol: "SQL_CACHE"
+
+sql_calc_found_rows_symbol: "SQL_CALC_FOUND_ROWS"
+
+sql_no_cache_symbol: "SQL_NO_CACHE"
+
+sql_small_result_symbol: "SQL_SMALL_RESULT"
+
+sql_symbol: "SQL"
+
+sql_thread_symbol: "SQL_THREAD"
+
+ssl_symbol: "ssl"
+
+stacked_symbol: "STACKED"
+
+starting_symbol: "STARTING"
+
+starts_symbol: "STARTS"
+
+start_symbol: "START"
+
+stats_auto_recalc_symbol: "STATS_AUTO_RECALC"
+
+stats_persistent_symbol: "STATS_PERSISTENT"
+
+stats_sample_pages_symbol: "STATS_SAMPLE_PAGES"
+
+status_symbol: "STATUS"
+
+stddev_samp_symbol: "STDDEV_SAMP" 
+
+stddev_symbol: "STDDEV" 
+
+stddev_pop_symbol: "STDDEV_POP" 
+
+std_symbol: "STD" 
+
+stop_symbol: "STOP"
+
+storage_symbol: "STORAGE"
+
+stored_symbol: "STORED"
+
+straight_join_symbol: "STRAIGHT_JOIN"
+
+string_symbol: "STRING"
+
+subclass_origin_symbol: "SUBCLASS_ORIGIN"
+
+subdate_symbol: "SUBDATE" 
+
+subject_symbol: "SUBJECT"
+
+subpartitions_symbol: "sub_partitions"
+
+subpartition_symbol: "SUBPARTITION"
+
+substr_symbol:  "SUBSTR" 
+
+substring_symbol: "SUBSTRING" 
+
+sum_symbol: "SUM" 
+
+super_symbol: "SUPER"
+
+suspend_symbol: "SUSPEND"
+
+swaps_symbol: "SWAPS"
+
+switches_symbol: "SWITCHES"
+
+sysdate_symbol: "SYSDATE" 
+
+system_user_symbol: "SYSTEM_USER" 
+
+tables_symbol: "TABLES"
+
+tablespace_symbol: "TABLESPACE"
+
+table_ref_priority_symbol: "TABLE_REF_PRIORITY"
+
+table_symbol: "TABLE"
+
+table_checksum_symbol: "TABLE_CHECKSUM"
+
+table_name_symbol: "TABLE_NAME"
+
+temporary_symbol: "TEMPORARY"
+
+temptable_symbol: "TEMPTABLE"
+
+terminated_symbol: "TERMINATED"
+
+text_symbol: "TEXT"
+
+than_symbol: "THAN"
+
+then_symbol: "THEN"
+
+timestamp_symbol: "TIMESTAMP"
+
+timestamp_add_symbol: "TIMESTAMP_ADD"
+
+timestamp_diff_symbol: "TIMESTAMP_DIFF"
+
+time_symbol: "TIME"
+
+tinyblob_symbol: "TINYBLOB"
+
+tinyint_symbol: "TINYINT"
+
+tinytext_symbol: "TINYTEXT"
+
+to_symbol: "TO"
+
+trailing_symbol: "TRAILING"
+
+transaction_symbol: "TRANSACTION"
+
+triggers_symbol: "TRIGGERS"
+
+trigger_symbol: "TRIGGER"
+
+trim_symbol: "TRIM" 
+
+true_symbol: "TRUE"
+
+truncate_symbol: "TRUNCATE"
+
+types_symbol: "TYPES"
+
+type_symbol: "TYPE"
+
+udf_returns_symbol: "UDF_RETURNS"
+
+uncommitted_symbol: "UNCOMMITTED"
+
+undefined_symbol: "UNDEFINED"
+
+undofile_symbol: "UNDOFILE"
+
+undo_buffer_size_symbol: "UNDO_BUFFER_SIZE"
+
+undo_symbol: "UNDO" 
+
+unicode_symbol: "unicode"
+
+uninstall_symbol: "UNINSTALL"
+
+union_symbol: "UNION"
+
+unique_symbol: "UNIQUE"
+
+unknown_symbol: "UNKNOWN"
+
+unlock_symbol: "UNLOCK"
+
+unsigned_symbol: "UNSIGNED"
+
+until_symbol: "UNTIL"
+
+update_symbol: "UPDATE"
+
+upgrade_symbol: "UPGRADE"
+
+usage_symbol: "USAGE"
+
+user_resources_symbol: "USER_RESOURCES"
+
+user_symbol: "user"
+
+use_frm_symbol: "USE_FRM"
+
+use_symbol: "USE"
+
+using_symbol: "USING"
+
+utc_date_symbol: "UTC_DATE"
+
+utc_timestamp_symbol: "UTC_TIMESTAMP"
+
+utc_time_symbol: "UTC_TIME"
+
+validation_symbol: "VALIDATION"
+
+values_symbol: "values"
+
+value_symbol: "VALUE"
+
+varbinary_symbol: "VARBINARY"
+
+varchar_symbol: "VARCHAR"
+
+varcharacter_symbol: "VARCHARACTER" 
+
+variables_symbol: "VARIABLES"
+
+variance_symbol: "VARIANCE" 
+
+varying_symbol: "VARYING"
+
+var_pop_symbol: "VAR_POP" 
+
+var_samp_symbol: "VAR_SAMP" 
+
+view_symbol: "VIEW"
+
+virtual_symbol: "VIRTUAL"
+
+wait_symbol: "WAIT"
+
+warnings_symbol: "WARNINGS"
+
+week_symbol: "WEEK"
+
+weight_string_symbol: "WEIGHT_STRING"
+
+when_symbol: "WHEN"
+
+where_symbol: "WHERE"
+
+while_symbol: "WHILE"
+
+with_symbol: "WITH"
+
+without_symbol: "WITHOUT"
+
+work_symbol: "WORK"
+
+wrapper_symbol: "WRAPPER"
+
+write_symbol: "WRITE"
+
+x509_symbol: "X509"
+
+xa_symbol: "XA"
+
+xid_symbol: "xid"
+
+xml_symbol: "XML"
+
+xor_symbol: "XOR"
+
+year_month_symbol: "YEAR_MONTH"
+
+year_symbol: "YEAR"
+
+zerofill_symbol: "ZEROFILL"
+
+persist_symbol: "PERSIST"
+
+role_symbol: "role"
+
+admin_symbol: "ADMIN"
+
+invisible_symbol: "INVISIBLE"
+
+visible_symbol: "VISIBLE"
+
+except_symbol: "EXCEPT"
+
+component_symbol: "COMPONENT"
+
+recursive_symbol: "RECURSIVE"
+
+json_objectagg_symbol: "JSON_OBJECTAGG"
+
+json_arrayagg_symbol: "JSON_ARRAYAGG"
+
+of_symbol: "OF"
+
+skip_symbol: "SKIP"
+
+locked_symbol: "LOCKED"
+
+nowait_symbol: "NOWAIT"
+
+grouping_symbol: "GROUPING"
+
+persist_only_symbol: "PERSIST_ONLY"
+
+histogram_symbol: "histogram"
+
+buckets_symbol: "BUCKETS"
+
+remote_symbol: "REMOTE"
+
+clone_symbol: "CLONE"
+
+cume_dist_symbol: "CUME_DIST"
+
+dense_rank_symbol: "DENSE_RANK"
+
+exclude_symbol: "EXCLUDE"
+
+first_value_symbol: "FIRST_VALUE"
+
+following_symbol: "FOLLOWING"
+
+groups_symbol: "GROUPS"
+
+lag_symbol: "LAG"
+
+last_value_symbol: "LAST_VALUE"
+
+lead_symbol: "LEAD"
+
+nth_value_symbol: "NTH_VALUE"
+
+ntile_symbol: "NTILE"
+
+nulls_symbol: "NULLS"
+
+others_symbol: "OTHERS"
+
+over_symbol: "OVER"
+
+percent_rank_symbol: "PERCENT_RANK"
+
+preceding_symbol: "PRECEDING"
+
+rank_symbol: "RANK"
+
+respect_symbol: "RESPECT"
+
+row_number_symbol: "ROW_NUMBER"
+
+ties_symbol: "TIES"
+
+unbounded_symbol: "UNBOUNDED"
+
+window_symbol: "WINDOW"
+
+empty_symbol: "EMPTY"
+
+json_table_symbol: "JSON_TABLE"
+
+nested_symbol: "NESTED"
+
+ordinality_symbol: "ORDINALITY"
+
+path_symbol: "PATH"
+
+history_symbol: "HISTORY"
+
+reuse_symbol: "REUSE"
+
+srid_symbol: "SRID"
+
+thread_priority_symbol: "THREAD_PRIORITY"
+
+resource_symbol: "RESOURCE"
+
+system_symbol: "SYSTEM"
+
+vcpu_symbol: "VCPU"
+
+master_public_key_path_symbol: "MASTER_PUBLIC_KEY_PATH"
+
+get_master_public_key_symbol: "GET_MASTER_PUBLIC_KEY_SYM"
+
+restart_symbol: "RESTART"
+
+definition_symbol: "DEFINITION"
+
+description_symbol: "DESCRIPTION"
+
+organization_symbol: "ORGANIZATION"
+
+reference_symbol: "REFERENCE"
+
+optional_symbol: "OPTIONAL"
+
+secondary_symbol: "SECONDARY"
+
+secondary_engine_symbol: "SECONDARY_ENGINE"
+
+secondary_load_symbol: "SECONDARY_LOAD"
+
+secondary_unload_symbol: "SECONDARY_UNLOAD"
+
+active_symbol: "ACTIVE"
+
+inactive_symbol: "INACTIVE"
+
+lateral_symbol: "LATERAL"
+
+retain_symbol: "RETAIN"
+
+old_symbol: "OLD"
+
+network_namespace_symbol: "NETWORK_NAMESPACE"
+
+enforced_symbol: "ENFORCED"
+
+array_symbol: "ARRAY"
+
+oj_symbol: "OJ"
+
+member_symbol: "MEMBER"
+
+random_symbol: "RANDOM"
+
+master_compression_algorithm_symbol: "MASTER_COMPRESSION_ALGORITHM"
+
+master_zstd_compression_level_symbol: "MASTER_ZSTD_COMPRESSION_LEVEL"
+
+privilege_checks_user_symbol: "PRIVILEGE_CHECKS_USER"
+
+master_tls_ciphersuites_symbol: "MASTER_TLS_CIPHERSUITES"
+
+require_row_format_symbol: "REQUIRE_ROW_FORMAT"
+
+password_lock_time_symbol: "PASSWORD_LOCK_TIME"
+
+failed_login_attempts_symbol: "FAILED_LOGIN_ATTEMPTS"
+
+require_table_primary_key_check_symbol: "REQUIRE_TABLE_PRIMARY_KEY_CHECK"
+
+stream_symbol: "STREAM"
+
+off_symbol: "OFF"
+
+int1_symbol: "INT1" 
+
+int2_symbol: "INT2" 
+
+int3_symbol: "INT3" 
+
+int4_symbol: "INT4" 
+
+int8_symbol: "INT8" 
+
+sql_tsi_second_symbol: "SQL_TSI_SECOND" 
+
+sql_tsi_minute_symbol: "SQL_TSI_MINUTE" 
+
+sql_tsi_hour_symbol: "SQL_TSI_HOUR" 
+
+sql_tsi_day_symbol: "SQL_TSI_DAY" 
+
+sql_tsi_week_symbol: "SQL_TSI_WEEK" 
+
+sql_tsi_month_symbol: "SQL_TSI_MONTH" 
+
+sql_tsi_quarter_symbol: "SQL_TSI_QUARTER" 
+
+sql_tsi_year_symbol: "SQL_TSI_YEAR" 
+
+whitespace: /[ \t\f\r\n]*/
+
+invalid_input: | /[\u0001-\u0008]/ | /[\u000B]/ | /[\u000C]/          | /[\u000E-\u001F]/   | "["  | "]"
+
+comment_dash: div_symbol
+comment_star: "*"
+version_comment_start: comment_dash comment_star "!" digits 
+
+
+version_comment_end: comment_star comment_dash
+mysql_comment_start: comment_dash comment_star "!" 
+version_comment_end: comment_dash comment_star
+block_comment: (comment_dash comment_star comment_star comment_dash | comment_star comment_dash block_comment_content comment_star comment_dash) 
+pound_comment: "#" /[^\n\r]*/
+dashdash_comment: double_dash (/[ \t]/ /[^\n\r]*/ | linebreak | "")
+double_dash: "--"
+
+
+eof: /\Z/
+
+%import common.SIGNED_NUMBER
+%ignore block_comment
