@@ -1,0 +1,8 @@
+[package]
+name = "peginator-test"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+peginator = "0.7.0"
+

@@ -16,6 +16,9 @@ Explorations so far:
 * ❌ [PHP PEG exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/php-peg/) – the parser doesn't produce AST and doesn't seem to correctly process the math expressions included as examples.
 * ❌ [Python Lark exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/python-lark/) – it seems to have trouble with ambiguity of the MySQL grammar and it also generates a state table that makes manual parser modifications challenging.
 * ❌ [LALRPOP exploration](https://lalrpop.github.io/lalrpop/) – it generates an AST, but requires a separate ast.rs file that explicitly declares possible AST nodes and maps all the grammar rules to them. I'm not saying no to that, but it's a lot of work so I'm putting it on hold for now.
+* [Rust Peginator exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/rust-peginator/)
+* ❌ [Node BNF parser exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/node-bnf-parser/) – it creates a WASM parser, which is interesting, but still it creates a node for each character, which is not what we want.
+
 
 Next steps:
 

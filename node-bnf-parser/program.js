@@ -1,0 +1,26 @@
+import * as _Shared from "./shared.js";
+let _rawWasm = _Shared.DecodeBase64("AGFzbQEAAAABGgVgAAF/YAF/AX9gA39/fwBgAn9/AX9gAX8AAwcGAAECAwQABQQBAQEKBh8GfwBBJwt/AUEAC38BQQALfwFBAAt/AUEAC38BQQALBzoGBm1lbW9yeQIABWlucHV0AwAFcmVhY2gDBQtpbnB1dExlbmd0aAMCBV9pbml0AAAHcHJvZ3JhbQAFCooFBhkAQQAkBEEAJAUjAkEnaiQBIwEQASQDIwMLCgAgAEEDakF8cQsjAQF/A0AgACADaiABIANqLQAAOgAAIANBAWoiAyACSA0ACwtAAQF/IABBJ2ohAkEAIQADQAJAIAAgAmotAAAgACABai0AAEcNACAAQQFqIgBBAEoNACMBIAAgAmpKDQELCyAACw4AIAAjBU4EQCAAJAULC+4DAQZ/IwNBgAhqPwBBEHRKBEBBAUAAGgsjAyIEIwQ2AgggBEEUaiQDAkACfyMDIgAjBDYCCCAAQRRqJAMDQCMDIgMjBDYCCCMEQR4QAyEFIAUjBGokBCMEEAQCQCAFQQFHBEBBASEBIAMoAggkBCADJAMMAQsjA0EANgIAIwNBBzYCBCMDIwQ2AgwjA0EBNgIQIANBFGpBHkEBEAIgA0EVahABJAMLIAFFBEAgAkEBaiECDAELCyACQQBMBEAgACgCCCQEIAAkA0EBDAELIABBGDYCACAAQQY2AgQgACMENgIMIAAgAjYCEEEACyIBDQACf0EAIQIjAyIAIwQ2AgggAEEUaiQDA0AjAyIDIwQ2AggjBEEfEAMhBSAFIwRqJAQjBBAEAkAgBUEBRwRAQQEhASADKAIIJAQgAyQDDAELIwNBADYCACMDQQc2AgQjAyMENgIMIwNBATYCECADQRRqQR9BARACIANBFWoQASQDCyABRQRAIAJBAWohAgwBCwsgAkEATARAIAAoAggkBCAAJANBAQwBCyAAQRg2AgAgAEEGNgIEIAAjBDYCDCAAIAI2AhBBAAsiAQ0ACyABBEBBASEBIAQoAggkBCAEJAMFIARBIDYCACAEQQc2AgQgBCMENgIMIARBAjYCEAsgAQsLUAgAQQALB2xpdGVyYWwAQQcLBSguLi4pAEEMCwYoLi4uKT8AQRILBiguLi4pKgBBGAsGKC4uLikrAEEeCwFhAEEfCwFiAEEgCwdwcm9ncmFt");
+let _ctx = null;
+if (typeof window === 'undefined') {
+	_ctx = new WebAssembly.Instance(
+		new WebAssembly.Module(
+			_rawWasm
+		), {js: {print_i32: console.log}}
+	);
+}
+let ready = new Promise(async (res) => {
+	if (typeof window !== 'undefined') {
+		_ctx = await WebAssembly.instantiate(
+			await WebAssembly.compile(_rawWasm),
+			{js: {print_i32: console.log}}
+		);
+	}
+
+	Object.freeze(_ctx);
+	_rawWasm = null;
+	res();
+});
+export { ready };
+export function Parse_Program (data, refMapping = true) {
+	return _Shared.Parse(_ctx, data, refMapping, "program");
+}
