@@ -1,0 +1,14 @@
+{
+  "name": "lezer",
+  "version": "1.0.0",
+  "description": "If there are no problems with the grammar specified in lang.grammar, this will write two files, lang.js and lang.terms.js.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lezer": "^0.13.5"
+  }
+}

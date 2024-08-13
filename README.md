@@ -25,6 +25,16 @@ Explorations so far:
    * It [produces an AST](https://tree-sitter.github.io/tree-sitter/playground).
    * The produced aprsers are huge (5.5MB for a general SQL, not even aware of MySQL nuances)
    * It's not dependency-free. It needs libtree-sitter.a.
+* [Lezer](https://lezer.codemirror.net/)
+   * Needs a library (The @lezer/lr package provides the run-time parsing system. Combined with a parser built by the generator, it gives you a parser object that can take a source file and return a tree.)
+   * It generates a state table that seems difficult to translate to PHP:
+     `!WQYQPOOOhQPO'#CdOOQO'#Ci'#CiOOQO'#Ce'#CeQYQPOOOOQO,59O,59OOyQPO,59OOOQO-E6c-E6cOOQO1G.j1G.j`
+   * It is the most promising and easy to convert parser generator so far, though:
+      * ✅ Fast
+      * ✅ Small
+      * ✅ Produces AST
+      Let's see if we can convert MySQL grammar to Lezer format.
+
 
 Maybe:
 
