@@ -28,6 +28,8 @@ On the minus:
 
 * The standalone code is very dynamic and uses python features that may be difficult to convert to PHP, 
   especially using AI.
+* It generates a state table, similarly to ANTLR, which makes manual parser modifications extremely difficult.
+* It has troubles understanding grammar symbols like "/" or "*", which makes parsing block comments challenging. Sometimes it's also difficult to encode those symbols in regular expressions.
 
 Lark doesn't seem to handle ambiguity very well, e.g. I got dozens of errors like
 this one when trying to parse the MySQL grammar:
@@ -47,3 +49,6 @@ Reduce/Reduce collision in Terminal('SEMICOLON') between the following rules:
       - <role_or_label_keyword : >
       - <identifier_keywords_unambiguous : >
       - <symbol_master_heartbeat_period_symbol : >
+
+
+[The explanation on GitHub](https://github.com/lark-parser/lark/issues/182) makes sense, but I'm not sure how it applies to the grammar we're using.
