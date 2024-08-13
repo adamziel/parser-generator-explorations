@@ -17,6 +17,7 @@ Explorations so far:
 * ❌ [Python Lark exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/python-lark/) – it seems to have trouble with ambiguity of the MySQL grammar and it also generates a state table that makes manual parser modifications challenging.
 * [Rust Peginator exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/rust-peginator/)
 * ❌ [Node BNF parser exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/node-bnf-parser/) – it creates a WASM parser, which is interesting, but still it creates a node for each character, which is not what we want.
+* ❌ [Javacc exploration](https://github.com/adamziel/parser-generator-explorations/blob/trunk/javacc/) – it's a similar problem as with these stream-parsers where you must produce AST nodes manually.
 * ❌ Racket and [Racketscript](https://github.com/racketscript/racketscript) – Racketscript parsers involve dependencies and are difficult to read. It smells like a large bundle size and a difficult JS -> PHP translation. Let's abandon this for now.
 * ❌ https://github.com/TheLartians/PEGParser – it builds its parsers at run time
 * ❌ https://github.com/chevrotain/chevrotain – it builds its parsers at run time
@@ -25,7 +26,10 @@ Explorations so far:
    * It [produces an AST](https://tree-sitter.github.io/tree-sitter/playground).
    * The produced aprsers are huge (5.5MB for a general SQL, not even aware of MySQL nuances)
    * It's not dependency-free. It needs libtree-sitter.a.
-* [Lezer](https://lezer.codemirror.net/)
+* ❌ [PHP_ParserGenerator](https://github.com/pear/PHP_ParserGenerator/blob/master/examples/Parser.y) – Stream parser, won't give us AST and will require a ton of extra work to convert to AST.
+* ❌ [Lime PHP parser generator](https://github.com/rvanvelzen/lime/tree/master) – Same as above, it's a stream parser generator that won't give us AST and will require a ton of extra work to convert to AST.
+* ❌ [Lezer](https://lezer.codemirror.net/)
+   * It was **super** promising! I really hoped it would work. Unfortunately, the parser generator is running for two hours now on the MySQL grammar file and there's no sign it will ever finish. Too bad!
    * Needs a library (The @lezer/lr package provides the run-time parsing system. Combined with a parser built by the generator, it gives you a parser object that can take a source file and return a tree.)
    * It generates a state table that seems difficult to translate to PHP:
      `!WQYQPOOOhQPO'#CdOOQO'#Ci'#CiOOQO'#Ce'#CeQYQPOOOOQO,59O,59OOyQPO,59OOOQO-E6c-E6cOOQO1G.j1G.j`
@@ -35,7 +39,6 @@ Explorations so far:
       * ✅ Produces AST
       Let's see if we can convert MySQL grammar to Lezer format.
 
-
 Maybe:
 
 * [LALRPOP](https://lalrpop.github.io/lalrpop/) – it generates an AST, but requires a separate ast.rs file that explicitly declares possible AST nodes and maps all the grammar rules to them. We could generate a parser and then translate it to PHP with AI or another automated tool.
@@ -43,5 +46,6 @@ Maybe:
 Next steps:
 
 * Find a parser generator with great debugging tools.   
-   
+   * Maybe https://github.com/EoinDavey/tsPEG
+      
 
