@@ -21,6 +21,30 @@ Upside:
 * Is fast!
 * Generates an AST
 * The resulting parser is small
+* Has "skip whitespace" semantics!
 * Could largely be transpiled by an automated JS -> PHP tool
 * The grammar resembles EBNF form and support custom callbacks
 * The resulting parser is quite small and could potentially be translated to PHP with AI or another automated tool.
+
+TODO:
+
+* Case-insensitive token matching (e.g. select, SELECT selECT)
+  * Explanation on how to do it: https://discuss.codemirror.net/t/case-insensitive-lang-support/4907/2
+  * Code example: https://github.com/lezer-parser/php/blob/main/src/php.grammar#L425
+
+Problem: Running out of memory when generating the parser from mysql.grammar.
+
+Solution: Increase the heap size
+
+```
+# Via exports
+export NODE_OPTIONS=--max_old_space_size=10096
+npx lezer-generator mysql.grammar -o mysql.js
+
+# Or via CLI options
+node --max-old-space-size=8192 index.js
+```
+
+Problem: Parser generation takes 10+ minutes
+
+Solution: Just accept it. It's a one-time operation. Better to have a slow parser generator than a slow parser.
