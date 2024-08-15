@@ -2,7 +2,13 @@
 
 This is an attempt at generating a MySQL parser in any language.
 
-Explorations so far:
+tl;dr I went for a custom recursive descent PHP parser that can handle the full MySQL grammar converted from the .g4 notation to PHP code.
+
+[Check it out!](https://github.com/adamziel/parser-generator-explorations/tree/trunk/custom-parser)
+
+----
+
+Explorations I did to get here:
 
 * [MySQL grammar in ANTLR g4 format](https://github.com/mysql/mysql-workbench/blob/8.0/library/parsers/grammars/MySQLParser.g4) (thanks to MySQL workbench)
 * [MySQL grammar in EBNF notation](https://github.com/adamziel/parser-generator-explorations/blob/71194eb0b1ac78fe3905b42662f19cdeac4adf42/ebnf/MySQLParser.ebnf#L14) thanks to the [grammar-converter](https://github.com/vorpal-research/grammar-converter/tree/master) tool.
