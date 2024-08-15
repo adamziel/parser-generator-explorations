@@ -14,12 +14,19 @@ class DynamicRecursiveDescentParser {
     private $tokens;
     private $position;
     private $grammar;
+    private static $grammar_static;
+    private $lookup;
     private $rule_names;
     public $debug = false;
 
-    public function __construct(array $grammar, array $tokens) {
-        $this->grammar = $this->inflate_grammar($grammar);
-
+    public function __construct(array $grammar, array $tokens, array $lookup_table) {
+        if(isset(self::$grammar_static)) {
+            $this->grammar = self::$grammar_static;
+        } else {
+            $this->grammar = $this->inflate_grammar($grammar);
+            self::$grammar_static = $this->grammar;
+        }
+        $this->lookup = $lookup_table;
         $this->path = [];
         $this->tokens = $tokens;
         $this->position = 0;
@@ -65,10 +72,18 @@ class DynamicRecursiveDescentParser {
         if ($is_terminal) {
             return $this->_match_token($rule_or_terminal);
         }
-
         $rule = $this->grammar[$rule_or_terminal];
 
+        // $token_name = MySQLLexer::getTokenName($this->tokens[$this->position]->getType());
+        // if(isset($this->lookup[$rule_or_terminal][$token_name])) {
+        //     if (count($this->lookup[$rule_or_terminal][$token_name]) === 1) {
+        //         $branch_nb = $this->lookup[$rule_or_terminal][$token_name][0];
+        //         $rule = [$branch_nb => $rule[$branch_nb]];
+        //     }
+        // }
+
         $starting_position = $this->position;
+
         array_push($this->path, $rule_or_terminal);
         // $this->log('Before foreach(): '. $rule_or_terminal. ' (' . count($rule).' branches)');
         foreach ($rule as $k => $branch) {
@@ -232,25 +247,27 @@ WHERE NOT EXISTS (
 SQL
 ];
 
-foreach ($queries as $k => $query) {
-    $parser = new DynamicRecursiveDescentParser($grammar, tokenizeQuery($query));
-    // $parser->debug = true;
-    $parse_tree = $parser->parse_start();
-    file_put_contents("query_$k.parsetree", 
-    "QUERY:\n$query\n\nPARSE TREE:\n\n" . json_encode($parse_tree, JSON_PRETTY_PRINT));
-}
-
-// // Benchmark 5 times
-// $start_time = microtime(true);
-// for ($i = 0; $i < 50; $i++) {
-//     $parser = new DynamicRecursiveDescentParser($expanded_grammar, $tokens);
+$lookup = json_decode(file_get_contents(__DIR__.'/lookup-branches.json'), true);
+// foreach ($queries as $k => $query) {
+//     $parser = new DynamicRecursiveDescentParser($grammar, tokenizeQuery($query), $lookup);
+//     // $parser->debug = true;
 //     $parse_tree = $parser->parse_start();
+//     file_put_contents("query_$k.parsetree", 
+//     "QUERY:\n$query\n\nPARSE TREE:\n\n" . json_encode($parse_tree, JSON_PRETTY_PRINT));
 // }
-// $end_time = microtime(true);
-// $execution_time = $end_time - $start_time;
+
+// Benchmark 5 times
+$tokens = tokenizeQuery($queries[0]);
+$start_time = microtime(true);
+for ($i = 0; $i < 50; $i++) {
+    $parser = new DynamicRecursiveDescentParser($grammar, $tokens, $lookup);
+    $parse_tree = $parser->parse_start();
+}
+$end_time = microtime(true);
+$execution_time = $end_time - $start_time;
 
 // // Output the parse tree
-// echo json_encode($parse_tree, JSON_PRETTY_PRINT);
+echo json_encode($parse_tree, JSON_PRETTY_PRINT);
 
 // // Output the benchmark result
-// echo "Execution time: " . $execution_time . " seconds";
+echo "Execution time: " . $execution_time . " seconds";

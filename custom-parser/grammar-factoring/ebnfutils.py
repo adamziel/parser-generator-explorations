@@ -583,6 +583,24 @@ def deduplicate(productions):
         ]
     return new_productions
 
+def next_step_lookup_table(hashed_grammar):
+    lookup = defaultdict(lambda: defaultdict(list))
+    terminals = defaultdict(set)
+    while len(terminals) < len(hashed_grammar):
+        for name, branch in hashed_grammar.items():
+            for i, subrule in enumerate(branch):
+                if isinstance(subrule, str):
+                    raise Exception(f"Invalid subrule {subrule}")
+                first = subrule[0]
+                is_terminal = first not in hashed_grammar
+                if is_terminal:
+                    terminals[name].add(first)
+                elif first in terminals:
+                    terminals[name] = terminals[name].union(terminals[first])
+                    for terminal in terminals[first]:
+                        if i not in lookup[name][terminal]:
+                            lookup[name][terminal].append(i)
+    return lookup
 
 # Example Grammar that needs left-factoring
 # productions = {
@@ -592,8 +610,12 @@ def deduplicate(productions):
 #     'C': [['g']]
 # }
 
-# with open("MySQLParser-expanded-right-recursive.json") as fp:
-#     productions = hash_grammar(json.load(fp))
+with open("MySQLParser-factored.json") as fp:
+    productions = hash_grammar(json.load(fp))
+
+import json
+print(json.dumps(next_step_lookup_table(productions)))
+exit(0)
 
 
 # productions = left_factor_grammar(productions)
