@@ -9,20 +9,26 @@
   whole lot of lookups
 */
 
-class DynamicRecursiveDescentParser {
-    private $path;
-    private $tokens;
-    private $position;
-    private $grammar;
-    private $rule_names;
-    public $debug = false;
 
-    public function __construct(array $grammar, array $tokens) {
-        $this->grammar = $this->inflate_grammar($grammar);
+class Grammar {
 
-        $this->path = [];
-        $this->tokens = $tokens;
-        $this->position = 0;
+    public $rules;
+    public $rule_names;
+    public $terminals_lookup;
+    public $lowest_non_terminal_id;
+    public $highest_terminal_id;
+
+    public function __construct(array $rules, array $lookup_table = null)
+    {
+        $this->inflate($rules);
+    }
+
+    public function get_rule_name($rule_id) {
+        return $this->rule_names[$rule_id];
+    }
+
+    public function get_rule_id($rule_name) {
+        return array_search($rule_name, $this->rule_names);
     }
 
     /**
@@ -34,53 +40,98 @@ class DynamicRecursiveDescentParser {
      * Or perhaps we can let go of some parsing rules that SQLite cannot
      * support anyway?
      */
-    private function inflate_grammar($grammar)
+    private function inflate($grammar)
     {
-        foreach($grammar['rules_names'] as $rule_id => $rule_name) {
-            $this->rule_names[$rule_id + $grammar['rules_offset']] = $rule_name;
+        $this->lowest_non_terminal_id = $grammar['rules_offset'];
+        $this->highest_terminal_id = $this->lowest_non_terminal_id - 1;
+
+        foreach($grammar['rules_names'] as $rule_index => $rule_name) {
+            $this->rule_names[$rule_index + $grammar['rules_offset']] = $rule_name;
+            $this->rules[$rule_index + $grammar['rules_offset']] = [];
         }
-        $inflated_grammar = [];
-        foreach($grammar['grammar'] as $rule_id_without_offset => $branches) {
-            $rule_id = $rule_id_without_offset + $grammar['rules_offset'];
-            $rule_name = $this->rule_names[$rule_id];
-            $inflated_grammar[$rule_name] = [];
-            foreach($branches as $branch) {
-                $new_branch = [];
-                foreach($branch as $subrule_id) {
-                    $new_branch[] = isset($this->rule_names[$subrule_id]) ? $this->rule_names[$subrule_id] : $subrule_id;
+
+        $this->rules = [];
+        foreach($grammar['grammar'] as $rule_index => $branches) {
+            $rule_id = $rule_index + $grammar['rules_offset'];
+            $this->rules[$rule_id] = $branches;
+
+            $rule_lookup = [];
+            $each_first_symbol_is_a_unique_terminal = true;
+            foreach($branches as $k => $branch) {
+                $branch_starts_with_terminal = $branch[0] < $this->lowest_non_terminal_id;
+                if (!$branch_starts_with_terminal) {
+                    $each_first_symbol_is_a_unique_terminal = false;
+                    break;
                 }
-                $inflated_grammar[$rule_name][] = $new_branch;
+                if (isset($rule_lookup[$branch[0]])) {
+                    $each_first_symbol_is_a_unique_terminal = false;
+                    break;
+                }
+                $rule_lookup[$branch[0]] = $k;
+            }
+            if ($each_first_symbol_is_a_unique_terminal) {
+                $this->terminals_lookup[$rule_id] = $rule_lookup;
             }
         }
-        return $inflated_grammar;        
+    }
+
+}
+
+class DynamicRecursiveDescentParser {
+    private $path;
+    private $tokens;
+    private $position;
+    private Grammar $grammar;
+    public $debug = false;
+
+    public function __construct(Grammar $grammar, array $tokens) {
+        $this->grammar = $grammar;
+        $this->path = [];
+        $this->tokens = $tokens;
+        $this->position = 0;
     }
 
     public function parse_start() : ?array {
-        $result = $this->parse("query");
+        $result = $this->parse($this->grammar->get_rule_id("query"));
         return $result;
     }
 
-    public function parse($rule_or_terminal) {
-        $is_terminal = !isset($this->grammar[$rule_or_terminal]);
+    public function parse($rule_id) {
+        $is_terminal = $rule_id <= $this->grammar->highest_terminal_id;
         if ($is_terminal) {
-            return $this->_match_token($rule_or_terminal);
+            return $this->_match_token($rule_id);
         }
 
-        $rule = $this->grammar[$rule_or_terminal];
+        $rule = $this->grammar->rules[$rule_id];
+        if(isset($this->grammar->terminals_lookup[$rule_id])) {
+            $token_id = $this->tokens[$this->position]->getType();
+            $branch_nb = false;
+            if(isset($this->grammar->terminals_lookup[$rule_id][$token_id])) {
+                $branch_nb = $this->grammar->terminals_lookup[$rule_id][$token_id];
+            }
+            if($branch_nb === false) {
+                if(isset($this->grammar->terminals_lookup[$rule_id][MySQLLexer::EMPTY_TOKEN])) {
+                    $branch_nb = $this->grammar->terminals_lookup[$rule_id][MySQLLexer::EMPTY_TOKEN];
+                }
+            }
+            if($branch_nb === false) {
+                return null;
+            }
+
+            $rule = [$rule[$branch_nb]];
+        }
 
         $starting_position = $this->position;
-        array_push($this->path, $rule_or_terminal);
-        // $this->log('Before foreach(): '. $rule_or_terminal. ' (' . count($rule).' branches)');
-        foreach ($rule as $k => $branch) {
-            $this->log('Entering branch: ' . $k);
+
+        array_push($this->path, $rule_id);
+        // $this->log('Before foreach(): '. $this->get_rule_name($rule_id). '<'.$rule_id.'> (' . count($rule).' branches)');
+        foreach ($rule as $branch) {
+            // $this->log('Entering branch: ' . $k);
             $this->position = $starting_position;
             $match = [];
             $branch_matches = true;
-            foreach ($branch as $name) {
-                $token_repr = ctype_digit($name.'') ? ( '<'.MySQLLexer::getTokenName($name).'>') : '';
-                $this->log('Trying to match subrule: ' . $name . $token_repr);
-                $matched_children = $this->parse($name);
-
+            foreach ($branch as $subrule_id) {
+                $matched_children = $this->parse($subrule_id);
                 if ($matched_children === null) {
                     // $this->log("Short-circuiting matching match branch $k ({$subrule['name']})");
                     $branch_matches = false;
@@ -90,13 +141,13 @@ class DynamicRecursiveDescentParser {
                 } else if(is_array($matched_children) && count($matched_children) === 0) {
                     continue;
                 }
-                $match[$name][] = $matched_children;
+                $match[$subrule_id][] = $matched_children;
             }
             if ($branch_matches === true) {
-                $this->log("Matched branch: " . $rule_or_terminal . '<' . $this->tokens[$starting_position] . '> <-> '. '<' . (isset($this->tokens[$this->position]) ? $this->tokens[$this->position] : '') . '>');
+                // $this->log("Matched branch: " . $rule_id . '<' . $this->tokens[$starting_position] . '> <-> '. '<' . (isset($this->tokens[$this->position]) ? $this->tokens[$this->position] : '') . '>');
                 break;
             } else {
-                $this->log("Failed to match branch: " . $name);
+                // $this->log("Failed to match branch: " . $this->get_rule_name($rule_id));
             }
         }
         // $this->log("Done with matching branches for $rule_or_terminal");
@@ -108,6 +159,15 @@ class DynamicRecursiveDescentParser {
         }
 
         return $match;
+    }
+
+    private function get_rule_name($id)
+    {
+        if($id <= $this->grammar->highest_terminal_id) {
+            return MySQLLexer::getTokenName($id);
+        }
+
+        return $this->grammar->get_rule_name($id);        
     }
 
     private function log($data) {
@@ -148,26 +208,6 @@ function tokenizeQuery($sql) {
 }
 
 
-function inflate_grammar(array $grammar) : array {
-    $expanded_grammar = [];
-    foreach ($grammar as $rule) {
-        $expanded_grammar[$rule["name"]] = [];
-    }
-    foreach ($grammar as $rule) {
-        foreach ($rule["bnf"] as $branch) {
-            $new_branch = [];
-            foreach ($branch as $name) {
-                $is_terminal = !isset($expanded_grammar[$name]);
-                $new_branch[] = $is_terminal ? MySQLLexer::getTokenId($name) : $name;
-            }
-            $expanded_grammar[$rule["name"]][] = $new_branch;
-        }
-    }
-    return $expanded_grammar;
-}
-
-// Assuming MySQLParser.json is in the same directory as this script
-$grammar = include "./grammar.php";
 
 $queries = [
     <<<SQL
@@ -232,25 +272,36 @@ WHERE NOT EXISTS (
 SQL
 ];
 
-foreach ($queries as $k => $query) {
-    $parser = new DynamicRecursiveDescentParser($grammar, tokenizeQuery($query));
-    // $parser->debug = true;
-    $parse_tree = $parser->parse_start();
-    file_put_contents("query_$k.parsetree", 
-    "QUERY:\n$query\n\nPARSE TREE:\n\n" . json_encode($parse_tree, JSON_PRETTY_PRINT));
-}
+$lookup = json_decode(file_get_contents(__DIR__.'/lookup-branches.json'), true);
+// Assuming MySQLParser.json is in the same directory as this script
+$grammar_data = include "./grammar.php";
+$grammar = new Grammar($grammar_data, $lookup);
 
-// // Benchmark 5 times
-// $start_time = microtime(true);
-// for ($i = 0; $i < 50; $i++) {
-//     $parser = new DynamicRecursiveDescentParser($expanded_grammar, $tokens);
-//     $parse_tree = $parser->parse_start();
+$tokens = tokenizeQuery($queries[0]);
+$parser = new DynamicRecursiveDescentParser($grammar, $tokens);
+// foreach ($queries as $k => $query) {
+//     $parser = new DynamicRecursiveDescentParser($grammar, tokenizeQuery($query), $lookup);
+    // $parser->debug = true;
+    // $parse_tree = $parser->parse_start();
+    // print_r($parse_tree);
+//     file_put_contents("query_$k.parsetree", 
+//     "QUERY:\n$query\n\nPARSE TREE:\n\n" . json_encode($parse_tree, JSON_PRETTY_PRINT));
 // }
-// $end_time = microtime(true);
-// $execution_time = $end_time - $start_time;
+
+// die();
+// Benchmark 5 times
+$tokens = tokenizeQuery($queries[0]);
+
+$start_time = microtime(true);
+for ($i = 0; $i < 100; $i++) {
+    $parser = new DynamicRecursiveDescentParser($grammar, $tokens);
+    $parse_tree = $parser->parse_start();
+}
+$end_time = microtime(true);
+$execution_time = $end_time - $start_time;
 
 // // Output the parse tree
-// echo json_encode($parse_tree, JSON_PRETTY_PRINT);
+echo json_encode($parse_tree, JSON_PRETTY_PRINT);
 
 // // Output the benchmark result
-// echo "Execution time: " . $execution_time . " seconds";
+echo "Execution time: " . $execution_time . " seconds";
