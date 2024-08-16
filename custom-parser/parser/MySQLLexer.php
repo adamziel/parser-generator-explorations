@@ -1207,6 +1207,7 @@ class MySQLLexer {
     }
 
     protected static $tokenNames = [
+        self::EMPTY_TOKEN => 'ε',
         self::EQUAL_OPERATOR => 'EQUAL_OPERATOR',
         self::ASSIGN_OPERATOR => 'ASSIGN_OPERATOR',
         self::NULL_SAFE_EQUAL_OPERATOR => 'NULL_SAFE_EQUAL_OPERATOR',

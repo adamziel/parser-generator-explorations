@@ -98,6 +98,16 @@ class Grammar {
 
 }
 
+class StackFrame {
+    public $rule_id;
+    public $starting_position = 0;
+    public $position = 0;
+    public $branch_index = 0;
+    public $subrule_index = 0;
+    public $match = [];
+    public $child_frame;
+}
+
 class DynamicRecursiveDescentParser {
     private $path;
     private $tokens;
@@ -112,13 +122,12 @@ class DynamicRecursiveDescentParser {
         $this->position = 0;
     }
 
-    public function parse_start() : ?array {
-        $result = $this->parse($this->grammar->get_rule_id("query"));
+    public function parse_start() {
+        $result = $this->parse_recursive($this->grammar->get_rule_id("query"));
         return $result;
     }
 
-    public $checks = 0;
-    public function parse($rule_id) {
+    public function parse_recursive($rule_id) {
         $is_terminal = $rule_id <= $this->grammar->highest_terminal_id;
         if ($is_terminal) {
             ++$this->checks;
@@ -168,7 +177,7 @@ class DynamicRecursiveDescentParser {
             $match = [];
             $branch_matches = true;
             foreach ($branch as $subrule_id) {
-                $matched_children = $this->parse($subrule_id);
+                $matched_children = $this->parse_recursive($subrule_id);
                 if ($matched_children === null) {
                     // $this->log("Short-circuiting matching match branch $k ({$subrule['name']})");
                     $branch_matches = false;
@@ -197,6 +206,143 @@ class DynamicRecursiveDescentParser {
 
         return $match;
     }
+
+    public $checks = 0;
+    /**
+     * This method is unused. It was an attempt to optimize the parser by unrolling
+     * the recursion, but it was slower than the recursive version. Who would have
+     * thought! I'm keeping it here for reference and future optimization ideas.
+     */
+    public function parse_without_recursion($rule_id) {
+        $root_frame = new StackFrame();
+        $root_frame->rule_id = $rule_id;
+        $root_frame->position = 0;
+        $root_frame->starting_position = 0;
+        $stack = [$root_frame];
+        while (!empty($stack)) {
+            $frame = end($stack);
+            if($frame->child_frame) {
+                // We've just finished matching the nested rule!
+                // It matched if there's one or more entries in the match array.
+                if(count($frame->child_frame->match)) {
+                    // echo $indent . 'Matched a subrule of frame ' . $this->get_rule_name($frame->rule_id) ." \n";
+                    // It was a match! Move on to the next subrule.
+                    ++$frame->subrule_index;
+                    $frame->match[] = $frame->child_frame->match;
+                    $frame->position = $frame->child_frame->position;
+                } else {
+                    // The subrule didn't match. Move on to the next branch in
+                    // the current frame.
+                    ++$frame->branch_index;
+                    $frame->subrule_index = 0;
+                    $frame->match = [];
+                    $frame->position = $frame->starting_position;
+                }
+                $frame->child_frame = null;
+            }
+
+            $rule = $this->grammar->rules[$frame->rule_id];
+            // Lookahead optimization – go directly to the branch that matches
+            // if it's in our lookahead hash table.
+            if ($frame->branch_index === 0 && $frame->subrule_index === 0 && isset($this->grammar->lookahead_1[$frame->rule_id])) {
+                $token_id = $this->tokens[$frame->position]->type;
+                $branch_nb = false;
+                if(isset($this->grammar->lookahead_1[$frame->rule_id][$token_id])) {
+                    $branch_nb = $this->grammar->lookahead_1[$frame->rule_id][$token_id];
+                } else if(isset($this->grammar->lookahead_1[$frame->rule_id][MySQLLexer::EMPTY_TOKEN])) {
+                    $branch_nb = $this->grammar->lookahead_1[$frame->rule_id][MySQLLexer::EMPTY_TOKEN];
+                }
+                if ($branch_nb === false) {
+                    $frame->match = [];
+                    array_pop($stack);
+                    continue;
+                } else {
+                    $frame->branch_index = $branch_nb;
+                }
+            }
+
+            for (; $frame->branch_index < count($rule); $frame->branch_index++) {
+                $branch = $rule[$frame->branch_index];
+                for (; $frame->subrule_index < count($branch); $frame->subrule_index++) {
+                    $subrule_id = $branch[$frame->subrule_index];
+
+                    // $indent = str_repeat('  ', count($stack)) . 
+                    //     '[' . $this->get_rule_name($frame->rule_id) .':'.($frame->branch_index.':'.$frame->subrule_index.':'.$frame->position) .
+                    //     '][' . $this->get_rule_name($subrule_id) .']'
+                    // ;
+
+                    // Match a terminal – check if the current token satisfies the rule.
+                    $is_terminal = $subrule_id <= $this->grammar->highest_terminal_id;
+                    if ($is_terminal) {
+                        ++$this->checks;
+                        if ($frame->position < count($this->tokens) && (
+                            MySQLLexer::EMPTY_TOKEN === $subrule_id ||
+                            $this->tokens[$frame->position]->type === $subrule_id
+                        )) {
+                            // if($indent) echo $indent . 'Did match! ' .  " <".$this->tokens[$frame->position]."> \n";
+                            // Match! Save it in the frame and move to the next subrule.
+                            if(MySQLLexer::EMPTY_TOKEN === $subrule_id) {
+                                $frame->match[] = true;
+                            } else {
+                                $frame->match[] = $this->tokens[$frame->position];
+                                ++$frame->position;
+                            }
+                            continue;
+                        } else {
+                            // if($indent) echo $indent . 'Failed to match: ' . " <".$this->tokens[$frame->position]."> \n";
+                            // No match. Break out of the subrule loop and try the next branch.
+                            $frame->match = [];
+                            $frame->position = $frame->starting_position;
+                            $frame->subrule_index = 0;
+                            break;
+                        }
+                    }
+                    
+                    // Match a non-terminal – push a new frame onto the stack and continue.
+                    //
+                    // This is a recursion unrolled as a loop. This is an attempt to get
+                    // more speed than with a nested $this->parse() call. Unfortunately,
+                    // this is both slower and more complex.
+                    $child_frame = new StackFrame();
+                    $child_frame->rule_id = $subrule_id;
+                    $child_frame->position = $frame->position;
+                    $child_frame->starting_position = $frame->position;
+                    // if($indent) echo $indent . 'Pushing non-terminal to the stack! ' . " <".$this->tokens[$frame->position]."> \n";
+                    $stack[] = $child_frame;
+
+                    // Preserve the current stack frame, we'll want to re-enter it after
+                    // we're done with processing the nested rule.
+                    // But set a reference to the child frame so we can easily check if
+                    // it matched later on.
+                    $frame->child_frame = $child_frame;
+
+                    continue 3;
+                }
+                if(count($frame->match)) {
+                    // if($indent) echo $indent . "Branch matched!\n";
+                    break;
+                } else {
+                    // if($indent) echo $indent . "Trying the next branch!\n";
+                    $frame->match = [];
+                    $frame->position = $frame->starting_position;
+                }
+            }
+
+            array_pop($stack);
+
+            // We've successfully matched the last subrule in the root frame.
+            // We're done, yay!
+            if(empty($stack)) {
+                if (count($frame->match)) {
+                    return $frame;
+                }
+            }
+        }
+    
+        // We've exhausted all branches and subrules. No match.
+        return null;
+    }
+
 
     private function get_rule_name($id)
     {
@@ -230,6 +376,9 @@ function tokenizeQuery($sql) {
 
 
 $queries = [
+    <<<SQL
+WITH mytable AS (select 1) SELECT 123 FROM test
+SQL,
     <<<SQL
 WITH mytable AS (select 1 as a, `b`.c from dual) 
 SELECT HIGH_PRIORITY DISTINCT
@@ -298,10 +447,13 @@ $grammar_data = include "./grammar.php";
 $grammar = new Grammar($grammar_data, $lookup);
 
 $tokens = tokenizeQuery($queries[0]);
-$parser = new DynamicRecursiveDescentParser($grammar, $tokens);
+// $parser = new DynamicRecursiveDescentParser($grammar, $tokens);
 // $parse_tree = $parser->parse_start();
+// var_dump($parse_tree);
 // var_dump($parser->checks);
 // die();
+
+
 // foreach ($queries as $k => $query) {
 //     $parser = new DynamicRecursiveDescentParser($grammar, tokenizeQuery($query), $lookup);
     // $parser->debug = true;
@@ -312,14 +464,15 @@ $parser = new DynamicRecursiveDescentParser($grammar, $tokens);
 
 // die();
 // Benchmark 5 times
-echo 'all loaded and deflated';
-$tokens = tokenizeQuery($queries[0]);
+echo 'all loaded and deflated'."\n";
+$tokens = tokenizeQuery($queries[1]);
 
 $start_time = microtime(true);
 for ($i = 0; $i < 100; $i++) {
     $parser = new DynamicRecursiveDescentParser($grammar, $tokens);
     $parse_tree = $parser->parse_start();
 }
+var_Dump($parser->checks);
 $end_time = microtime(true);
 $execution_time = $end_time - $start_time;
 
