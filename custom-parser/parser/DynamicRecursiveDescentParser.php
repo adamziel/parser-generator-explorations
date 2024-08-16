@@ -453,8 +453,9 @@ $lookup = json_decode(file_get_contents(__DIR__.'/lookup-branches.json'), true);
 // Assuming MySQLParser.json is in the same directory as this script
 $grammar_data = include "./grammar.php";
 $grammar = new Grammar($grammar_data, $lookup);
+unset($grammar_data);
 
-$tokens = tokenizeQuery($queries[0]);
+// $tokens = tokenizeQuery($queries[0]);
 // $parser = new DynamicRecursiveDescentParser($grammar, $tokens);
 // $parse_tree = $parser->parse_start();
 // var_dump($parse_tree);
@@ -473,19 +474,21 @@ $tokens = tokenizeQuery($queries[0]);
 // die();
 // Benchmark 5 times
 echo 'all loaded and deflated'."\n";
-$tokens = tokenizeQuery($queries[3]);
+$tokens = tokenizeQuery($queries[1]);
 
+var_dump(memory_get_usage(true)/1024/1024);
 $start_time = microtime(true);
 for ($i = 0; $i < 700; $i++) {
     $parser = new DynamicRecursiveDescentParser($grammar, $tokens);
     $parse_tree = $parser->parse_start();
 }
-var_Dump($parser->checks);
+// var_Dump($parser->checks);
+var_dump(memory_get_usage(true)/1024/1024);
 $end_time = microtime(true);
 $execution_time = $end_time - $start_time;
 
 // // Output the parse tree
-echo json_encode($parse_tree, JSON_PRETTY_PRINT);
+// echo json_encode($parse_tree, JSON_PRETTY_PRINT);
 
 // // Output the benchmark result
 echo "Execution time: " . $execution_time . " seconds";
