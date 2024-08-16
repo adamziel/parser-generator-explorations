@@ -858,7 +858,7 @@ class MySQLLexer {
     protected $token;
     protected $text = '';
     protected $channel = self::DEFAULT_TOKEN_CHANNEL;
-    protected $type;
+    public $type;
     protected $tokenInstance;
     protected $serverVersion;
     protected $sqlModes;
@@ -9013,7 +9013,7 @@ class MySQLLexer {
 
 class MySQLToken
 {
-    private $type;
+    public $type;
     private $text;
     private $channel;
 
