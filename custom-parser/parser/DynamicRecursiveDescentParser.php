@@ -18,7 +18,6 @@ class Grammar {
     public $rules;
     public $rule_names;
     public $fragment_ids;
-    public $lookahead_which_branch = [];
     public $lookahead_is_match_possible = [];
     public $lowest_non_terminal_id;
     public $highest_terminal_id;
