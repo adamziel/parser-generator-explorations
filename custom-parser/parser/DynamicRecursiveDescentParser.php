@@ -3,6 +3,7 @@
 @TODO:
 
 * ✅ Tokenize MySQL Queries
+* Memoize token nb/rule matches to avoid repeating work.
 * Optimize the grammar to resolve ambiugities
 * Parse tree -> AST. Or not? I think we'll be just fine with the parse tree
 * Generate an expanded PHP parser to optimize matching, right now we're doing a 
@@ -14,7 +15,8 @@ class Grammar {
 
     public $rules;
     public $rule_names;
-    public $lookahead_1;
+    public $lookahead_which_branch = [];
+    public $lookahead_is_match_possible = [];
     public $lowest_non_terminal_id;
     public $highest_terminal_id;
 
@@ -57,40 +59,52 @@ class Grammar {
         }
 
         /**
-         * Compute a token => branch number lookup table for each rule
+         * Compute a rule => [token => true] lookup table for each rule
          * that starts with a terminal OR with another rule that already
          * has a lookahead mapping.
          * 
-         * Interestingly, doing this once speeds the parser up by 10%, and
-         * then computing one or more lookup rounds only speeds it up by another
-         * 1%.
+         * This is similar to left-factoring the grammar, even if not quite
+         * the same.
+         * 
+         * This enables us to quickly bale out from checking branches that 
+         * cannot possibly match the current token. This increased the parser
+         * speed by a whooping 80%!
+         * 
+         * The next step could be to:
+         * 
+         * * Compute a rule => [token => branch[]] list lookup table and only
+         *   process the branches that have a chance of matching the current token.
+         * * Actually left-factor the grammar as much as possible. This, however,
+         *   could inflate the serialized grammar size.
          */
-        for ($i = 0; $i < 5;$i++) {
-            foreach($grammar['grammar'] as $rule_index => $branches) {
+        // 5 iterations seem to give us all the speed gains we can get from this.
+        for ($i = 0; $i < 5; $i++) {
+            foreach ($grammar['grammar'] as $rule_index => $branches) {
                 $rule_id = $rule_index + $grammar['rules_offset'];
+                if(isset($this->lookahead_is_match_possible[$rule_id])) {
+                    continue;
+                }
                 $rule_lookup = [];
-                $each_first_symbol_is_a_unique_terminal = true;
-                foreach($branches as $top_branch_index => $branch) {
+                $first_symbol_can_be_expanded_to_all_terminals = true;
+                foreach($branches as $branch) {
+                    $terminals = false;
                     $branch_starts_with_terminal = $branch[0] < $this->lowest_non_terminal_id;
-                    if ($branch_starts_with_terminal && !isset($rule_lookup[$branch[0]])) {
-                        $rule_lookup[$branch[0]] = $top_branch_index;
-                        continue;
-                    }
-                    if(isset($this->lookahead_1[$branch[0]])) {
-                        foreach($this->lookahead_1[$branch[0]] as $token_id => $sub_branch_nb) {
-                            if(isset($rule_lookup[$token_id])) {
-                                $each_first_symbol_is_a_unique_terminal = false;
-                                break 2;
-                            }
-                            $rule_lookup[$token_id] = $top_branch_index;
-                        }
-                        continue;
+                    if($branch_starts_with_terminal) {
+                        $terminals = [$branch[0]];
+                    } else if(isset($this->lookahead_is_match_possible[$branch[0]])) {
+                        $terminals = array_keys($this->lookahead_is_match_possible[$branch[0]]);
                     }
 
-                    $each_first_symbol_is_a_unique_terminal = false;
+                    if($terminals === false) {
+                        $first_symbol_can_be_expanded_to_all_terminals = false;
+                        break;
+                    }
+                    foreach($terminals as $terminal) {
+                        $rule_lookup[$terminal] = true;
+                    }
                 }
-                if ($each_first_symbol_is_a_unique_terminal) {
-                    $this->lookahead_1[$rule_id] = $rule_lookup;
+                if ($first_symbol_can_be_expanded_to_all_terminals) {
+                    $this->lookahead_is_match_possible[$rule_id] = $rule_lookup;
                 }
             }
         }
@@ -149,22 +163,16 @@ class DynamicRecursiveDescentParser {
         }
 
         $rule = $this->grammar->rules[$rule_id];
-        if(isset($this->grammar->lookahead_1[$rule_id])) {
+        // Bale out from processing the current branch if none of its rules can
+        // possibly match the current token.
+        if(isset($this->grammar->lookahead_is_match_possible[$rule_id])) {
             $token_id = $this->tokens[$this->position]->type;
-            $branch_nb = false;
-            if(isset($this->grammar->lookahead_1[$rule_id][$token_id])) {
-                $branch_nb = $this->grammar->lookahead_1[$rule_id][$token_id];
-            }
-            if($branch_nb === false) {
-                if(isset($this->grammar->lookahead_1[$rule_id][MySQLLexer::EMPTY_TOKEN])) {
-                    $branch_nb = $this->grammar->lookahead_1[$rule_id][MySQLLexer::EMPTY_TOKEN];
-                }
-            }
-            if($branch_nb === false) {
+            if(
+                !isset($this->grammar->lookahead_is_match_possible[$rule_id][$token_id]) &&
+                !isset($this->grammar->lookahead_is_match_possible[$rule_id][MySQLLexer::EMPTY_TOKEN])
+            ) {
                 return null;
             }
-
-            $rule = [$rule[$branch_nb]];
         }
 
         $starting_position = $this->position;
@@ -244,13 +252,13 @@ class DynamicRecursiveDescentParser {
             $rule = $this->grammar->rules[$frame->rule_id];
             // Lookahead optimization – go directly to the branch that matches
             // if it's in our lookahead hash table.
-            if ($frame->branch_index === 0 && $frame->subrule_index === 0 && isset($this->grammar->lookahead_1[$frame->rule_id])) {
+            if ($frame->branch_index === 0 && $frame->subrule_index === 0 && isset($this->grammar->lookahead_which_branch[$frame->rule_id])) {
                 $token_id = $this->tokens[$frame->position]->type;
                 $branch_nb = false;
-                if(isset($this->grammar->lookahead_1[$frame->rule_id][$token_id])) {
-                    $branch_nb = $this->grammar->lookahead_1[$frame->rule_id][$token_id];
-                } else if(isset($this->grammar->lookahead_1[$frame->rule_id][MySQLLexer::EMPTY_TOKEN])) {
-                    $branch_nb = $this->grammar->lookahead_1[$frame->rule_id][MySQLLexer::EMPTY_TOKEN];
+                if(isset($this->grammar->lookahead_which_branch[$frame->rule_id][$token_id])) {
+                    $branch_nb = $this->grammar->lookahead_which_branch[$frame->rule_id][$token_id];
+                } else if(isset($this->grammar->lookahead_which_branch[$frame->rule_id][MySQLLexer::EMPTY_TOKEN])) {
+                    $branch_nb = $this->grammar->lookahead_which_branch[$frame->rule_id][MySQLLexer::EMPTY_TOKEN];
                 }
                 if ($branch_nb === false) {
                     $frame->match = [];
@@ -465,10 +473,10 @@ $tokens = tokenizeQuery($queries[0]);
 // die();
 // Benchmark 5 times
 echo 'all loaded and deflated'."\n";
-$tokens = tokenizeQuery($queries[1]);
+$tokens = tokenizeQuery($queries[3]);
 
 $start_time = microtime(true);
-for ($i = 0; $i < 100; $i++) {
+for ($i = 0; $i < 700; $i++) {
     $parser = new DynamicRecursiveDescentParser($grammar, $tokens);
     $parse_tree = $parser->parse_start();
 }
