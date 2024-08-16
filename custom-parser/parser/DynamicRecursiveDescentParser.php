@@ -321,11 +321,15 @@ class DynamicRecursiveDescentParser {
                 continue;
             }
             unset($match[$subrule_id]);
-            foreach($fragment_children as $transient_id => $transient_children) {
-                if(!isset($match[$transient_id])) {
-                    $match[$transient_id] = $fragment_children;
-                } else {
-                    $match[$transient_id] = array_merge($match[$transient_id], $fragment_children);
+            foreach($fragment_children as $child) {
+                foreach($child as $transient_id => $transient_children) {
+                    if(!isset($match[$transient_id])) {
+                        $match[$transient_id] = $transient_children;
+                    } else if(is_array($match[$transient_id])) {
+                        $match[$transient_id] += $transient_children;
+                    } else {
+                        throw new Exception("This should never happen");
+                    }
                 }
             }
         }
