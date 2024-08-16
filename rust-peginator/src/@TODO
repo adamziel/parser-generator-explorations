@@ -1,0 +1,4 @@
+LETTER_WHEN_UNQUOTED_NO_DIGIT = ('a' .. 'z') | ('A' .. 'Z') | '$' | ;
+-- /* /[a-zA-Z_$\u0080-\uffff]/; */
+
+LETTER_WITHOUT_FLOAT_PART = /[a-df-zA-DF-Z_$\u0080-\uffff]/;
