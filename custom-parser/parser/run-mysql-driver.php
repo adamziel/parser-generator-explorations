@@ -5,8 +5,10 @@ require_once __DIR__ . '/DynamicRecursiveDescentParser.php';
 require_once __DIR__ . '/SQLiteDriver.php';
 
 $query = <<<SQL
-WITH mytable AS (select 1 as a, `b`.c from dual) 
-SELECT HIGH_PRIORITY DISTINCT
+WITH
+    mytable AS (select 1 as a, `b`.c from dual),
+    mytable2 AS (select 1 as a, `b`.c from dual) 
+SELECT HIGH_PRIORITY SQL_SMALL_RESULT DISTINCT
 	CONCAT("a", "b"),
 	UPPER(z),
     DATE_FORMAT(col_a, '%Y-%m-%d %H:%i:%s') as formatted_date,
@@ -112,6 +114,36 @@ function translateQuery($ast, $rule_name=null) {
             // skip them.
             return null;
 
+        case 'selectOption':
+            $all_options = [];
+            $options_stack = [$ast];
+            while (!empty($options_stack)) {
+                $option_ast = array_pop($options_stack);
+                foreach ($option_ast as $option) {
+                    foreach ($option as $sub_rule => $sub_ast) {
+                        if ($sub_rule === 'selectOption') {
+                            array_push($options_stack, $sub_ast);
+                        } else {
+                            $option = translateQuery($sub_ast, $sub_rule);
+                            $all_options[] = $option->elements[0]->value;
+                        }
+                    }
+                }
+            }
+            $emit_options = [];
+            if(in_array('ALL', $all_options)) {
+                $emit_options[] = SQLiteTokenFactory::raw('ALL');
+            }
+            if(in_array('DISTINCT', $all_options) || in_array('DISTINCTROW', $all_options)) {
+                $emit_options[] = SQLiteTokenFactory::raw('DISTINCT');
+            }
+            if(in_array('SQL_CALC_FOUND_ROWS', $all_options)) {
+                // we'll need to run the current SQL query without any
+                // LIMIT clause, and then substitute the FOUND_ROWS()
+                // function with a literal number of rows found.            
+            }
+            return new SQLiteExpression($emit_options);
+
         case 'fromClause':
             // Skip `FROM DUAL`. We only care about a singular 
             // FROM DUAL statement, as FROM mytable, DUAL is a syntax
@@ -122,11 +154,6 @@ function translateQuery($ast, $rule_name=null) {
             ) {
                 return null;
             }
-
-        // case 'selectOption':
-        //     var_dump($ast);
-        //     die();
-
         case 'bitExpr':
         case 'boolPri':
         case 'lockStrengh':

@@ -79,7 +79,7 @@ class Grammar {
              *   rules that are not part of the original grammar. They are useful
              * 
              */
-            if($rule_name[0] === '%') {
+            if($rule_name[0] === '%' || $rule_name[0] === 'selectOption_rr') {
                 $this->fragment_ids[$rule_index + $grammar['rules_offset']] = true;
             }
         }
