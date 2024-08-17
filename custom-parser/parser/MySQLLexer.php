@@ -9015,7 +9015,7 @@ class MySQLLexer {
 class MySQLToken
 {
     public $type;
-    private $text;
+    public $text;
     private $channel;
 
     public function __construct($type, $text, $channel=null)

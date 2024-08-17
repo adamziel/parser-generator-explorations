@@ -13,6 +13,15 @@ Possible exploration avenues:
 */
 
 
+function tokenizeQuery($sql) {
+    $lexer = new MySQLLexer($sql);
+    $tokens = [];
+    do {
+        $token = $lexer->getNextToken();
+        $tokens[] = $token;
+    } while ($token->type !== MySQLLexer::EOF);
+    return $tokens;
+}
 class Grammar {
 
     public $rules;
@@ -22,7 +31,7 @@ class Grammar {
     public $lowest_non_terminal_id;
     public $highest_terminal_id;
 
-    public function __construct(array $rules, array $lookup_table = null)
+    public function __construct(array $rules)
     {
         $this->inflate($rules);
     }
@@ -52,6 +61,24 @@ class Grammar {
         foreach($grammar['rules_names'] as $rule_index => $rule_name) {
             $this->rule_names[$rule_index + $grammar['rules_offset']] = $rule_name;
             $this->rules[$rule_index + $grammar['rules_offset']] = [];
+            /**
+             * Treat all intermediate rules as fragments to inline before returning
+             * the final parse tree to the API consumer.
+             * 
+             * The original grammar was too difficult to parse with rules like
+             * 
+             *    query ::= EOF | ((simpleStatement | beginWork) ((SEMICOLON_SYMBOL EOF?) | EOF))
+             * 
+             * We've  factored rules like bitExpr* to separate rules like bitExpr_zero_or_more.
+             * This is super useful for parsing, but it limits the API consumer's ability to
+             * reason about the parse tree.
+             * 
+             * The following rules as fragments:
+             * 
+             * * Rules starting with a percent sign ("%") – these are intermediate
+             *   rules that are not part of the original grammar. They are useful
+             * 
+             */
             if($rule_name[0] === '%') {
                 $this->fragment_ids[$rule_index + $grammar['rules_offset']] = true;
             }
@@ -138,9 +165,10 @@ class DynamicRecursiveDescentParser {
         $this->position = 0;
     }
 
-    public function parse_start() {
-        $result = $this->parse_recursive($this->grammar->get_rule_id("query"));
-        return $this->expand_rule_names($result);
+    public function parse() {
+        $query_rule_id = $this->grammar->get_rule_id('query');
+        $result = $this->parse_recursive($query_rule_id);
+        return $this->expand_rule_names([$query_rule_id => $result]);
     }
 
     /**
@@ -175,19 +203,29 @@ class DynamicRecursiveDescentParser {
         $expanded = [];
         foreach($parse_tree as $rule_id => $children) {
             $rule_name = $this->get_rule_name($rule_id);
-            $expanded[$rule_name] = [];
-            foreach($children as $child) {
-                if(is_array($child)) {
-                    $expanded[$rule_name][] = $this->expand_rule_names($child);
-                } else {
-                    $expanded[$rule_name][] = $child;
+            $new_rule_name = str_replace(
+                array('_zero_or_one', '_zero_or_more', '_one_or_more', '_rr'),
+                '',
+                $rule_name
+            );
+            if (is_array($children)) {
+                if(isset($expanded[$new_rule_name])) {
+                    throw new Exception("Rule $new_rule_name already exists in the parse tree. This should never happen.");
+                }
+                $expanded[$new_rule_name] = [];
+                foreach ($children as $child) {
+                    if (is_array($child)) {
+                        $expanded[$new_rule_name][] = $this->expand_rule_names($child);
+                    } else {
+                        $expanded[$new_rule_name][] = $child;
+                    }
                 }
             }
         }
         return $expanded;
     }
 
-    public function parse_recursive($rule_id) {
+    private function parse_recursive($rule_id) {
         $is_terminal = $rule_id <= $this->grammar->highest_terminal_id;
         if ($is_terminal) {
             // Inlining a $this->match($rule_id) call here speeds the
@@ -202,7 +240,7 @@ class DynamicRecursiveDescentParser {
     
             if($this->tokens[$this->position]->type === $rule_id) {
                 $this->position++;
-                return $this->tokens[$this->position - 1] . '';
+                return $this->tokens[$this->position - 1];
             }
             return null;
         }
@@ -238,7 +276,14 @@ class DynamicRecursiveDescentParser {
                 } else if(is_array($matched_children) && count($matched_children) === 0) {
                     continue;
                 }
-                $match[$subrule_id][] = $matched_children;
+                if (!isset($match[$subrule_id])) {
+                    $match[$subrule_id] = [];
+                }
+                if(is_array($matched_children)) {
+                    $match[$subrule_id] += $matched_children;
+                } else {
+                    $match[$subrule_id][] = $matched_children;
+                }
             }
             if ($branch_matches === true) {
                 break;
@@ -259,28 +304,29 @@ class DynamicRecursiveDescentParser {
          * When we initially parse the BNF grammar file, it has compound rules such
          * as this one:
          * 
-         *     query ::= EOF | ((simpleStatement | beginWork) ((SEMICOLON_SYMBOL EOF?) | EOF))
+         *      query ::= EOF | ((simpleStatement | beginWork) ((SEMICOLON_SYMBOL EOF?) | EOF))
          * 
          * Building a parser that can understand such rules is way more complex than building
          * a parser that only follows simple rules, so we flatten those compound rules into
          * simpler ones. The above rule would be flattened to:
          * 
-         *     query ::= EOF | %query0
-         *     %query0 ::= %%query01 %%query02
-         *     %%query01 ::= simpleStatement | beginWork 
-         *     %%query02 ::= SEMICOLON_SYMBOL EOF? | EOF
+         *      query ::= EOF | %query0
+         *      %query0 ::= %%query01 %%query02
+         *      %%query01 ::= simpleStatement | beginWork 
+         *      %%query02 ::= SEMICOLON_SYMBOL EOF_zero_or_one | EOF
+         *      EOF_zero_or_one ::= EOF | ε
          * 
          * This factorization happens in 1-ebnf-to-json.js.
          * 
-         * "Fragments" are the rules starting with the percent sign ("%") and their names are not
-         * a part of the original grammar. These intermediate artifacts are extremely useful for
-         * the parser, but the API consumer should never have to worry about them.
+         * "Fragments" are intermediate artifacts whose names are not in the original grammar.
+         * They are extremely useful for the parser, but the API consumer should never have to
+         * worry about them. Fragment names start with a percent sign ("%"). 
          * 
-         * The loop below inlines every fragment back in its parent rule.
+         * The code below inlines every fragment back in its parent rule.
          * 
          * We could optimize this. The current $match may be discarded later on so any inlining
-         * effort would be wasted. However, inlining seems cheap and doing it here seems less
-         * complex than doing it later on.
+         * effort here would be wasted. However, inlining seems cheap and doing it bottom-up here
+         * is **much** easier than reprocessing the parse tree top-down later on.
          * 
          * The following parse tree:
          * 
@@ -289,6 +335,9 @@ class DynamicRecursiveDescentParser {
          *          [
          *              '%query01' => [
          *                  [
+         *                      'simpleStatement' => [
+         *                          MySQLToken(MySQLLexer::WITH_SYMBOL, 'WITH')
+         *                      ],
          *                      '%query02' => [
          *                          [
          *                              'simpleStatement' => [
@@ -309,32 +358,43 @@ class DynamicRecursiveDescentParser {
          *              'simpleStatement' => [
          *                  MySQLToken(MySQLLexer::WITH_SYMBOL, 'WITH')
          *              ]
+         *          ],
+         *          [
+         *              'simpleStatement' => [
+         *                  MySQLToken(MySQLLexer::WITH_SYMBOL, 'WITH')
+         *              ]
          *          ]
          *      ]
          * ]
          */
+        $match_to_flatmap = [];
+        $last_entry_is_fragment = false;
         foreach($match as $subrule_id => $fragment_children) {
-            if(
-                !is_array($fragment_children) ||
-                !isset($this->grammar->fragment_ids[$subrule_id])
-            ) {
+            $is_fragment = (
+                is_array($fragment_children) &&
+                isset($this->grammar->fragment_ids[$subrule_id])
+            );
+
+            // Every fragment becomes a new match
+            if($is_fragment) {
+                $last_entry_is_fragment = true;
+                $match_to_flatmap = array_merge($match_to_flatmap, $fragment_children);
                 continue;
             }
-            unset($match[$subrule_id]);
-            foreach($fragment_children as $child) {
-                foreach($child as $transient_id => $transient_children) {
-                    if(!isset($match[$transient_id])) {
-                        $match[$transient_id] = $transient_children;
-                    } else if(is_array($match[$transient_id])) {
-                        $match[$transient_id] += $transient_children;
-                    } else {
-                        throw new Exception("This should never happen");
-                    }
-                }
+
+            // Every non-fragment is preserved and either:
+            // * Added to the last match
+            // * Becomes a new match if the last match was an inlined fragment
+            if($last_entry_is_fragment || count($match_to_flatmap) === 0) {
+                $match_to_flatmap[] = [];
+                $last_entry_is_fragment = false;
             }
+
+            $index = count($match_to_flatmap) - 1;
+            $match_to_flatmap[$index][$subrule_id] = $fragment_children;
         }
 
-        return $match;
+        return $match_to_flatmap;
     }
 
     private function get_rule_name($id)
@@ -346,124 +406,3 @@ class DynamicRecursiveDescentParser {
         return $this->grammar->get_rule_name($id);        
     }
 }
-
-require_once __DIR__ . '/MySQLLexer.php';
-function tokenizeQuery($sql) {
-    $lexer = new MySQLLexer($sql);
-    $tokens = [];
-    do {
-        $token = $lexer->getNextToken();
-        $tokens[] = $token;
-    } while ($token->type !== MySQLLexer::EOF);
-    return $tokens;
-}
-
-
-
-$queries = [
-    <<<SQL
-WITH mytable AS (select 1) SELECT 123 FROM test
-SQL,
-    <<<SQL
-WITH mytable AS (select 1 as a, `b`.c from dual) 
-SELECT HIGH_PRIORITY DISTINCT
-	CONCAT("a", "b"),
-	UPPER(z),
-    DATE_FORMAT(col_a, '%Y-%m-%d %H:%i:%s') as formatted_date,
-    DATE_ADD(col_b, INTERVAL 1 DAY) as date_plus_one,
-	col_a
-FROM 
-my_table FORCE INDEX (`idx_department_id`),
-(SELECT `mycol`, 997482686 FROM "mytable") as subquery
-LEFT JOIN (SELECT a_column_yo from mytable) as t2 
-    ON (t2.id = mytable.id AND t2.id = 1)
-WHERE 1 = 3
-GROUP BY col_a, col_b
-HAVING 1 = 2
-UNION SELECT * from table_cde
-ORDER BY col_a DESC, col_b ASC
-FOR UPDATE;
-;
-SQL,
-    <<<SQL
-CREATE TABLE products (
-    product_id INT AUTO_INCREMENT PRIMARY KEY,
-    product_name VARCHAR(100) NOT NULL,
-    `description` TEXT,
-    category ENUM('Electronics', 'Clothing', 'Books', 'Home', 'Beauty'),
-    order_id INT AUTO_INCREMENT PRIMARY KEY,
-    customer_id INT,
-    product_id INT,
-    `status` SET('Pending', 'Shipped', 'Delivered', 'Cancelled'),
-    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    delivery_date DATETIME,
-    CONSTRAINT fk_customer
-        FOREIGN KEY (customer_id) REFERENCES customers (customer_id)
-        ON DELETE CASCADE,
-    CONSTRAINT fk_product
-        FOREIGN KEY (product_id) REFERENCES products (product_id)
-        ON DELETE CASCADE,
-    INDEX idx_col_h_i (`col_h`, `col_i`),
-    INDEX idx_col_g (`col_g`),
-    UNIQUE INDEX idx_col_k (`col_k`),
-    FULLTEXT INDEX idx_col_l (`col_l`)
-) DEFAULT CHARACTER SET cp1250 COLLATE cp1250_general_ci;
-SQL,
-    <<<SQL
-GRANT SELECT ON mytable TO myuser@localhost
-SQL,
-    <<<SQL
-INSERT INTO products
-SELECT 
-    'Smartphone', 
-    'Latest model with advanced features', 
-    699.99, 
-    50, 
-    'Electronics'
-WHERE NOT EXISTS (
-    SELECT 1 FROM products WHERE product_name = 'Smartphone'
-) AND 1=2;
-SQL
-];
-
-$lookup = json_decode(file_get_contents(__DIR__.'/lookup-branches.json'), true);
-// Assuming MySQLParser.json is in the same directory as this script
-$grammar_data = include "./grammar.php";
-$grammar = new Grammar($grammar_data, $lookup);
-unset($grammar_data);
-
-// $tokens = tokenizeQuery($queries[0]);
-// $parser = new DynamicRecursiveDescentParser($grammar, $tokens);
-// $parse_tree = $parser->parse_start();
-// var_dump($parse_tree);
-// die();
-
-
-// foreach ($queries as $k => $query) {
-//     $parser = new DynamicRecursiveDescentParser($grammar, tokenizeQuery($query), $lookup);
-    // $parser->debug = true;
-    // print_r($parse_tree);
-//     file_put_contents("query_$k.parsetree", 
-//     "QUERY:\n$query\n\nPARSE TREE:\n\n" . json_encode($parse_tree, JSON_PRETTY_PRINT));
-// }
-
-// die();
-// Benchmark 5 times
-echo 'all loaded and deflated'."\n";
-$tokens = tokenizeQuery($queries[1]);
-
-var_dump(memory_get_usage(true)/1024/1024);
-$start_time = microtime(true);
-for ($i = 0; $i < 700; $i++) {
-    $parser = new DynamicRecursiveDescentParser($grammar, $tokens);
-    $parse_tree = $parser->parse_start();
-}
-var_dump(memory_get_usage(true)/1024/1024);
-$end_time = microtime(true);
-$execution_time = $end_time - $start_time;
-
-// // Output the parse tree
-echo json_encode($parse_tree, JSON_PRETTY_PRINT);
-
-// // Output the benchmark result
-echo "Execution time: " . $execution_time . " seconds";
